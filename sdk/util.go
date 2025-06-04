@@ -24,7 +24,7 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 
 func awaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (*api.ModelsRequestResult, error) {
 	for {
-		response, err := client.ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.ResultsAlgorithmNameRequestsRequestIdGetParams{
+		response, err := client.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
 		}, requestOptions...)
@@ -44,9 +44,9 @@ func awaitRun(client *api.Client, requestId string, algorithmName string, pollIn
 			} else {
 				time.Sleep(5 * time.Second)
 			}
-		case *api.ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON:
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON:
 			return nil, fmt.Errorf("request %s for algorithm %s not found", requestId, algorithmName)
-		case *api.ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON:
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON:
 			return nil, fmt.Errorf("server returned BadRequest when looking up result for request %s for algorithm %s", requestId, algorithmName)
 		default:
 			return nil, fmt.Errorf("unexpected response type for request %s for algorithm %s", requestId, algorithmName)
@@ -117,7 +117,7 @@ func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult
 func getRuns(client *api.Client, tags []string, algorithmName *string, requestOptions ...api.RequestOption) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
 	return func(yield func(requestResult *api.ModelsTaggedRequestResult, err error) bool) {
 		for _, tag := range tags {
-			taggedRunsResponse, err := client.ResultsTagsTagGet(context.TODO(), api.ResultsTagsTagGetParams{Tag: tag}, requestOptions...)
+			taggedRunsResponse, err := client.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, requestOptions...)
 			if err != nil {
 				if !yield(nil, err) {
 					return
@@ -125,7 +125,7 @@ func getRuns(client *api.Client, tags []string, algorithmName *string, requestOp
 			}
 
 			switch taggedRunResponseType := taggedRunsResponse.(type) {
-			case *api.ResultsTagsTagGetOKApplicationJSON:
+			case *api.AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON:
 				for _, modelRequestResult := range *taggedRunResponseType {
 					// include the run if algorithm name is not provided
 					// if provided, only include those that have a matching name
@@ -140,11 +140,11 @@ func getRuns(client *api.Client, tags []string, algorithmName *string, requestOp
 						return
 					}
 				}
-			case *api.ResultsTagsTagGetNotFoundApplicationJSON:
+			case *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain:
 				if !yield(nil, fmt.Errorf("no submissions found for tag %s", tag)) {
 					return
 				}
-			case *api.ResultsTagsTagGetBadRequestApplicationJSON:
+			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain:
 				if !yield(nil, fmt.Errorf("server returned BadRequest request for tag %s", tag)) {
 					return
 				}
