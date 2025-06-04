@@ -3,6 +3,7 @@ module github.com/SneaksAndData/nexus-sdk-go
 go 1.23.1
 
 require (
+	github.com/SneaksAndData/nexus-core v1.0.1-0.20250603123541-396657c39bfd // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect

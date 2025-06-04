@@ -132,7 +132,7 @@ func (s ResourceQuantityFormat) Validate() error {
 }
 
 func (s ResultsTagsTagGetOKApplicationJSON) Validate() error {
-	alias := ([]ModelsRequestResult)(s)
+	alias := ([]ModelsTaggedRequestResult)(s)
 	if alias == nil {
 		return errors.New("nil is invalid value")
 	}

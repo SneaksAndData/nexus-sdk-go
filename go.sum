@@ -1,3 +1,5 @@
+github.com/SneaksAndData/nexus-core v1.0.1-0.20250603123541-396657c39bfd h1:7cB2HP0f5GmtRNwtjhzmC8dMIU3b3wqYrqFKU3vNo78=
+github.com/SneaksAndData/nexus-core v1.0.1-0.20250603123541-396657c39bfd/go.mod h1:CjfkB+qy0MI7qzdJ3fPlYDNF8MH0880980tWwjcLIVM=
 github.com/dlclark/regexp2 v1.11.5 h1:Q/sSnsKerHeCkc/jSTNq1oCm7KiVgUMZRDUoRu0JQZQ=
 github.com/dlclark/regexp2 v1.11.5/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=
