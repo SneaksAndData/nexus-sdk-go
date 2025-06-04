@@ -10,6 +10,14 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+func (s AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON) Validate() error {
+	alias := ([]ModelsTaggedRequestResult)(s)
+	if alias == nil {
+		return errors.New("nil is invalid value")
+	}
+	return nil
+}
+
 func (s *ModelsAlgorithmRequest) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
@@ -129,14 +137,6 @@ func (s ResourceQuantityFormat) Validate() error {
 	default:
 		return errors.Errorf("invalid value: %v", s)
 	}
-}
-
-func (s ResultsTagsTagGetOKApplicationJSON) Validate() error {
-	alias := ([]ModelsTaggedRequestResult)(s)
-	if alias == nil {
-		return errors.New("nil is invalid value")
-	}
-	return nil
 }
 
 func (s *V1EnvVar) Validate() error {

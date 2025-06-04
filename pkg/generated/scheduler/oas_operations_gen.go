@@ -6,9 +6,9 @@ package api
 type OperationName = string
 
 const (
-	MetadataAlgorithmNameRequestsRequestIdGetOperation OperationName = "MetadataAlgorithmNameRequestsRequestIdGet"
-	PayloadAlgorithmNameRequestsRequestIdGetOperation  OperationName = "PayloadAlgorithmNameRequestsRequestIdGet"
-	ResultsAlgorithmNameRequestsRequestIdGetOperation  OperationName = "ResultsAlgorithmNameRequestsRequestIdGet"
-	ResultsTagsTagGetOperation                         OperationName = "ResultsTagsTagGet"
-	RunAlgorithmNamePostOperation                      OperationName = "RunAlgorithmNamePost"
+	AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetOperation OperationName = "AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetOperation  OperationName = "AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetOperation  OperationName = "AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV12ResultsTagsRequestTagGetOperation                  OperationName = "AlgorithmV12ResultsTagsRequestTagGet"
+	AlgorithmV12RunAlgorithmNamePostOperation                      OperationName = "AlgorithmV12RunAlgorithmNamePost"
 )

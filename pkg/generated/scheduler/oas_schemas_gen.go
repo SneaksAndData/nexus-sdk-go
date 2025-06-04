@@ -3,18 +3,255 @@
 package api
 
 import (
+	"io"
+
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 )
 
-type MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+type AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
 
-func (*MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) metadataAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) algorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes() {
 }
 
-type MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+type AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+	Data io.Reader
+}
 
-func (*MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) metadataAlgorithmNameRequestsRequestIdGetRes() {
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) algorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+
+func (*AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) algorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) algorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequest struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequest) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequest) algorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFound struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFound) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFound) algorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFound struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFound) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFound) algorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+
+func (*AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) algorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) algorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+
+func (*AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) algorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) algorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON string
+
+func (*AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
+type AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
+type AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON string
+
+func (*AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
+type AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
+type AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON []ModelsTaggedRequestResult
+
+func (*AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
+type AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON map[string]string
+
+func (s *AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON) init() AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON {
+	m := *s
+	if m == nil {
+		m = map[string]string{}
+		*s = m
+	}
+	return m
+}
+
+func (*AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON) algorithmV12RunAlgorithmNamePostRes() {
+}
+
+type AlgorithmV12RunAlgorithmNamePostBadRequestApplicationJSON string
+
+func (*AlgorithmV12RunAlgorithmNamePostBadRequestApplicationJSON) algorithmV12RunAlgorithmNamePostRes() {
+}
+
+type AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain) algorithmV12RunAlgorithmNamePostRes() {}
+
+type AlgorithmV12RunAlgorithmNamePostInternalServerErrorApplicationJSON string
+
+func (*AlgorithmV12RunAlgorithmNamePostInternalServerErrorApplicationJSON) algorithmV12RunAlgorithmNamePostRes() {
+}
+
+type AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextPlain) algorithmV12RunAlgorithmNamePostRes() {
 }
 
 // Ref: #/components/schemas/models.AlgorithmRequest
@@ -337,7 +574,7 @@ func (s *ModelsCheckpointedRequest) SetTag(val OptString) {
 	s.Tag = val
 }
 
-func (*ModelsCheckpointedRequest) metadataAlgorithmNameRequestsRequestIdGetRes() {}
+func (*ModelsCheckpointedRequest) algorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes() {}
 
 // Ref: #/components/schemas/models.ParentJobReference
 type ModelsParentJobReference struct{}
@@ -390,7 +627,7 @@ func (s *ModelsRequestResult) SetStatus(val OptString) {
 	s.Status = val
 }
 
-func (*ModelsRequestResult) resultsAlgorithmNameRequestsRequestIdGetRes() {}
+func (*ModelsRequestResult) algorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes() {}
 
 // Ref: #/components/schemas/models.TaggedRequestResult
 type ModelsTaggedRequestResult struct {
@@ -1463,21 +1700,6 @@ func (o OptV1SecretKeySelector) Or(d V1SecretKeySelector) V1SecretKeySelector {
 	return d
 }
 
-type PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
-
-func (*PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) payloadAlgorithmNameRequestsRequestIdGetRes() {
-}
-
-type PayloadAlgorithmNameRequestsRequestIdGetFoundApplicationJSON string
-
-func (*PayloadAlgorithmNameRequestsRequestIdGetFoundApplicationJSON) payloadAlgorithmNameRequestsRequestIdGetRes() {
-}
-
-type PayloadAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
-
-func (*PayloadAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) payloadAlgorithmNameRequestsRequestIdGetRes() {
-}
-
 // Ref: #/components/schemas/resource.Quantity
 type ResourceQuantity struct {
 	Format OptResourceQuantityFormat `json:"Format"`
@@ -1540,49 +1762,6 @@ func (s *ResourceQuantityFormat) UnmarshalText(data []byte) error {
 		return errors.Errorf("invalid value: %q", data)
 	}
 }
-
-type ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
-
-func (*ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) resultsAlgorithmNameRequestsRequestIdGetRes() {
-}
-
-type ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
-
-func (*ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) resultsAlgorithmNameRequestsRequestIdGetRes() {
-}
-
-type ResultsTagsTagGetBadRequestApplicationJSON string
-
-func (*ResultsTagsTagGetBadRequestApplicationJSON) resultsTagsTagGetRes() {}
-
-type ResultsTagsTagGetNotFoundApplicationJSON string
-
-func (*ResultsTagsTagGetNotFoundApplicationJSON) resultsTagsTagGetRes() {}
-
-type ResultsTagsTagGetOKApplicationJSON []ModelsTaggedRequestResult
-
-func (*ResultsTagsTagGetOKApplicationJSON) resultsTagsTagGetRes() {}
-
-type RunAlgorithmNamePostAccepted map[string]string
-
-func (s *RunAlgorithmNamePostAccepted) init() RunAlgorithmNamePostAccepted {
-	m := *s
-	if m == nil {
-		m = map[string]string{}
-		*s = m
-	}
-	return m
-}
-
-func (*RunAlgorithmNamePostAccepted) runAlgorithmNamePostRes() {}
-
-type RunAlgorithmNamePostBadRequestApplicationJSON string
-
-func (*RunAlgorithmNamePostBadRequestApplicationJSON) runAlgorithmNamePostRes() {}
-
-type RunAlgorithmNamePostInternalServerErrorApplicationJSON string
-
-func (*RunAlgorithmNamePostInternalServerErrorApplicationJSON) runAlgorithmNamePostRes() {}
 
 // Ref: #/components/schemas/v1.ConfigMapEnvSource
 type V1ConfigMapEnvSource struct {

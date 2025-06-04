@@ -80,36 +80,36 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
-	// MetadataAlgorithmNameRequestsRequestIdGet invokes GET /metadata/{algorithmName}/requests/{requestId} operation.
+	// AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/metadata/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves checkpointed metadata for a run.
 	//
-	// GET /metadata/{algorithmName}/requests/{requestId}
-	MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (MetadataAlgorithmNameRequestsRequestIdGetRes, error)
-	// PayloadAlgorithmNameRequestsRequestIdGet invokes GET /payload/{algorithmName}/requests/{requestId} operation.
+	// GET /algorithm/v1.2/metadata/{algorithmName}/requests/{requestId}
+	AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes, error)
+	// AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/payload/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves payload sent by the client for the provided run.
 	//
-	// GET /payload/{algorithmName}/requests/{requestId}
-	PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (PayloadAlgorithmNameRequestsRequestIdGetRes, error)
-	// ResultsAlgorithmNameRequestsRequestIdGet invokes GET /results/{algorithmName}/requests/{requestId} operation.
+	// GET /algorithm/v1.2/payload/{algorithmName}/requests/{requestId}
+	AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes, error)
+	// AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/results/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves a result for the provided run.
 	//
-	// GET /results/{algorithmName}/requests/{requestId}
-	ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (ResultsAlgorithmNameRequestsRequestIdGetRes, error)
-	// ResultsTagsTagGet invokes GET /results/tags/{tag} operation.
+	// GET /algorithm/v1.2/results/{algorithmName}/requests/{requestId}
+	AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes, error)
+	// AlgorithmV12ResultsTagsRequestTagGet invokes GET /algorithm/v1.2/results/tags/{requestTag} operation.
 	//
 	// Read results of all runs with a matching tag.
 	//
-	// GET /results/tags/{tag}
-	ResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams, options ...RequestOption) (ResultsTagsTagGetRes, error)
-	// RunAlgorithmNamePost invokes POST /run/{algorithmName} operation.
+	// GET /algorithm/v1.2/results/tags/{requestTag}
+	AlgorithmV12ResultsTagsRequestTagGet(ctx context.Context, params AlgorithmV12ResultsTagsRequestTagGetParams, options ...RequestOption) (AlgorithmV12ResultsTagsRequestTagGetRes, error)
+	// AlgorithmV12RunAlgorithmNamePost invokes POST /algorithm/v1.2/run/{algorithmName} operation.
 	//
 	// Accepts an algorithm payload and places it into a scheduling queue.
 	//
-	// POST /run/{algorithmName}
-	RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams, options ...RequestOption) (RunAlgorithmNamePostRes, error)
+	// POST /algorithm/v1.2/run/{algorithmName}
+	AlgorithmV12RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params AlgorithmV12RunAlgorithmNamePostParams, options ...RequestOption) (AlgorithmV12RunAlgorithmNamePostRes, error)
 }
 
 // Client implements OAS client.
@@ -136,17 +136,17 @@ func NewClient(serverURL string, opts ...ClientOption) (*Client, error) {
 	}, nil
 }
 
-// MetadataAlgorithmNameRequestsRequestIdGet invokes GET /metadata/{algorithmName}/requests/{requestId} operation.
+// AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/metadata/{algorithmName}/requests/{requestId} operation.
 //
 // Retrieves checkpointed metadata for a run.
 //
-// GET /metadata/{algorithmName}/requests/{requestId}
-func (c *Client) MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (MetadataAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendMetadataAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+// GET /algorithm/v1.2/metadata/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res MetadataAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes, err error) {
 
 	var reqCfg requestConfig
 	reqCfg.setDefaults(c.baseClient)
@@ -160,7 +160,7 @@ func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Conte
 	}
 	u = uri.Clone(u)
 	var pathParts [4]string
-	pathParts[0] = "/metadata/"
+	pathParts[0] = "/algorithm/v1.2/metadata/"
 	{
 		// Encode "algorithmName" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -219,7 +219,7 @@ func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Conte
 		return res, errors.Wrap(err, "edit response")
 	}
 
-	result, err := decodeMetadataAlgorithmNameRequestsRequestIdGetResponse(resp)
+	result, err := decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -227,17 +227,17 @@ func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Conte
 	return result, nil
 }
 
-// PayloadAlgorithmNameRequestsRequestIdGet invokes GET /payload/{algorithmName}/requests/{requestId} operation.
+// AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/payload/{algorithmName}/requests/{requestId} operation.
 //
 // Retrieves payload sent by the client for the provided run.
 //
-// GET /payload/{algorithmName}/requests/{requestId}
-func (c *Client) PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (PayloadAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendPayloadAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+// GET /algorithm/v1.2/payload/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res PayloadAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes, err error) {
 
 	var reqCfg requestConfig
 	reqCfg.setDefaults(c.baseClient)
@@ -251,7 +251,7 @@ func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 	}
 	u = uri.Clone(u)
 	var pathParts [4]string
-	pathParts[0] = "/payload/"
+	pathParts[0] = "/algorithm/v1.2/payload/"
 	{
 		// Encode "algorithmName" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -310,7 +310,7 @@ func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 		return res, errors.Wrap(err, "edit response")
 	}
 
-	result, err := decodePayloadAlgorithmNameRequestsRequestIdGetResponse(resp)
+	result, err := decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -318,17 +318,17 @@ func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 	return result, nil
 }
 
-// ResultsAlgorithmNameRequestsRequestIdGet invokes GET /results/{algorithmName}/requests/{requestId} operation.
+// AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/results/{algorithmName}/requests/{requestId} operation.
 //
 // Retrieves a result for the provided run.
 //
-// GET /results/{algorithmName}/requests/{requestId}
-func (c *Client) ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (ResultsAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendResultsAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+// GET /algorithm/v1.2/results/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res ResultsAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes, err error) {
 
 	var reqCfg requestConfig
 	reqCfg.setDefaults(c.baseClient)
@@ -342,7 +342,7 @@ func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 	}
 	u = uri.Clone(u)
 	var pathParts [4]string
-	pathParts[0] = "/results/"
+	pathParts[0] = "/algorithm/v1.2/results/"
 	{
 		// Encode "algorithmName" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -401,7 +401,7 @@ func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 		return res, errors.Wrap(err, "edit response")
 	}
 
-	result, err := decodeResultsAlgorithmNameRequestsRequestIdGetResponse(resp)
+	result, err := decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -409,17 +409,17 @@ func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 	return result, nil
 }
 
-// ResultsTagsTagGet invokes GET /results/tags/{tag} operation.
+// AlgorithmV12ResultsTagsRequestTagGet invokes GET /algorithm/v1.2/results/tags/{requestTag} operation.
 //
 // Read results of all runs with a matching tag.
 //
-// GET /results/tags/{tag}
-func (c *Client) ResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams, options ...RequestOption) (ResultsTagsTagGetRes, error) {
-	res, err := c.sendResultsTagsTagGet(ctx, params, options...)
+// GET /algorithm/v1.2/results/tags/{requestTag}
+func (c *Client) AlgorithmV12ResultsTagsRequestTagGet(ctx context.Context, params AlgorithmV12ResultsTagsRequestTagGetParams, options ...RequestOption) (AlgorithmV12ResultsTagsRequestTagGetRes, error) {
+	res, err := c.sendAlgorithmV12ResultsTagsRequestTagGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams, requestOptions ...RequestOption) (res ResultsTagsTagGetRes, err error) {
+func (c *Client) sendAlgorithmV12ResultsTagsRequestTagGet(ctx context.Context, params AlgorithmV12ResultsTagsRequestTagGetParams, requestOptions ...RequestOption) (res AlgorithmV12ResultsTagsRequestTagGetRes, err error) {
 
 	var reqCfg requestConfig
 	reqCfg.setDefaults(c.baseClient)
@@ -433,16 +433,16 @@ func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTa
 	}
 	u = uri.Clone(u)
 	var pathParts [2]string
-	pathParts[0] = "/results/tags/"
+	pathParts[0] = "/algorithm/v1.2/results/tags/"
 	{
-		// Encode "tag" parameter.
+		// Encode "requestTag" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "tag",
+			Param:   "requestTag",
 			Style:   uri.PathStyleSimple,
 			Explode: false,
 		})
 		if err := func() error {
-			return e.EncodeValue(conv.StringToString(params.Tag))
+			return e.EncodeValue(conv.StringToString(params.RequestTag))
 		}(); err != nil {
 			return res, errors.Wrap(err, "encode path")
 		}
@@ -473,7 +473,7 @@ func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTa
 		return res, errors.Wrap(err, "edit response")
 	}
 
-	result, err := decodeResultsTagsTagGetResponse(resp)
+	result, err := decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -481,17 +481,17 @@ func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTa
 	return result, nil
 }
 
-// RunAlgorithmNamePost invokes POST /run/{algorithmName} operation.
+// AlgorithmV12RunAlgorithmNamePost invokes POST /algorithm/v1.2/run/{algorithmName} operation.
 //
 // Accepts an algorithm payload and places it into a scheduling queue.
 //
-// POST /run/{algorithmName}
-func (c *Client) RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams, options ...RequestOption) (RunAlgorithmNamePostRes, error) {
-	res, err := c.sendRunAlgorithmNamePost(ctx, request, params, options...)
+// POST /algorithm/v1.2/run/{algorithmName}
+func (c *Client) AlgorithmV12RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params AlgorithmV12RunAlgorithmNamePostParams, options ...RequestOption) (AlgorithmV12RunAlgorithmNamePostRes, error) {
+	res, err := c.sendAlgorithmV12RunAlgorithmNamePost(ctx, request, params, options...)
 	return res, err
 }
 
-func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams, requestOptions ...RequestOption) (res RunAlgorithmNamePostRes, err error) {
+func (c *Client) sendAlgorithmV12RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params AlgorithmV12RunAlgorithmNamePostParams, requestOptions ...RequestOption) (res AlgorithmV12RunAlgorithmNamePostRes, err error) {
 	// Validate request before sending.
 	if err := func() error {
 		if err := request.Validate(); err != nil {
@@ -514,7 +514,7 @@ func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAl
 	}
 	u = uri.Clone(u)
 	var pathParts [2]string
-	pathParts[0] = "/run/"
+	pathParts[0] = "/algorithm/v1.2/run/"
 	{
 		// Encode "algorithmName" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -539,7 +539,7 @@ func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAl
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
 	}
-	if err := encodeRunAlgorithmNamePostRequest(request, r); err != nil {
+	if err := encodeAlgorithmV12RunAlgorithmNamePostRequest(request, r); err != nil {
 		return res, errors.Wrap(err, "encode request")
 	}
 
@@ -557,7 +557,7 @@ func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAl
 		return res, errors.Wrap(err, "edit response")
 	}
 
-	result, err := decodeRunAlgorithmNamePostResponse(resp)
+	result, err := decodeAlgorithmV12RunAlgorithmNamePostResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
