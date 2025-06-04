@@ -3,22 +3,23 @@ package sdk
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"iter"
 	"time"
 )
 
-func getRequestStub(result scheduler.ModelsRequestResult) *models.CheckpointedRequest {
+func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest {
 	return &models.CheckpointedRequest{
 		Id:             result.RequestId.Value,
 		LifecycleStage: result.Status.Value,
 	}
 }
 
-func awaitRun(client *scheduler.Client, requestId string, algorithmName string, pollInterval *time.Duration) (*scheduler.ModelsRequestResult, error) {
+func awaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
 	for {
-		result, err := client.ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), scheduler.ResultsAlgorithmNameRequestsRequestIdGetParams{
+		response, err := client.ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
 		})
@@ -27,23 +28,32 @@ func awaitRun(client *scheduler.Client, requestId string, algorithmName string, 
 			return nil, err
 		}
 
-		if getRequestStub(result).IsFinished() {
-			return result, nil
-		}
+		switch result := response.(type) {
+		case *api.ModelsRequestResult:
+			if getRequestStub(result).IsFinished() {
+				return result, nil
+			}
 
-		if pollInterval != nil {
-			time.Sleep(*pollInterval)
-		} else {
-			time.Sleep(5 * time.Second)
+			if pollInterval != nil {
+				time.Sleep(*pollInterval)
+			} else {
+				time.Sleep(5 * time.Second)
+			}
+		case *api.ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON:
+			return nil, fmt.Errorf("request %s for algorithm %s not found", requestId, algorithmName)
+		case *api.ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON:
+			return nil, fmt.Errorf("server returned BadRequest when looking up result for request %s for algorithm %s", requestId, algorithmName)
+		default:
+			return nil, fmt.Errorf("unexpected response type for request %s for algorithm %s", requestId, algorithmName)
 		}
 	}
 }
 
-func awaitRuns(client *scheduler.Client, requestIds []string, algorithmName string, pollInterval *time.Duration) ([]*scheduler.ModelsRequestResult, error) {
-	resultChannel := make(chan *scheduler.ModelsRequestResult, len(requestIds))
-	for _, requestId := range requestIds {
+func awaitRuns(client *api.Client, runs []*api.ModelsTaggedRequestResult, pollInterval *time.Duration) ([]*api.ModelsRequestResult, error) {
+	resultChannel := make(chan *api.ModelsRequestResult, len(runs))
+	for _, run := range runs {
 		go func() {
-			result, err := awaitRun(client, requestId, algorithmName, pollInterval)
+			result, err := awaitRun(client, run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
 			if err != nil {
 				close(resultChannel)
 			}
@@ -52,7 +62,7 @@ func awaitRuns(client *scheduler.Client, requestIds []string, algorithmName stri
 		}()
 	}
 
-	results := []*scheduler.ModelsRequestResult{}
+	results := []*api.ModelsRequestResult{}
 	for result := range resultChannel {
 		results = append(results, result)
 	}
@@ -60,38 +70,38 @@ func awaitRuns(client *scheduler.Client, requestIds []string, algorithmName stri
 	return results, nil
 }
 
-func AwaitRunsByTag(client *scheduler.Client, tags []string) (iter.Seq[*scheduler.ModelsRequestResult], error) {
-	runsToAwait := []scheduler.ModelsRequestResult{}
+func AwaitTaggedRuns(client *api.Client, tags []string) (iter.Seq[*api.ModelsRequestResult], error) {
+	runsToAwait := []*api.ModelsTaggedRequestResult{}
 
 	for _, tag := range tags {
-		taggedRunsResponse, err := client.ResultsTagsTagGet(context.TODO(), scheduler.ResultsTagsTagGetParams{Tag: tag})
+		taggedRunsResponse, err := client.ResultsTagsTagGet(context.TODO(), api.ResultsTagsTagGetParams{Tag: tag})
 		if err != nil {
 			return nil, err
 		}
 
 		switch taggedRunResponseType := taggedRunsResponse.(type) {
-		case *scheduler.ResultsTagsTagGetOKApplicationJSON:
+		case *api.ResultsTagsTagGetOKApplicationJSON:
 			for _, modelRequestResult := range *taggedRunResponseType {
-				runsToAwait = append(runsToAwait, modelRequestResult)
+				runsToAwait = append(runsToAwait, &modelRequestResult)
 			}
 			if err != nil {
 				return nil, err
 			}
-		case *scheduler.ResultsTagsTagGetNotFoundApplicationJSON:
+		case *api.ResultsTagsTagGetNotFoundApplicationJSON:
 			return nil, errors.New("no submissions found for tag " + tag)
-		case *scheduler.ResultsTagsTagGetBadRequestApplicationJSON:
+		case *api.ResultsTagsTagGetBadRequestApplicationJSON:
 			return nil, errors.New("server returned BadRequest request for tag " + tag)
 		default:
 			return nil, errors.New("Unhandled response type for tag " + tag)
 		}
 	}
 
-	runResults, err := awaitRuns(client, []string{}, "", nil)
+	runResults, err := awaitRuns(client, runsToAwait, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return func(yield func(requestResult *scheduler.ModelsRequestResult) bool) {
+	return func(yield func(requestResult *api.ModelsRequestResult) bool) {
 		for _, result := range runResults {
 			if !yield(result) {
 				return
