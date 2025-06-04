@@ -49,8 +49,8 @@ func awaitRun(client *api.Client, requestId string, algorithmName string, pollIn
 	}
 }
 
-func awaitRuns(client *api.Client, runs []*api.ModelsTaggedRequestResult, pollInterval *time.Duration) ([]*api.ModelsRequestResult, error) {
-	resultChannel := make(chan *api.ModelsRequestResult, len(runs))
+func awaitRuns(client *api.Client, runs []*api.ModelsTaggedRequestResult, pollInterval *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
+	resultChannel := make(chan *api.ModelsTaggedRequestResult, len(runs))
 	for _, run := range runs {
 		go func() {
 			result, err := awaitRun(client, run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
@@ -58,11 +58,32 @@ func awaitRuns(client *api.Client, runs []*api.ModelsTaggedRequestResult, pollIn
 				close(resultChannel)
 			}
 
-			resultChannel <- result
+			resultChannel <- &api.ModelsTaggedRequestResult{
+				AlgorithmName: api.OptString{
+					Value: run.AlgorithmName.Value,
+					Set:   true,
+				},
+				RequestId: api.OptString{
+					Value: result.RequestId.Value,
+					Set:   true,
+				},
+				ResultUri: api.OptString{
+					Value: result.ResultUri.Value,
+					Set:   true,
+				},
+				RunErrorMessage: api.OptString{
+					Value: result.RunErrorMessage.Value,
+					Set:   true,
+				},
+				Status: api.OptString{
+					Value: result.Status.Value,
+					Set:   true,
+				},
+			}
 		}()
 	}
 
-	results := []*api.ModelsRequestResult{}
+	results := []*api.ModelsTaggedRequestResult{}
 	for result := range resultChannel {
 		results = append(results, result)
 	}
@@ -70,7 +91,8 @@ func awaitRuns(client *api.Client, runs []*api.ModelsTaggedRequestResult, pollIn
 	return results, nil
 }
 
-func AwaitTaggedRuns(client *api.Client, tags []string) (iter.Seq[*api.ModelsRequestResult], error) {
+// AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
+func AwaitTaggedRuns(client *api.Client, tags []string, algorithmName *string, pollInterval *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
 	runsToAwait := []*api.ModelsTaggedRequestResult{}
 
 	for _, tag := range tags {
@@ -82,7 +104,11 @@ func AwaitTaggedRuns(client *api.Client, tags []string) (iter.Seq[*api.ModelsReq
 		switch taggedRunResponseType := taggedRunsResponse.(type) {
 		case *api.ResultsTagsTagGetOKApplicationJSON:
 			for _, modelRequestResult := range *taggedRunResponseType {
-				runsToAwait = append(runsToAwait, &modelRequestResult)
+				// include the run if algorithm name is not provided
+				// if provided, only include those that have a matching name
+				if algorithmName == nil || modelRequestResult.AlgorithmName.Value == *algorithmName {
+					runsToAwait = append(runsToAwait, &modelRequestResult)
+				}
 			}
 			if err != nil {
 				return nil, err
@@ -96,12 +122,12 @@ func AwaitTaggedRuns(client *api.Client, tags []string) (iter.Seq[*api.ModelsReq
 		}
 	}
 
-	runResults, err := awaitRuns(client, runsToAwait, nil)
+	runResults, err := awaitRuns(client, runsToAwait, pollInterval)
 	if err != nil {
 		return nil, err
 	}
 
-	return func(yield func(requestResult *api.ModelsRequestResult) bool) {
+	return func(yield func(requestResult *api.ModelsTaggedRequestResult) bool) {
 		for _, result := range runResults {
 			if !yield(result) {
 				return
