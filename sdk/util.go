@@ -6,6 +6,7 @@ import (
 	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"iter"
+	"net/http"
 	"time"
 )
 
@@ -21,12 +22,12 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 	}
 }
 
-func awaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
+func awaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (*api.ModelsRequestResult, error) {
 	for {
 		response, err := client.ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
-		})
+		}, requestOptions...)
 
 		if err != nil {
 			return nil, err
@@ -53,7 +54,7 @@ func awaitRun(client *api.Client, requestId string, algorithmName string, pollIn
 	}
 }
 
-func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
+func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, requestOptions ...api.RequestOption) ([]*api.ModelsTaggedRequestResult, error) {
 	resultChannel := make(chan *AwaitResult)
 	for run, runErr := range runs {
 		go func() {
@@ -65,7 +66,7 @@ func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult
 				close(resultChannel)
 			}
 
-			result, err := awaitRun(client, run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
+			result, err := awaitRun(client, run.RequestId.Value, run.AlgorithmName.Value, pollInterval, requestOptions...)
 			if err != nil {
 				resultChannel <- &AwaitResult{
 					Error:  err,
@@ -113,10 +114,10 @@ func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult
 	return results, nil
 }
 
-func getRuns(client *api.Client, tags []string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
+func getRuns(client *api.Client, tags []string, algorithmName *string, requestOptions ...api.RequestOption) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
 	return func(yield func(requestResult *api.ModelsTaggedRequestResult, err error) bool) {
 		for _, tag := range tags {
-			taggedRunsResponse, err := client.ResultsTagsTagGet(context.TODO(), api.ResultsTagsTagGetParams{Tag: tag})
+			taggedRunsResponse, err := client.ResultsTagsTagGet(context.TODO(), api.ResultsTagsTagGetParams{Tag: tag}, requestOptions...)
 			if err != nil {
 				if !yield(nil, err) {
 					return
@@ -162,10 +163,10 @@ func GetRunResults(client *api.Client, tag string, algorithmName *string) iter.S
 }
 
 // AwaitRun awaits results for a submission identified by a request id and an algorithm name
-func AwaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
+func AwaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (*api.ModelsRequestResult, error) {
 	resultChannel := make(chan *api.ModelsRequestResult, 1)
 	go func() {
-		result, err := awaitRun(client, requestId, algorithmName, pollInterval)
+		result, err := awaitRun(client, requestId, algorithmName, pollInterval, requestOptions...)
 		if err != nil {
 			close(resultChannel)
 		}
@@ -179,8 +180,8 @@ func AwaitRun(client *api.Client, requestId string, algorithmName string, pollIn
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func AwaitTaggedRuns(client *api.Client, tags []string, algorithmName *string, pollInterval *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
-	runResults, err := awaitRuns(client, getRuns(client, tags, algorithmName), pollInterval)
+func AwaitTaggedRuns(client *api.Client, tags []string, algorithmName *string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+	runResults, err := awaitRuns(client, getRuns(client, tags, algorithmName), pollInterval, requestOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -192,4 +193,12 @@ func AwaitTaggedRuns(client *api.Client, tags []string, algorithmName *string, p
 			}
 		}
 	}, nil
+}
+
+// GetAuthOption provides a request modifier option that sets Auth header value
+func GetAuthOption(authHeaderValue string) api.RequestOption {
+	return api.WithEditRequest(func(req *http.Request) error {
+		req.Header.Set("Authorization", authHeaderValue)
+		return nil
+	})
 }

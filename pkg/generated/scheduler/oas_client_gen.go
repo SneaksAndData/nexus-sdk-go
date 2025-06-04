@@ -4,6 +4,7 @@ package api
 
 import (
 	"context"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -13,6 +14,64 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/uri"
 )
+
+type requestConfig struct {
+	Client       ht.Client
+	ServerURL    *url.URL
+	EditRequest  func(req *http.Request) error
+	EditResponse func(resp *http.Response) error
+}
+
+func (cfg *requestConfig) setDefaults(c baseClient) {
+	if cfg.Client == nil {
+		cfg.Client = c.cfg.Client
+	}
+}
+
+func (cfg *requestConfig) onRequest(req *http.Request) error {
+	if fn := cfg.EditRequest; fn != nil {
+		return fn(req)
+	}
+	return nil
+}
+
+func (cfg *requestConfig) onResponse(resp *http.Response) error {
+	if fn := cfg.EditResponse; fn != nil {
+		return fn(resp)
+	}
+	return nil
+}
+
+// RequestOption defines options for request.
+type RequestOption func(cfg *requestConfig)
+
+// WithRequestClient sets client for request.
+func WithRequestClient(client ht.Client) RequestOption {
+	return func(cfg *requestConfig) {
+		cfg.Client = client
+	}
+}
+
+// WithServerURL sets client for request.
+func WithServerURL(u *url.URL) RequestOption {
+	return func(cfg *requestConfig) {
+		cfg.ServerURL = u
+	}
+}
+
+// WithEditRequest sets function to edit request.
+func WithEditRequest(fn func(req *http.Request) error) RequestOption {
+	return func(cfg *requestConfig) {
+		cfg.EditRequest = fn
+	}
+}
+
+// WithEditResponse sets function to edit response.
+func WithEditResponse(fn func(resp *http.Response) error) RequestOption {
+	return func(cfg *requestConfig) {
+		cfg.EditResponse = fn
+	}
+}
 
 func trimTrailingSlashes(u *url.URL) {
 	u.Path = strings.TrimRight(u.Path, "/")
@@ -26,31 +85,31 @@ type Invoker interface {
 	// Retrieves checkpointed metadata for a run.
 	//
 	// GET /metadata/{algorithmName}/requests/{requestId}
-	MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams) (MetadataAlgorithmNameRequestsRequestIdGetRes, error)
+	MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (MetadataAlgorithmNameRequestsRequestIdGetRes, error)
 	// PayloadAlgorithmNameRequestsRequestIdGet invokes GET /payload/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves payload sent by the client for the provided run.
 	//
 	// GET /payload/{algorithmName}/requests/{requestId}
-	PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams) (PayloadAlgorithmNameRequestsRequestIdGetRes, error)
+	PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (PayloadAlgorithmNameRequestsRequestIdGetRes, error)
 	// ResultsAlgorithmNameRequestsRequestIdGet invokes GET /results/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves a result for the provided run.
 	//
 	// GET /results/{algorithmName}/requests/{requestId}
-	ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams) (ResultsAlgorithmNameRequestsRequestIdGetRes, error)
+	ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (ResultsAlgorithmNameRequestsRequestIdGetRes, error)
 	// ResultsTagsTagGet invokes GET /results/tags/{tag} operation.
 	//
 	// Read results of all runs with a matching tag.
 	//
 	// GET /results/tags/{tag}
-	ResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams) (ResultsTagsTagGetRes, error)
+	ResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams, options ...RequestOption) (ResultsTagsTagGetRes, error)
 	// RunAlgorithmNamePost invokes POST /run/{algorithmName} operation.
 	//
 	// Accepts an algorithm payload and places it into a scheduling queue.
 	//
 	// POST /run/{algorithmName}
-	RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams) (RunAlgorithmNamePostRes, error)
+	RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams, options ...RequestOption) (RunAlgorithmNamePostRes, error)
 }
 
 // Client implements OAS client.
@@ -77,34 +136,29 @@ func NewClient(serverURL string, opts ...ClientOption) (*Client, error) {
 	}, nil
 }
 
-type serverURLKey struct{}
-
-// WithServerURL sets context key to override server URL.
-func WithServerURL(ctx context.Context, u *url.URL) context.Context {
-	return context.WithValue(ctx, serverURLKey{}, u)
-}
-
-func (c *Client) requestURL(ctx context.Context) *url.URL {
-	u, ok := ctx.Value(serverURLKey{}).(*url.URL)
-	if !ok {
-		return c.serverURL
-	}
-	return u
-}
-
 // MetadataAlgorithmNameRequestsRequestIdGet invokes GET /metadata/{algorithmName}/requests/{requestId} operation.
 //
 // Retrieves checkpointed metadata for a run.
 //
 // GET /metadata/{algorithmName}/requests/{requestId}
-func (c *Client) MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams) (MetadataAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendMetadataAlgorithmNameRequestsRequestIdGet(ctx, params)
+func (c *Client) MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (MetadataAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendMetadataAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams) (res MetadataAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params MetadataAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res MetadataAlgorithmNameRequestsRequestIdGetRes, err error) {
 
-	u := uri.Clone(c.requestURL(ctx))
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
 	var pathParts [4]string
 	pathParts[0] = "/metadata/"
 	{
@@ -151,11 +205,19 @@ func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Conte
 		return res, errors.Wrap(err, "create request")
 	}
 
-	resp, err := c.cfg.Client.Do(r)
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
 	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
 
 	result, err := decodeMetadataAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
@@ -170,14 +232,24 @@ func (c *Client) sendMetadataAlgorithmNameRequestsRequestIdGet(ctx context.Conte
 // Retrieves payload sent by the client for the provided run.
 //
 // GET /payload/{algorithmName}/requests/{requestId}
-func (c *Client) PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams) (PayloadAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendPayloadAlgorithmNameRequestsRequestIdGet(ctx, params)
+func (c *Client) PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (PayloadAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendPayloadAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams) (res PayloadAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params PayloadAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res PayloadAlgorithmNameRequestsRequestIdGetRes, err error) {
 
-	u := uri.Clone(c.requestURL(ctx))
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
 	var pathParts [4]string
 	pathParts[0] = "/payload/"
 	{
@@ -224,11 +296,19 @@ func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 		return res, errors.Wrap(err, "create request")
 	}
 
-	resp, err := c.cfg.Client.Do(r)
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
 	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
 
 	result, err := decodePayloadAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
@@ -243,14 +323,24 @@ func (c *Client) sendPayloadAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 // Retrieves a result for the provided run.
 //
 // GET /results/{algorithmName}/requests/{requestId}
-func (c *Client) ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams) (ResultsAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendResultsAlgorithmNameRequestsRequestIdGet(ctx, params)
+func (c *Client) ResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (ResultsAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendResultsAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams) (res ResultsAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params ResultsAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res ResultsAlgorithmNameRequestsRequestIdGetRes, err error) {
 
-	u := uri.Clone(c.requestURL(ctx))
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
 	var pathParts [4]string
 	pathParts[0] = "/results/"
 	{
@@ -297,11 +387,19 @@ func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 		return res, errors.Wrap(err, "create request")
 	}
 
-	resp, err := c.cfg.Client.Do(r)
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
 	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
 
 	result, err := decodeResultsAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
@@ -316,14 +414,24 @@ func (c *Client) sendResultsAlgorithmNameRequestsRequestIdGet(ctx context.Contex
 // Read results of all runs with a matching tag.
 //
 // GET /results/tags/{tag}
-func (c *Client) ResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams) (ResultsTagsTagGetRes, error) {
-	res, err := c.sendResultsTagsTagGet(ctx, params)
+func (c *Client) ResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams, options ...RequestOption) (ResultsTagsTagGetRes, error) {
+	res, err := c.sendResultsTagsTagGet(ctx, params, options...)
 	return res, err
 }
 
-func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams) (res ResultsTagsTagGetRes, err error) {
+func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTagGetParams, requestOptions ...RequestOption) (res ResultsTagsTagGetRes, err error) {
 
-	u := uri.Clone(c.requestURL(ctx))
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
 	var pathParts [2]string
 	pathParts[0] = "/results/tags/"
 	{
@@ -351,11 +459,19 @@ func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTa
 		return res, errors.Wrap(err, "create request")
 	}
 
-	resp, err := c.cfg.Client.Do(r)
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
 	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
 
 	result, err := decodeResultsTagsTagGetResponse(resp)
 	if err != nil {
@@ -370,12 +486,12 @@ func (c *Client) sendResultsTagsTagGet(ctx context.Context, params ResultsTagsTa
 // Accepts an algorithm payload and places it into a scheduling queue.
 //
 // POST /run/{algorithmName}
-func (c *Client) RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams) (RunAlgorithmNamePostRes, error) {
-	res, err := c.sendRunAlgorithmNamePost(ctx, request, params)
+func (c *Client) RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams, options ...RequestOption) (RunAlgorithmNamePostRes, error) {
+	res, err := c.sendRunAlgorithmNamePost(ctx, request, params, options...)
 	return res, err
 }
 
-func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams) (res RunAlgorithmNamePostRes, err error) {
+func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params RunAlgorithmNamePostParams, requestOptions ...RequestOption) (res RunAlgorithmNamePostRes, err error) {
 	// Validate request before sending.
 	if err := func() error {
 		if err := request.Validate(); err != nil {
@@ -386,7 +502,17 @@ func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAl
 		return res, errors.Wrap(err, "validate")
 	}
 
-	u := uri.Clone(c.requestURL(ctx))
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
 	var pathParts [2]string
 	pathParts[0] = "/run/"
 	{
@@ -417,11 +543,19 @@ func (c *Client) sendRunAlgorithmNamePost(ctx context.Context, request *ModelsAl
 		return res, errors.Wrap(err, "encode request")
 	}
 
-	resp, err := c.cfg.Client.Do(r)
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
 	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
 
 	result, err := decodeRunAlgorithmNamePostResponse(resp)
 	if err != nil {
