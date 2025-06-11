@@ -35,11 +35,11 @@ jobs:
       
       - name: Install Latest Nexus CRD
         run: |
-          helm install nexus-crd --create-namespace --version v0.0.0-3-ga307185 oci://ghcr.io/sneaksanddata/helm/nexus-crd
+          helm install nexus-crd --namespace nexus --create-namespace --version v0.0.0-3-ga307185 oci://ghcr.io/sneaksanddata/helm/nexus-crd
           
       - name: Install Latest Nexus
         run: |
-          helm install nexus oci://ghcr.io/sneaksanddata/helm/nexus
+          helm install nexus --namespace nexus --create-namespace --version v0.0.0-23-gdbc882c oci://ghcr.io/sneaksanddata/helm/nexus
           
 # WIP - algorithm YAML needs to be deployed for tests for work          
 #      - name: Test
