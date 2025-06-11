@@ -6,13 +6,34 @@ import (
 	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"iter"
-	"net/http"
+	"k8s.io/klog/v2"
 	"time"
 )
 
 type AwaitResult struct {
 	Result *api.ModelsTaggedRequestResult
 	Error  error
+}
+
+type NexusSchedulerClient struct {
+	ApiClient      *api.Client
+	RequestOptions *[]api.RequestOption
+	logger         *klog.Logger
+}
+
+func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *[]api.RequestOption) *NexusSchedulerClient {
+	client, err := api.NewClient(schedulerUrl)
+
+	if err != nil {
+		logger.Error(err, "unable to initialize Nexus client")
+		klog.FlushAndExit(klog.ExitFlushTimeout, 1)
+	}
+
+	return &NexusSchedulerClient{
+		ApiClient:      client,
+		RequestOptions: options,
+		logger:         logger,
+	}
 }
 
 func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest {
@@ -22,12 +43,12 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 	}
 }
 
-func awaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
 	for {
-		response, err := client.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
+		response, err := nc.ApiClient.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
-		}, requestOptions...)
+		}, *nc.RequestOptions...)
 
 		if err != nil {
 			return nil, err
@@ -54,7 +75,7 @@ func awaitRun(client *api.Client, requestId string, algorithmName string, pollIn
 	}
 }
 
-func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, requestOptions ...api.RequestOption) ([]*api.ModelsTaggedRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
 	resultChannel := make(chan *AwaitResult)
 	for run, runErr := range runs {
 		go func() {
@@ -66,7 +87,7 @@ func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult
 				close(resultChannel)
 			}
 
-			result, err := awaitRun(client, run.RequestId.Value, run.AlgorithmName.Value, pollInterval, requestOptions...)
+			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
 			if err != nil {
 				resultChannel <- &AwaitResult{
 					Error:  err,
@@ -114,10 +135,10 @@ func awaitRuns(client *api.Client, runs iter.Seq2[*api.ModelsTaggedRequestResult
 	return results, nil
 }
 
-func getRuns(client *api.Client, tags []string, algorithmName *string, requestOptions ...api.RequestOption) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
+func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
 	return func(yield func(requestResult *api.ModelsTaggedRequestResult, err error) bool) {
 		for _, tag := range tags {
-			taggedRunsResponse, err := client.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, requestOptions...)
+			taggedRunsResponse, err := nc.ApiClient.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, *nc.RequestOptions...)
 			if err != nil {
 				if !yield(nil, err) {
 					return
@@ -158,15 +179,15 @@ func getRuns(client *api.Client, tags []string, algorithmName *string, requestOp
 }
 
 // GetRunResults retrieves run results for all runs with a matching tag, and optionally, an algorithm name
-func GetRunResults(client *api.Client, tag string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
-	return getRuns(client, []string{tag}, algorithmName)
+func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
+	return nc.getRuns([]string{tag}, algorithmName)
 }
 
 // AwaitRun awaits results for a submission identified by a request id and an algorithm name
-func AwaitRun(client *api.Client, requestId string, algorithmName string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
 	resultChannel := make(chan *api.ModelsRequestResult, 1)
 	go func() {
-		result, err := awaitRun(client, requestId, algorithmName, pollInterval, requestOptions...)
+		result, err := nc.awaitRun(requestId, algorithmName, pollInterval)
 		if err != nil {
 			close(resultChannel)
 		}
@@ -180,8 +201,8 @@ func AwaitRun(client *api.Client, requestId string, algorithmName string, pollIn
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func AwaitTaggedRuns(client *api.Client, tags []string, algorithmName *string, pollInterval *time.Duration, requestOptions ...api.RequestOption) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
-	runResults, err := awaitRuns(client, getRuns(client, tags, algorithmName), pollInterval, requestOptions...)
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval)
 	if err != nil {
 		return nil, err
 	}
@@ -193,12 +214,4 @@ func AwaitTaggedRuns(client *api.Client, tags []string, algorithmName *string, p
 			}
 		}
 	}, nil
-}
-
-// GetAuthOption provides a request modifier option that sets Auth header value
-func GetAuthOption(authHeaderValue string) api.RequestOption {
-	return api.WithEditRequest(func(req *http.Request) error {
-		req.Header.Set("Authorization", authHeaderValue)
-		return nil
-	})
 }

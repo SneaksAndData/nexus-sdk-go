@@ -10,6 +10,10 @@ require (
 )
 
 require (
+	github.com/DataDog/datadog-api-client-go/v2 v2.33.0 // indirect
+	github.com/DataDog/datadog-go/v5 v5.5.0 // indirect
+	github.com/DataDog/zstd v1.5.2 // indirect
+	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/aws/smithy-go v1.22.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
@@ -22,6 +26,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gocql/gocql v0.0.0-20211015133455-b225f9b53fa1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
@@ -39,6 +44,10 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
+	github.com/samber/lo v1.47.0 // indirect
+	github.com/samber/slog-common v0.17.0 // indirect
+	github.com/samber/slog-datadog/v2 v2.8.0 // indirect
+	github.com/samber/slog-multi v1.2.4 // indirect
 	github.com/scylladb/go-reflectx v1.0.1 // indirect
 	github.com/scylladb/gocqlx/v3 v3.0.1 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
