@@ -35,7 +35,7 @@ jobs:
       
       - name: Install Latest Nexus CRD
         run: |
-          helm install --create-namespace nexus-crd oci://ghcr.io/sneaksanddata/helm/nexus-crd
+          helm install nexus-crd --create-namespace --version v0.0.0-3-ga307185 oci://ghcr.io/sneaksanddata/helm/nexus-crd
           
       - name: Install Latest Nexus
         run: |
