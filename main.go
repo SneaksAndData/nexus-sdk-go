@@ -1,5 +1,9 @@
 package main
 
+//#cgo LDFLAGS:
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
@@ -9,6 +13,7 @@ import (
 	"k8s.io/klog/v2"
 	"runtime"
 	"strings"
+	"unsafe"
 )
 
 var pinner = runtime.Pinner{}
@@ -42,6 +47,25 @@ func GetRunResults(tag *C.char) *C.char {
 
 	return C.CString(strings.Join(results, ","))
 }
+
+//export GetRunResultsArray
+func GetRunResultsArray(tag *C.char) **C.char {
+	results := []string{}
+	for result, _ := range client.GetRunResults(C.GoString(tag), nil) {
+		results = append(results, result.RequestId.Value)
+	}
+
+	clangResults := C.malloc(C.size_t(len(results)) * C.size_t(unsafe.Sizeof(uintptr(0))))
+	resultsPtrArray := (*[10]*C.char)(clangResults)
+
+	for i, result := range results {
+		resultsPtrArray[i] = C.CString(result)
+	}
+
+	return (**C.char)(clangResults)
+}
+
+// TODO: memory release
 
 func main() {
 
