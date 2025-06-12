@@ -7,6 +7,7 @@ import (
 	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"iter"
 	"k8s.io/klog/v2"
+	"runtime"
 	"time"
 )
 
@@ -21,7 +22,7 @@ type NexusSchedulerClient struct {
 	logger         *klog.Logger
 }
 
-func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *[]api.RequestOption) *NexusSchedulerClient {
+func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *[]api.RequestOption, pinner *runtime.Pinner) *NexusSchedulerClient {
 	client, err := api.NewClient(schedulerUrl)
 
 	if err != nil {
@@ -29,11 +30,20 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 		klog.FlushAndExit(klog.ExitFlushTimeout, 1)
 	}
 
-	return &NexusSchedulerClient{
+	result := &NexusSchedulerClient{
 		ApiClient:      client,
 		RequestOptions: options,
 		logger:         logger,
 	}
+
+	if pinner != nil {
+		pinner.Pin(client)
+		pinner.Pin(logger)
+		pinner.Pin(options)
+		pinner.Pin(result)
+	}
+
+	return result
 }
 
 func (nc *NexusSchedulerClient) getRequestOptions() []api.RequestOption {

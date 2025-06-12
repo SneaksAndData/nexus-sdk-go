@@ -26,7 +26,7 @@ func newFixture(t *testing.T) *fixture {
 	logger := klog.FromContext(context.TODO())
 
 	f.logger = &logger
-	f.client = NewNexusSchedulerClient(f.url, f.logger, nil)
+	f.client = NewNexusSchedulerClient(f.url, f.logger, nil, nil)
 
 	return f
 }
