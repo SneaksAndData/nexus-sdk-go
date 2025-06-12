@@ -36,6 +36,14 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 	}
 }
 
+func (nc *NexusSchedulerClient) getRequestOptions() []api.RequestOption {
+	if nc.RequestOptions == nil {
+		return []api.RequestOption{}
+	}
+
+	return *nc.RequestOptions
+}
+
 func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest {
 	return &models.CheckpointedRequest{
 		Id:             result.RequestId.Value,
@@ -48,7 +56,7 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 		response, err := nc.ApiClient.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
-		}, *nc.RequestOptions...)
+		}, nc.getRequestOptions()...)
 
 		if err != nil {
 			return nil, err
@@ -138,7 +146,7 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
 	return func(yield func(requestResult *api.ModelsTaggedRequestResult, err error) bool) {
 		for _, tag := range tags {
-			taggedRunsResponse, err := nc.ApiClient.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, *nc.RequestOptions...)
+			taggedRunsResponse, err := nc.ApiClient.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, nc.getRequestOptions()...)
 			if err != nil {
 				if !yield(nil, err) {
 					return

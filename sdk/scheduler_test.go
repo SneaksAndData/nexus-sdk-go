@@ -16,8 +16,10 @@ type fixture struct {
 }
 
 func newFixture(t *testing.T) *fixture {
-	f := &fixture{}
-	f.t = t
+	f := &fixture{
+		url: "http://localhost:8080",
+		t:   t,
+	}
 	appLogger, _ := telemetry.ConfigureLogger(context.TODO(), map[string]string{}, "info")
 	klog.SetSlogLogger(appLogger)
 
