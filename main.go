@@ -70,3 +70,15 @@ func GetRunResultsArray(tag *C.char) **C.char {
 func main() {
 
 }
+
+//from ctypes import *
+//import ctypes
+//lib = cdll.LoadLibrary("./nexus_sdk.so")
+//lib.CreateSchedulerClient(bytes("http://localhost:8080", encoding='utf-8'), bytes("", encoding='utf-8'))
+//r1 = lib.GetRunResultsArray
+//r1.restype = ctypes.POINTER(ctypes.c_char_p)
+//results = r1(b"abc")
+//for r in results:
+//if r is None:
+//break
+//print(r)
