@@ -4,6 +4,13 @@ package main
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <string.h>
+//typedef struct RunResult {
+//char* algorithm;
+//char* request_id;
+//char* result_uri;
+//char* run_error_message;
+//char* status;
+//} RunResult;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
@@ -12,9 +19,10 @@ import (
 	"github.com/SneaksAndData/nexus-sdk-go/sdk"
 	"k8s.io/klog/v2"
 	"runtime"
-	"strings"
 	"unsafe"
 )
+
+// for those in need: https://fluhus.github.io/snopher/
 
 var pinner = runtime.Pinner{}
 var client *sdk.NexusSchedulerClient
@@ -39,30 +47,31 @@ func CreateSchedulerClient(url *C.char, token *C.char) {
 }
 
 //export GetRunResults
-func GetRunResults(tag *C.char) *C.char {
-	results := []string{}
-	for result, _ := range client.GetRunResults(C.GoString(tag), nil) {
-		results = append(results, result.RequestId.Value)
-	}
-
-	return C.CString(strings.Join(results, ","))
-}
-
-//export GetRunResultsArray
-func GetRunResultsArray(tag *C.char) **C.char {
-	results := []string{}
-	for result, _ := range client.GetRunResults(C.GoString(tag), nil) {
-		results = append(results, result.RequestId.Value)
+func GetRunResults(tag *C.char) **C.RunResult {
+	results := []*api.ModelsTaggedRequestResult{}
+	for result, err := range client.GetRunResults(C.GoString(tag), nil) {
+		if result != nil {
+			results = append(results, result)
+		} else {
+			client.Logger.Error(err, "error retrieving results")
+		}
 	}
 
 	clangResults := C.malloc(C.size_t(len(results)) * C.size_t(unsafe.Sizeof(uintptr(0))))
-	resultsPtrArray := (*[10]*C.char)(clangResults)
+	// this is just a type cast, assuming we are way below 10000 results anyway
+	resultsPtrArray := (*[10000]*C.RunResult)(clangResults)
 
 	for i, result := range results {
-		resultsPtrArray[i] = C.CString(result)
+		resultsPtrArray[i] = &C.RunResult{
+			algorithm:         C.CString(result.AlgorithmName.Value),
+			request_id:        C.CString(result.RequestId.Value),
+			result_uri:        C.CString(result.ResultUri.Value),
+			run_error_message: C.CString(result.RunErrorMessage.Value),
+			status:            C.CString(result.Status.Value),
+		}
 	}
 
-	return (**C.char)(clangResults)
+	return (**C.RunResult)(clangResults)
 }
 
 // TODO: memory release
@@ -70,15 +79,3 @@ func GetRunResultsArray(tag *C.char) **C.char {
 func main() {
 
 }
-
-//from ctypes import *
-//import ctypes
-//lib = cdll.LoadLibrary("./nexus_sdk.so")
-//lib.CreateSchedulerClient(bytes("http://localhost:8080", encoding='utf-8'), bytes("", encoding='utf-8'))
-//r1 = lib.GetRunResultsArray
-//r1.restype = ctypes.POINTER(ctypes.c_char_p)
-//results = r1(b"abc")
-//for r in results:
-//if r is None:
-//break
-//print(r)

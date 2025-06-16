@@ -19,7 +19,7 @@ type AwaitResult struct {
 type NexusSchedulerClient struct {
 	ApiClient      *api.Client
 	RequestOptions *[]api.RequestOption
-	logger         *klog.Logger
+	Logger         *klog.Logger
 }
 
 func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *[]api.RequestOption, pinner *runtime.Pinner) *NexusSchedulerClient {
@@ -33,7 +33,7 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 	result := &NexusSchedulerClient{
 		ApiClient:      client,
 		RequestOptions: options,
-		logger:         logger,
+		Logger:         logger,
 	}
 
 	if pinner != nil {
@@ -158,9 +158,8 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 		for _, tag := range tags {
 			taggedRunsResponse, err := nc.ApiClient.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, nc.getRequestOptions()...)
 			if err != nil {
-				if !yield(nil, err) {
-					return
-				}
+				yield(nil, err)
+				return
 			}
 
 			switch taggedRunResponseType := taggedRunsResponse.(type) {
