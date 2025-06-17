@@ -30,7 +30,7 @@ jobs:
         run: GOOS=linux GOARCH=amd64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_amd64.so main.go
 
       - name: Create Release
-        uses: SneaksAndData/github-actions/semver_release@v0.1.10
+        uses: SneaksAndData/github-actions/semver_release@v0.1.11
         with:
           major_v: 0
           minor_v: 1
