@@ -1,4 +1,4 @@
-name: Run tests with coverage
+name: Code Quality
 run-name: Validate ${{github.ref_name}} by @${{ github.actor }}
 
 on:
