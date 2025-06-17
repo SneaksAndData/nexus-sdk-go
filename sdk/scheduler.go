@@ -46,6 +46,10 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 	return result
 }
 
+func (nc *NexusSchedulerClient) RefreshAuth(token string) {
+	nc.RequestOptions = &[]api.RequestOption{GetAuthOption(token)}
+}
+
 func (nc *NexusSchedulerClient) getRequestOptions() []api.RequestOption {
 	if nc.RequestOptions == nil {
 		return []api.RequestOption{}

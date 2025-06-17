@@ -74,6 +74,11 @@ func GetRunResults(tag *C.char) **C.RunResult {
 	return (**C.RunResult)(clangResults)
 }
 
+//export UpdateToken
+func UpdateToken(token *C.char) {
+	client.RefreshAuth(C.GoString(token))
+}
+
 // TODO: memory release
 
 func main() {
