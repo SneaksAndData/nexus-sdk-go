@@ -101,7 +101,7 @@ jobs:
         run: |
           go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
           tar -czf nexus_sdk_darwin_arm64.tar.gz dist/
-          mkdir release && mv nexus_sdk_linux_arm64.tar.gz release/
+          mkdir release && mv nexus_sdk_darwin_arm64.tar.gz release/
 
       - name: Upload asset to Release
         env:
