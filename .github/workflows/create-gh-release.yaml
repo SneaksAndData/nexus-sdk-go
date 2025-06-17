@@ -28,14 +28,17 @@ jobs:
         run: go mod vendor
 
       - name: Build linux-amd64
-        run: GOOS=linux GOARCH=amd64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_amd64.so main.go
+        run: |
+          GOOS=linux GOARCH=amd64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_amd64.so main.go
+          tar -czf nexus_sdk_linux_amd64.tar.gz dist/
+          mkdir release && mv nexus_sdk_linux_amd64.tar.gz release/
 
       - name: Create Release
         uses: SneaksAndData/github-actions/semver_release@v0.1.11
         with:
           major_v: 0
           minor_v: 1
-          assets_path: dist
+          assets_path: release
         id: release
 
   linux_arm64:
@@ -61,13 +64,16 @@ jobs:
         run: go mod vendor
 
       - name: Build linux-arm64
-        run: GOOS=linux GOARCH=arm64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_arm64.so main.go
+        run: |
+          GOOS=linux GOARCH=arm64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_arm64.so main.go
+          tar -czf nexus_sdk_linux_arm64.tar.gz dist/
+          mkdir release && mv nexus_sdk_linux_arm64.tar.gz release/
 
       - name: Upload asset to Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload ${{needs.base_release.outputs.version}} dist/*.*
+          gh release upload ${{needs.base_release.outputs.version}} release/*.*
 
   macos:
     name: Add MacOS Silicon build
@@ -92,10 +98,13 @@ jobs:
         run: go mod vendor
 
       - name: Build darwin-arm64
-        run: go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
+        run: |
+          go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
+          tar -czf nexus_sdk_darwin_arm64.tar.gz dist/
+          mkdir release && mv nexus_sdk_linux_arm64.tar.gz release/
 
       - name: Upload asset to Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload ${{needs.base_release.outputs.version}} dist/*.*
+          gh release upload ${{needs.base_release.outputs.version}} release/*.*
