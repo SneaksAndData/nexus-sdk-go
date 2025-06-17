@@ -36,9 +36,9 @@ jobs:
       - name: Build darwin-arm64
         run: GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
           
-      - name: Create Release
-        uses: SneaksAndData/github-actions/semver_release@v0.1.10
-        with:
-          major_v: 0
-          minor_v: 1
-          assets_path: dist
+#      - name: Create Release
+#        uses: SneaksAndData/github-actions/semver_release@v0.1.10
+#        with:
+#          major_v: 0
+#          minor_v: 1
+#          assets_path: dist
