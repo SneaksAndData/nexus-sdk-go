@@ -7,7 +7,7 @@ jobs:
   base_release:
     name: Create Base Release
     runs-on: ubuntu-latest
-    #if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     outputs:
       version: ${{ steps.release.outputs.version }}
 
@@ -42,7 +42,7 @@ jobs:
     name: Add ARM64 build
     needs: [ base_release ]
     runs-on: ubuntu-24.04-arm
-    #if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -73,7 +73,7 @@ jobs:
     name: Add MacOS Silicon build
     needs: [ base_release ]
     runs-on: macos-13
-    #if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
