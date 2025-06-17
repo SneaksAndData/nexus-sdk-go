@@ -28,7 +28,7 @@ jobs:
 
       - name: Build linux-amd64
         run: GOOS=linux GOARCH=amd64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_amd64.so main.go
-          
+
       - name: Create Release
         uses: SneaksAndData/github-actions/semver_release@v0.1.10
         with:
@@ -39,7 +39,7 @@ jobs:
 
   linux_arm64:
     name: Add ARM64 build
-    needs: [base_release]
+    needs: [ base_release ]
     runs-on: ubuntu-24.04-arm
     #if: ${{ github.ref == 'refs/heads/main' }}
 
@@ -62,15 +62,14 @@ jobs:
       - name: Build linux-arm64
         run: GOOS=linux GOARCH=arm64 go build -v -buildmode=c-shared -o dist/nexus_sdk_linux_arm64.so main.go
 
-
-#      - name: Upload asset to Release
-#        run: |
-#          gh release upload ${{needs.base_release.outputs.version}} dist/*.*
+      - name: Upload asset to Release
+        run: |
+          gh release upload ${{needs.base_release.outputs.version}} dist/*.*
 
   macos:
     name: Add MacOS Silicon build
-    needs: [base_release]
-    runs-on: 	macos-13
+    needs: [ base_release ]
+    runs-on: macos-13
     #if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
@@ -90,8 +89,8 @@ jobs:
         run: go mod vendor
 
       - name: Build darwin-arm64
-        run: GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
+        run: go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
 
-#      - name: Upload asset to Release
-#        run: |
-#          gh release upload ${{needs.base_release.outputs.version}} dist/*.*
+      - name: Upload asset to Release
+        run: |
+          gh release upload ${{needs.base_release.outputs.version}} dist/*.*
