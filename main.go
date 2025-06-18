@@ -79,6 +79,15 @@ func UpdateToken(token *C.char) {
 	client.RefreshAuth(C.GoString(token))
 }
 
+//export FreeRunResult
+func FreeRunResult(result C.RunResult) {
+	C.free(unsafe.Pointer(result.algorithm))
+	C.free(unsafe.Pointer(result.request_id))
+	C.free(unsafe.Pointer(result.result_uri))
+	C.free(unsafe.Pointer(result.run_error_message))
+	C.free(unsafe.Pointer(result.status))
+}
+
 // TODO: memory release
 
 func main() {
