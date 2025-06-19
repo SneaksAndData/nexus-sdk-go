@@ -183,13 +183,11 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 					}
 				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain:
-				if !yield(nil, fmt.Errorf("no submissions found for tag %s", tag)) {
-					return
-				}
-			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain:
-				if !yield(nil, fmt.Errorf("server returned BadRequest request for tag %s", tag)) {
-					return
-				}
+				yield(nil, nil)
+				return
+			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain:
+				yield(nil, fmt.Errorf("server returned BadRequest request for tag %s", tag))
+				return
 			default:
 				if !yield(nil, fmt.Errorf("unhandled response type for tag %s", tag)) {
 					return

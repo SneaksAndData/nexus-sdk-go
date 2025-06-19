@@ -197,6 +197,28 @@ type AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON []ModelsTaggedRequest
 func (*AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
 }
 
+type AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON string
+
+func (*AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
+type AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain) algorithmV12ResultsTagsRequestTagGetRes() {
+}
+
 type AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON map[string]string
 
 func (s *AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON) init() AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON {

@@ -302,6 +302,46 @@ func (s *AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON) UnmarshalJSON(da
 	return s.Decode(d)
 }
 
+// Encode encodes AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON as json.
+func (s AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := string(s)
+
+	e.Str(unwrapped)
+}
+
+// Decode decodes AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON from json.
+func (s *AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON to nil")
+	}
+	var unwrapped string
+	if err := func() error {
+		v, err := d.Str()
+		unwrapped = string(v)
+		if err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode implements json.Marshaler.
 func (s AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON) Encode(e *jx.Encoder) {
 	e.ObjStart()

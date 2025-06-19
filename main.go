@@ -52,8 +52,14 @@ func GetRunResults(tag *C.char) **C.RunResult {
 	for result, err := range client.GetRunResults(C.GoString(tag), nil) {
 		if result != nil {
 			results = append(results, result)
+		}
+
+		if err != nil {
+			client.Logger.Error(err, "error retrieving results by tag")
+			return nil
 		} else {
-			client.Logger.Error(err, "error retrieving results")
+			// return empty array if no error is reported by the client
+			break
 		}
 	}
 
