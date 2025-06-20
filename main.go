@@ -9,6 +9,8 @@ package main
 //char* request_id;
 //char* result_uri;
 //char* run_error_message;
+//char* client_error_type;
+//char* client_error_message;
 //char* status;
 //} RunResult;
 import "C"
@@ -18,6 +20,7 @@ import (
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/SneaksAndData/nexus-sdk-go/sdk"
 	"k8s.io/klog/v2"
+	"reflect"
 	"runtime"
 	"unsafe"
 )
@@ -49,35 +52,43 @@ func CreateSchedulerClient(url *C.char, token *C.char) {
 //export GetRunResults
 func GetRunResults(tag *C.char) **C.RunResult {
 	results := []*api.ModelsTaggedRequestResult{}
+
 	for result, err := range client.GetRunResults(C.GoString(tag), nil) {
 		if result != nil {
 			results = append(results, result)
-		}
-
-		if err != nil {
-			client.Logger.Error(err, "error retrieving results by tag")
-			return nil
-		} else {
-			// return empty array if no error is reported by the client
-			break
+		} else if err != nil {
+			client.Logger.V(1).Error(err, "error retrieving results")
+			errorResults := C.malloc(C.size_t(1) * C.size_t(unsafe.Sizeof(uintptr(0))))
+			goCResults := (*[10]*C.RunResult)(errorResults)
+			goCResults[0] = &C.RunResult{
+				algorithm:            nil,
+				request_id:           nil,
+				result_uri:           nil,
+				run_error_message:    nil,
+				client_error_type:    C.CString(reflect.TypeOf(err).String()),
+				client_error_message: C.CString(err.Error()),
+				status:               nil,
+			}
+			return (**C.RunResult)(errorResults)
 		}
 	}
 
-	clangResults := C.malloc(C.size_t(len(results)) * C.size_t(unsafe.Sizeof(uintptr(0))))
-	// this is just a type cast, assuming we are way below 10000 results anyway
-	resultsPtrArray := (*[10000]*C.RunResult)(clangResults)
+	cResults := C.malloc(C.size_t(len(results)) * C.size_t(unsafe.Sizeof(uintptr(0))))
+	goCResults := (*[10000]*C.RunResult)(unsafe.Pointer(cResults))
 
 	for i, result := range results {
-		resultsPtrArray[i] = &C.RunResult{
-			algorithm:         C.CString(result.AlgorithmName.Value),
-			request_id:        C.CString(result.RequestId.Value),
-			result_uri:        C.CString(result.ResultUri.Value),
-			run_error_message: C.CString(result.RunErrorMessage.Value),
-			status:            C.CString(result.Status.Value),
+		goCResults[i] = &C.RunResult{
+			algorithm:            C.CString(result.AlgorithmName.Value),
+			request_id:           C.CString(result.RequestId.Value),
+			result_uri:           C.CString(result.ResultUri.Value),
+			run_error_message:    C.CString(result.RunErrorMessage.Value),
+			client_error_type:    nil,
+			client_error_message: nil,
+			status:               C.CString(result.Status.Value),
 		}
 	}
 
-	return (**C.RunResult)(clangResults)
+	return (**C.RunResult)(cResults)
 }
 
 //export UpdateToken
@@ -91,6 +102,8 @@ func FreeRunResult(result C.RunResult) {
 	C.free(unsafe.Pointer(result.request_id))
 	C.free(unsafe.Pointer(result.result_uri))
 	C.free(unsafe.Pointer(result.run_error_message))
+	C.free(unsafe.Pointer(result.client_error_type))
+	C.free(unsafe.Pointer(result.client_error_message))
 	C.free(unsafe.Pointer(result.status))
 }
 

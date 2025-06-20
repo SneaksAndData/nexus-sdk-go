@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
 	"iter"
 	"k8s.io/klog/v2"
 	"runtime"
@@ -162,7 +163,7 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 		for _, tag := range tags {
 			taggedRunsResponse, err := nc.ApiClient.AlgorithmV12ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV12ResultsTagsRequestTagGetParams{RequestTag: tag}, nc.getRequestOptions()...)
 			if err != nil {
-				yield(nil, err)
+				yield(nil, models2.NewSdkErr(err))
 				return
 			}
 
@@ -178,18 +179,24 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 					}
 				}
 				if err != nil {
-					if !yield(nil, err) {
+					if !yield(nil, models2.NewSdkErr(err)) {
 						return
 					}
 				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain:
-				yield(nil, nil)
-				return
-			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain:
-				yield(nil, fmt.Errorf("server returned BadRequest request for tag %s", tag))
-				return
+				if !yield(nil, models2.NewNotFoundError(fmt.Errorf("no submissions found for tag %s", tag))) {
+					return
+				}
+			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain:
+				if !yield(nil, models2.NewBadRequestError(fmt.Errorf("invalid request for tag %s", tag))) {
+					return
+				}
+			case *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain:
+				if !yield(nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not accepted or missing for %s", tag))) {
+					return
+				}
 			default:
-				if !yield(nil, fmt.Errorf("unhandled response type for tag %s", tag)) {
+				if !yield(nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for tag %s", tag))) {
 					return
 				}
 			}
