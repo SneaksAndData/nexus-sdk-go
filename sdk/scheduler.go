@@ -191,7 +191,7 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 				if !yield(nil, models2.NewBadRequestError(fmt.Errorf("invalid request for tag %s", tag))) {
 					return
 				}
-			case *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain:
+			case *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextHTML:
 				if !yield(nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not accepted or missing for %s", tag))) {
 					return
 				}

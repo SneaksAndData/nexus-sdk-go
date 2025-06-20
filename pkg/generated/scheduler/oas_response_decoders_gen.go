@@ -93,6 +93,15 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -101,6 +110,59 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 			}
 
 			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			return &response, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
+	case 401:
+		// Code 401.
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "application/json":
+			buf, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return res, err
+			}
+			d := jx.DecodeBytes(buf)
+
+			var response AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON
+			if err := func() error {
+				if err := response.Decode(d); err != nil {
+					return err
+				}
+				if err := d.Skip(); err != io.EOF {
+					return errors.New("unexpected trailing data")
+				}
+				return nil
+			}(); err != nil {
+				err = &ogenerrors.DecodeBodyError{
+					ContentType: ct,
+					Body:        buf,
+					Err:         err,
+				}
+				return res, err
+			}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
+		case ct == "text/plain":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -137,6 +199,15 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -162,6 +233,15 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -169,7 +249,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFound{Data: bytes.NewReader(b)}
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -181,6 +261,15 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -188,7 +277,35 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequest{Data: bytes.NewReader(b)}
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			return &response, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
+	case 401:
+		// Code 401.
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
+		case ct == "text/plain":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -200,6 +317,15 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -207,7 +333,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFound{Data: bytes.NewReader(b)}
+			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -285,6 +411,15 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -293,6 +428,59 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			}
 
 			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			return &response, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
+	case 401:
+		// Code 401.
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "application/json":
+			buf, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return res, err
+			}
+			d := jx.DecodeBytes(buf)
+
+			var response AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON
+			if err := func() error {
+				if err := response.Decode(d); err != nil {
+					return err
+				}
+				if err := d.Skip(); err != io.EOF {
+					return errors.New("unexpected trailing data")
+				}
+				return nil
+			}(); err != nil {
+				err = &ogenerrors.DecodeBodyError{
+					ContentType: ct,
+					Body:        buf,
+					Err:         err,
+				}
+				return res, err
+			}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
+		case ct == "text/plain":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -328,6 +516,15 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				}
 				return res, err
 			}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -423,6 +620,15 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				return res, err
 			}
 			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsTagsRequestTagGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -467,6 +673,15 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				return res, err
 			}
 			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -510,6 +725,15 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				}
 				return res, err
 			}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12ResultsTagsRequestTagGetNotFoundTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -596,6 +820,15 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12RunAlgorithmNamePostBadRequestTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -604,6 +837,59 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 			}
 
 			response := AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain{Data: bytes.NewReader(b)}
+			return &response, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
+	case 401:
+		// Code 401.
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "application/json":
+			buf, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return res, err
+			}
+			d := jx.DecodeBytes(buf)
+
+			var response AlgorithmV12RunAlgorithmNamePostUnauthorizedApplicationJSON
+			if err := func() error {
+				if err := response.Decode(d); err != nil {
+					return err
+				}
+				if err := d.Skip(); err != io.EOF {
+					return errors.New("unexpected trailing data")
+				}
+				return nil
+			}(); err != nil {
+				err = &ogenerrors.DecodeBodyError{
+					ContentType: ct,
+					Body:        buf,
+					Err:         err,
+				}
+				return res, err
+			}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12RunAlgorithmNamePostUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
+		case ct == "text/plain":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12RunAlgorithmNamePostUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -639,6 +925,15 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				}
 				return res, err
 			}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
