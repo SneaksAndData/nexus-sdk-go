@@ -112,7 +112,10 @@ func FreeRunResult(result C.RunResult) {
 	C.free(unsafe.Pointer(result.status))
 }
 
-// TODO: memory release
+//export FreeClient
+func FreeClient() {
+	pinner.Unpin()
+}
 
 func main() {
 

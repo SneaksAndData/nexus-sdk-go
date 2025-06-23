@@ -16,6 +16,10 @@ type NotFoundError struct {
 	underlying error
 }
 
+type InternalServerErr struct {
+	underlying error
+}
+
 func (ue *UnauthorizedError) Error() string {
 	return ue.underlying.Error()
 }
@@ -32,6 +36,10 @@ func (nfe *NotFoundError) Error() string {
 	return nfe.underlying.Error()
 }
 
+func (ise *InternalServerErr) Error() string {
+	return ise.underlying.Error()
+}
+
 func NewSdkErr(underlying error) *SdkErr {
 	return &SdkErr{underlying: underlying}
 }
@@ -46,4 +54,8 @@ func NewBadRequestError(underlying error) *BadRequestError {
 
 func NewNotFoundError(underlying error) *NotFoundError {
 	return &NotFoundError{underlying: underlying}
+}
+
+func NewInternalServerError(underlying error) *InternalServerErr {
+	return &InternalServerErr{underlying: underlying}
 }

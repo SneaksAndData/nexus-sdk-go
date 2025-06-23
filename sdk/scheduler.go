@@ -241,3 +241,24 @@ func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *st
 		}
 	}, nil
 }
+
+func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, algorithmName string) (string, error) {
+	createdRunResponse, err := nc.ApiClient.AlgorithmV12RunAlgorithmNamePost(context.TODO(), request, api.AlgorithmV12RunAlgorithmNamePostParams{AlgorithmName: algorithmName}, nc.getRequestOptions()...)
+
+	if err != nil {
+		return "", models2.NewSdkErr(err)
+	}
+
+	switch createdRunResponseType := createdRunResponse.(type) {
+	case *api.AlgorithmV12RunAlgorithmNamePostBadRequestApplicationJSON, *api.AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain:
+		return "", models2.NewBadRequestError(fmt.Errorf("invalid request payload for algorithm '%s'", algorithmName))
+	case *api.AlgorithmV12RunAlgorithmNamePostUnauthorizedApplicationJSON, *api.AlgorithmV12RunAlgorithmNamePostUnauthorizedTextPlain, *api.AlgorithmV12RunAlgorithmNamePostUnauthorizedTextHTML:
+		return "", models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm '%s'", algorithmName))
+	case *api.AlgorithmV12RunAlgorithmNamePostInternalServerErrorApplicationJSON, *api.AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextPlain, *api.AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextHTML:
+		return "", models2.NewInternalServerError(fmt.Errorf("server error while creating a run request for algorithm '%s'", algorithmName))
+	case *api.AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON:
+		return (*createdRunResponseType)["requestId"], nil
+	default:
+		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm '%s'", algorithmName))
+	}
+}
