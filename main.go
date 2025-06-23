@@ -20,7 +20,7 @@ import (
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/SneaksAndData/nexus-sdk-go/sdk"
 	"k8s.io/klog/v2"
-	"log/slog"
+	"os"
 	"reflect"
 	"runtime"
 	"unsafe"
@@ -33,8 +33,12 @@ var client *sdk.NexusSchedulerClient
 
 //export CreateSchedulerClient
 func CreateSchedulerClient(url *C.char, token *C.char) {
+	logLevelString := os.Getenv("NEXUS__SDK_LOG_LEVEL")
+	if logLevelString == "" {
+		logLevelString = telemetry.LoggingDisabled
+	}
 	ctx := signals.SetupSignalHandler()
-	appLogger, err := telemetry.ConfigureLogger(ctx, map[string]string{}, slog.LevelError.String())
+	appLogger, err := telemetry.ConfigureLogger(ctx, map[string]string{}, logLevelString)
 	klog.SetSlogLogger(appLogger)
 
 	logger := klog.FromContext(ctx)

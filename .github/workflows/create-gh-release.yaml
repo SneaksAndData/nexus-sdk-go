@@ -19,7 +19,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.*'
+          go-version: '1.24.*'
 
       - name: Verify dependencies
         run: go mod verify
@@ -37,7 +37,7 @@ jobs:
         uses: SneaksAndData/github-actions/semver_release@v0.1.11
         with:
           major_v: 0
-          minor_v: 1
+          minor_v: 2
           assets_path: release
         id: release
 
@@ -55,7 +55,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.*'
+          go-version: '1.24.*'
 
       - name: Verify dependencies
         run: go mod verify
@@ -89,7 +89,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.*'
+          go-version: '1.24.*'
 
       - name: Verify dependencies
         run: go mod verify
