@@ -78,7 +78,7 @@ jobs:
   macos:
     name: Add MacOS Silicon build
     needs: [ base_release ]
-    runs-on: macos-13
+    runs-on: macos-latest
     if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
@@ -99,7 +99,7 @@ jobs:
 
       - name: Build darwin-arm64
         run: |
-          GOARCH=arm64 go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
+          go build -v -buildmode=c-shared -o dist/nexus_sdk_darwin_arm64.so main.go
           tar -czf nexus_sdk_darwin_arm64.tar.gz dist/
           mkdir release && mv nexus_sdk_darwin_arm64.tar.gz release/
 

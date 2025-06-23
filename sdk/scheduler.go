@@ -184,7 +184,7 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 					}
 				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain:
-				if !yield(nil, models2.NewNotFoundError(fmt.Errorf("no submissions found for tag %s", tag))) {
+				if !yield(nil, models2.NewNotFoundError(fmt.Errorf("no submissions found for tag '%s'", tag))) {
 					return
 				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain:
@@ -192,11 +192,11 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 					return
 				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain, *api.AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextHTML:
-				if !yield(nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not accepted or missing for %s", tag))) {
+				if !yield(nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not accepted or missing for tag '%s'", tag))) {
 					return
 				}
 			default:
-				if !yield(nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for tag %s", tag))) {
+				if !yield(nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for tag '%s'", tag))) {
 					return
 				}
 			}
