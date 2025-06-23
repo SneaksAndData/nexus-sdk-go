@@ -14,9 +14,9 @@ package main
 //char* status;
 //} RunResult;
 //typedef struct AlgorithmRun {
+//char* request_id;
 //char* client_error_type;
 //char* client_error_message;
-//char* request_id;
 //} AlgorithmRun;
 import "C"
 import (
@@ -104,7 +104,7 @@ func GetRunResults(tag *C.char) **C.RunResult {
 }
 
 //export CreateRun
-func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.char, parentRequest *C.char, payloadValidFrom *C.char, tag *C.char) *C.AlgorithmRun {
+func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.char, parentRequest *C.char, payloadValidFor *C.char, tag *C.char) C.AlgorithmRun {
 	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
 	var algSpecOverride api.V1NexusAlgorithmSpec
 	var parent api.ModelsAlgorithmRequestRef
@@ -118,13 +118,13 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		Set:   false,
 	}
 	customSpec := api.OptV1NexusAlgorithmSpec{
-		Value: &api.V1NexusAlgorithmSpec{},
+		Value: api.V1NexusAlgorithmSpec{},
 		Set:   false,
 	}
 
 	reportDecodeErr := func(err error) C.AlgorithmRun {
 		decodeErr = models2.NewInputDecodeError(err)
-		return &C.AlgorithmRun{
+		return C.AlgorithmRun{
 			request_id:           C.CString(""),
 			client_error_type:    C.CString(reflect.TypeOf(decodeErr).String()),
 			client_error_message: C.CString(decodeErr.Error()),
@@ -147,7 +147,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 	}
 
 	if customConfiguration != nil {
-		if err := json.Unmarshal([]byte(C.GoString(algSpecOverride)), &algSpecOverride); err != nil {
+		if err := json.Unmarshal([]byte(C.GoString(customConfiguration)), &algSpecOverride); err != nil {
 			return reportDecodeErr(err)
 		}
 
@@ -169,7 +169,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		CustomConfiguration: customSpec,
 		ParentRequest:       parentRequestParam,
 		PayloadValidFor: api.OptString{
-			Value: C.GoString(payloadValidFrom),
+			Value: C.GoString(payloadValidFor),
 			Set:   true,
 		},
 		RequestApiVersion: api.OptString{
@@ -180,14 +180,14 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 	}, C.GoString(algorithmName))
 
 	if err != nil {
-		return &C.AlgorithmRun{
+		return C.AlgorithmRun{
 			request_id:           C.CString(""),
 			client_error_type:    C.CString(reflect.TypeOf(err).String()),
 			client_error_message: C.CString(err.Error()),
 		}
 	}
 
-	return &C.AlgorithmRun{
+	return C.AlgorithmRun{
 		request_id:           C.CString(result),
 		client_error_type:    nil,
 		client_error_message: nil,
