@@ -20,6 +20,10 @@ type InternalServerErr struct {
 	underlying error
 }
 
+type InputDecodeError struct {
+	underlying error
+}
+
 func (ue *UnauthorizedError) Error() string {
 	return ue.underlying.Error()
 }
@@ -40,6 +44,10 @@ func (ise *InternalServerErr) Error() string {
 	return ise.underlying.Error()
 }
 
+func (ide *InputDecodeError) Error() string {
+	return ide.underlying.Error()
+}
+
 func NewSdkErr(underlying error) *SdkErr {
 	return &SdkErr{underlying: underlying}
 }
@@ -58,4 +66,8 @@ func NewNotFoundError(underlying error) *NotFoundError {
 
 func NewInternalServerError(underlying error) *InternalServerErr {
 	return &InternalServerErr{underlying: underlying}
+}
+
+func NewInputDecodeError(underlying error) *InputDecodeError {
+	return &InputDecodeError{underlying: underlying}
 }
