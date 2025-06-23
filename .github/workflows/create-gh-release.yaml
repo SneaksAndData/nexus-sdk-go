@@ -78,7 +78,7 @@ jobs:
   macos:
     name: Add MacOS Silicon build
     needs: [ base_release ]
-    runs-on: macos-13
+    runs-on: macos-latest
     if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
