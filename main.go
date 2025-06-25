@@ -18,6 +18,18 @@ package main
 //char* client_error_type;
 //char* client_error_message;
 //} AlgorithmRun;
+//typedef struct CustomRunConfiguration {
+//char* version;
+//char* workgroup_name;
+//char* workgroup_group;
+//char* workgroup_kind;
+//char* cpu_limit;
+//char* memory_limit;
+//} CustomRunConfiguration;
+//typedef struct ParentRequest {
+//char* algorithm_name;
+//char* request_id;
+//} ParentRequest;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
@@ -104,10 +116,8 @@ func GetRunResults(tag *C.char) **C.RunResult {
 }
 
 //export CreateRun
-func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.char, parentRequest *C.char, payloadValidFor *C.char, tag *C.char) C.AlgorithmRun {
+func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, payloadValidFor *C.char, tag *C.char) C.AlgorithmRun {
 	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
-	var algSpecOverride api.V1NexusAlgorithmSpec
-	var parent api.ModelsAlgorithmRequestRef
 	var decodeErr *models2.InputDecodeError
 	parentRequestParam := api.OptModelsAlgorithmRequestRef{
 		Value: api.ModelsAlgorithmRequestRef{},
@@ -136,24 +146,95 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 	}
 
 	if parentRequest != nil {
-		if err := json.Unmarshal([]byte(C.GoString(parentRequest)), &parent); err != nil {
-			return reportDecodeErr(err)
-		}
-
 		parentRequestParam = api.OptModelsAlgorithmRequestRef{
-			Value: parent,
-			Set:   true,
+			Value: api.ModelsAlgorithmRequestRef{
+				AlgorithmName: C.GoString(parentRequest.algorithm_name),
+				RequestId:     C.GoString(parentRequest.request_id),
+			},
+			Set: true,
 		}
 	}
 
 	if customConfiguration != nil {
-		if err := json.Unmarshal([]byte(C.GoString(customConfiguration)), &algSpecOverride); err != nil {
-			return reportDecodeErr(err)
+		var cpuLimit api.OptString
+		var memoryLimit api.OptString
+		var container api.OptV1NexusAlgorithmContainer
+		var workgroup api.OptV1NexusAlgorithmWorkgroupRef
+
+		if customConfiguration.cpu_limit != nil {
+			cpuLimit = api.OptString{
+				Value: C.GoString(customConfiguration.cpu_limit),
+				Set:   true,
+			}
+		}
+
+		if customConfiguration.memory_limit != nil {
+			memoryLimit = api.OptString{
+				Value: C.GoString(customConfiguration.memory_limit),
+				Set:   true,
+			}
+		}
+
+		if customConfiguration.version != nil {
+			container = api.OptV1NexusAlgorithmContainer{
+				Value: api.V1NexusAlgorithmContainer{
+					VersionTag: api.OptString{
+						Value: C.GoString(customConfiguration.version),
+						Set:   true,
+					},
+				},
+				Set: true,
+			}
+		}
+
+		if customConfiguration.workgroup_name != nil {
+			workgroup = api.OptV1NexusAlgorithmWorkgroupRef{
+				Value: api.V1NexusAlgorithmWorkgroupRef{
+					Name: api.OptString{
+						Value: C.GoString(customConfiguration.workgroup_name),
+						Set:   true,
+					},
+					Group: api.OptString{
+						Value: C.GoString(customConfiguration.workgroup_group),
+						Set:   true,
+					},
+					Kind: api.OptString{
+						Value: C.GoString(customConfiguration.workgroup_kind),
+						Set:   true,
+					},
+				},
+				Set: true,
+			}
 		}
 
 		customSpec = api.OptV1NexusAlgorithmSpec{
-			Value: algSpecOverride,
-			Set:   true,
+			Value: api.V1NexusAlgorithmSpec{
+				Args: nil,
+				Command: api.OptString{
+					Set: false,
+				},
+				ComputeResources: api.OptV1NexusAlgorithmResources{
+					Value: api.V1NexusAlgorithmResources{
+						CpuLimit:    cpuLimit,
+						MemoryLimit: memoryLimit,
+						CustomResources: api.OptV1NexusAlgorithmResourcesCustomResources{
+							Set: false,
+						},
+					},
+				},
+				Container: container,
+				DatadogIntegrationSettings: api.OptV1NexusDatadogIntegrationSettings{
+					Set: false,
+				},
+				ErrorHandlingBehaviour: api.OptV1NexusErrorHandlingBehaviour{
+					Set: false,
+				},
+				RuntimeEnvironment: api.OptV1NexusAlgorithmRuntimeEnvironment{
+					Set: false,
+				},
+				WorkgroupRef: workgroup,
+			},
+			Set: true,
 		}
 	}
 
