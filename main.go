@@ -13,12 +13,19 @@ package main
 //char* client_error_message;
 //char* status;
 //} RunResult;
+//typedef struct AlgorithmRun {
+//char* request_id;
+//char* client_error_type;
+//char* client_error_message;
+//} AlgorithmRun;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/SneaksAndData/nexus-sdk-go/sdk"
+	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
+	"github.com/ogen-go/ogen/json"
 	"k8s.io/klog/v2"
 	"os"
 	"reflect"
@@ -96,6 +103,97 @@ func GetRunResults(tag *C.char) **C.RunResult {
 	return (**C.RunResult)(cResults)
 }
 
+//export CreateRun
+func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.char, parentRequest *C.char, payloadValidFor *C.char, tag *C.char) C.AlgorithmRun {
+	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
+	var algSpecOverride api.V1NexusAlgorithmSpec
+	var parent api.ModelsAlgorithmRequestRef
+	var decodeErr *models2.InputDecodeError
+	parentRequestParam := api.OptModelsAlgorithmRequestRef{
+		Value: api.ModelsAlgorithmRequestRef{},
+		Set:   false,
+	}
+	requestTag := api.OptString{
+		Value: "",
+		Set:   false,
+	}
+	customSpec := api.OptV1NexusAlgorithmSpec{
+		Value: api.V1NexusAlgorithmSpec{},
+		Set:   false,
+	}
+
+	reportDecodeErr := func(err error) C.AlgorithmRun {
+		decodeErr = models2.NewInputDecodeError(err)
+		return C.AlgorithmRun{
+			request_id:           C.CString(""),
+			client_error_type:    C.CString(reflect.TypeOf(decodeErr).String()),
+			client_error_message: C.CString(decodeErr.Error()),
+		}
+	}
+
+	if err := json.Unmarshal([]byte(C.GoString(algorithmParameters)), &algParams); err != nil {
+		return reportDecodeErr(err)
+	}
+
+	if parentRequest != nil {
+		if err := json.Unmarshal([]byte(C.GoString(parentRequest)), &parent); err != nil {
+			return reportDecodeErr(err)
+		}
+
+		parentRequestParam = api.OptModelsAlgorithmRequestRef{
+			Value: parent,
+			Set:   true,
+		}
+	}
+
+	if customConfiguration != nil {
+		if err := json.Unmarshal([]byte(C.GoString(customConfiguration)), &algSpecOverride); err != nil {
+			return reportDecodeErr(err)
+		}
+
+		customSpec = api.OptV1NexusAlgorithmSpec{
+			Value: algSpecOverride,
+			Set:   true,
+		}
+	}
+
+	if tag != nil {
+		requestTag = api.OptString{
+			Value: C.GoString(tag),
+			Set:   true,
+		}
+	}
+
+	result, err := client.CreateRun(&api.ModelsAlgorithmRequest{
+		AlgorithmParameters: algParams,
+		CustomConfiguration: customSpec,
+		ParentRequest:       parentRequestParam,
+		PayloadValidFor: api.OptString{
+			Value: C.GoString(payloadValidFor),
+			Set:   true,
+		},
+		RequestApiVersion: api.OptString{
+			Value: "1.2",
+			Set:   true,
+		},
+		Tag: requestTag,
+	}, C.GoString(algorithmName))
+
+	if err != nil {
+		return C.AlgorithmRun{
+			request_id:           C.CString(""),
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+		}
+	}
+
+	return C.AlgorithmRun{
+		request_id:           C.CString(result),
+		client_error_type:    nil,
+		client_error_message: nil,
+	}
+}
+
 //export UpdateToken
 func UpdateToken(token *C.char) {
 	client.RefreshAuth(C.GoString(token))
@@ -112,7 +210,17 @@ func FreeRunResult(result C.RunResult) {
 	C.free(unsafe.Pointer(result.status))
 }
 
-// TODO: memory release
+//export FreeAlgorithmRun
+func FreeAlgorithmRun(algRun C.AlgorithmRun) {
+	C.free(unsafe.Pointer(algRun.client_error_type))
+	C.free(unsafe.Pointer(algRun.client_error_message))
+	C.free(unsafe.Pointer(algRun.request_id))
+}
+
+//export FreeClient
+func FreeClient() {
+	pinner.Unpin()
+}
 
 func main() {
 
