@@ -316,8 +316,8 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 
 	if err != nil {
 		return C.RunResult{
-			algorithm:            algorithmName,
-			request_id:           requestId,
+			algorithm:            C.CString(C.GoString(algorithmName)),
+			request_id:           C.CString(C.GoString(requestId)),
 			result_uri:           nil,
 			run_error_message:    nil,
 			client_error_type:    C.CString(reflect.TypeOf(err).String()),
@@ -327,8 +327,8 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 	}
 
 	return C.RunResult{
-		algorithm:            algorithmName,
-		request_id:           requestId,
+		algorithm:            C.CString(C.GoString(algorithmName)),
+		request_id:           C.CString(C.GoString(requestId)),
 		result_uri:           C.CString(result.ResultUri.Value),
 		run_error_message:    C.CString(result.RunErrorMessage.Value),
 		client_error_type:    nil,

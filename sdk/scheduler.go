@@ -12,8 +12,13 @@ import (
 	"time"
 )
 
-type AwaitResult struct {
+type AwaitTaggedResult struct {
 	Result *api.ModelsTaggedRequestResult
+	Error  error
+}
+
+type AwaitResult struct {
+	Result *api.ModelsRequestResult
 	Error  error
 }
 
@@ -67,6 +72,7 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 }
 
 func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
+	invalidRequestResponseDuration := 0 * time.Second
 	for {
 		response, err := nc.ApiClient.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
@@ -88,22 +94,37 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 			} else {
 				time.Sleep(5 * time.Second)
 			}
-		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON:
-			return nil, fmt.Errorf("request %s for algorithm %s not found", requestId, algorithmName)
-		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON:
-			return nil, fmt.Errorf("server returned BadRequest when looking up result for request %s for algorithm %s", requestId, algorithmName)
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
+			if invalidRequestResponseDuration > 5*time.Minute {
+				return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithmName, requestId))
+			}
+
+			nc.Logger.V(0).Info("received bad request when trying to read a result - possible lag in submission accounting, will try again")
+
+			if pollInterval != nil {
+				invalidRequestResponseDuration += *pollInterval
+				time.Sleep(*pollInterval)
+			} else {
+				invalidRequestResponseDuration += 5 * time.Second
+				time.Sleep(5 * time.Second)
+			}
+
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML:
+			return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
+			return nil, nil
 		default:
-			return nil, fmt.Errorf("unexpected response type for request %s for algorithm %s", requestId, algorithmName)
+			return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
 		}
 	}
 }
 
 func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
-	resultChannel := make(chan *AwaitResult)
+	resultChannel := make(chan *AwaitTaggedResult)
 	for run, runErr := range runs {
 		go func() {
 			if runErr != nil {
-				resultChannel <- &AwaitResult{
+				resultChannel <- &AwaitTaggedResult{
 					Error:  runErr,
 					Result: nil,
 				}
@@ -112,14 +133,14 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 
 			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
 			if err != nil {
-				resultChannel <- &AwaitResult{
+				resultChannel <- &AwaitTaggedResult{
 					Error:  err,
 					Result: nil,
 				}
 				close(resultChannel)
 			}
 
-			resultChannel <- &AwaitResult{
+			resultChannel <- &AwaitTaggedResult{
 				Error: nil,
 				Result: &api.ModelsTaggedRequestResult{
 					AlgorithmName: api.OptString{
@@ -211,19 +232,29 @@ func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string)
 
 // AwaitRun awaits results for a submission identified by a request id and an algorithm name
 func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
-	resultChannel := make(chan *api.ModelsRequestResult, 1)
+	resultChannel := make(chan *AwaitResult, 1)
 	go func() {
 		result, err := nc.awaitRun(requestId, algorithmName, pollInterval)
 		if err != nil {
+			resultChannel <- &AwaitResult{
+				Error:  err,
+				Result: nil,
+			}
 			close(resultChannel)
+			return
 		}
 
-		resultChannel <- result
+		resultChannel <- &AwaitResult{
+			Error:  nil,
+			Result: result,
+		}
+		close(resultChannel)
+		return
 	}()
 
 	runResult := <-resultChannel
 
-	return runResult, nil
+	return runResult.Result, runResult.Error
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited

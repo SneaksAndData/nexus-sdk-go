@@ -3,6 +3,7 @@ package sdk
 import (
 	"context"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
+	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"k8s.io/klog/v2"
 	"strings"
 	"testing"
@@ -57,5 +58,38 @@ func Test_GetRunResultsTagExists(t *testing.T) {
 
 	if actualLength != expectedLength {
 		f.t.Errorf("GetRunResults should have returned the expected %d submissions", expectedLength)
+	}
+}
+
+func Test_AwaitRun(t *testing.T) {
+	f := newFixture(t)
+	runId, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
+		AlgorithmParameters: nil,
+		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: api.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: api.OptString{
+			Set: false,
+		},
+		RequestApiVersion: api.OptString{
+			Set: false,
+		},
+		Tag: api.OptString{
+			Value: "abc",
+			Set:   true,
+		},
+	}, "omni-channel-solver")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	_, err = f.client.AwaitRun(runId, "omni-channel-solver", nil)
+
+	if err != nil {
+		f.t.Error(err)
 	}
 }
