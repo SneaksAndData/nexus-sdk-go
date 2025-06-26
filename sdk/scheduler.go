@@ -9,6 +9,7 @@ import (
 	"iter"
 	"k8s.io/klog/v2"
 	"runtime"
+	"sync"
 	"time"
 )
 
@@ -74,6 +75,7 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
 	invalidRequestResponseDuration := 0 * time.Second
 	for {
+		nc.Logger.V(0).Info(fmt.Sprintf("Checking status of a request %s/%s", algorithmName, requestId))
 		response, err := nc.ApiClient.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
@@ -85,7 +87,11 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 
 		switch result := response.(type) {
 		case *api.ModelsRequestResult:
+
+			nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s status: %s", algorithmName, requestId, result.Status.Value))
+
 			if getRequestStub(result).IsFinished() {
+				nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s finished", algorithmName, requestId))
 				return result, nil
 			}
 
@@ -119,16 +125,29 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed chan<- int32) ([]*api.ModelsTaggedRequestResult, error) {
-	resultChannel := make(chan *AwaitTaggedResult)
+func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed *chan int32) ([]*api.ModelsTaggedRequestResult, error) {
+	resultChannel := make(chan *AwaitTaggedResult, 10)
+	var wg sync.WaitGroup
+
 	for run, runErr := range runs {
+		wg.Add(1)
 		go func() {
+			defer func() {
+				nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
+				if completed != nil {
+					*completed <- 1
+				}
+				wg.Done()
+			}()
+
+			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
+
 			if runErr != nil {
 				resultChannel <- &AwaitTaggedResult{
 					Error:  runErr,
 					Result: nil,
 				}
-				close(resultChannel)
+				nc.Logger.V(0).Error(runErr, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
 				return
 			}
 
@@ -138,11 +157,9 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					Error:  err,
 					Result: nil,
 				}
-				close(resultChannel)
+				nc.Logger.V(0).Error(err, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
 				return
 			}
-
-			completed <- 1
 
 			resultChannel <- &AwaitTaggedResult{
 				Error: nil,
@@ -169,8 +186,16 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					},
 				},
 			}
+
+			return
 		}()
 	}
+
+	go func() {
+		wg.Wait()
+		nc.Logger.V(0).Info("Successfully awaited all tagged runs")
+		close(resultChannel)
+	}()
 
 	results := []*api.ModelsTaggedRequestResult{}
 	for result := range resultChannel {
@@ -262,7 +287,7 @@ func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string,
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed chan<- int32) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
 	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval, completed)
 	if err != nil {
 		return nil, err

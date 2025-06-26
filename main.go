@@ -345,15 +345,18 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 		value := C.GoString(algorithm)
 		algName = &value
 	}
-	goTags := []string{}
+	var goTags []string
+	cTags := unsafe.Slice(tags, 1<<30)
 	// copy tags into a Go slice
-	for _, tag := range unsafe.Slice(tags, 1000) {
-		goTags = append(goTags, C.GoString(tag))
+	for i := 0; cTags[i] != nil; i++ {
+		goTags = append(goTags, C.GoString(cTags[i]))
 	}
 
-	counter := make(chan int32)
+	var counterRef *chan int32
 	// activate progress counter
 	if unsafe.Pointer(completed) != nil {
+		counter := make(chan int32, 10)
+		counterRef = &counter
 		go func() {
 			for range counter {
 				*(*C.int)(unsafe.Pointer(completed))++
@@ -361,7 +364,12 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 		}()
 	}
 
-	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counter)
+	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counterRef)
+
+	if counterRef != nil {
+		close(*counterRef)
+	}
+
 	results := []*api.ModelsTaggedRequestResult{}
 
 	if err != nil {
