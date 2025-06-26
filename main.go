@@ -42,6 +42,7 @@ import (
 	"os"
 	"reflect"
 	"runtime"
+	"time"
 	"unsafe"
 )
 
@@ -74,10 +75,15 @@ func CreateSchedulerClient(url *C.char, token *C.char) {
 }
 
 //export GetRunResults
-func GetRunResults(tag *C.char) *C.RunResult {
+func GetRunResults(tag *C.char, algorithm *C.char) *C.RunResult {
 	results := []*api.ModelsTaggedRequestResult{}
+	var algName *string
+	if C.GoString(algorithm) != "" {
+		value := C.GoString(algorithm)
+		algName = &value
+	}
 
-	for result, err := range client.GetRunResults(C.GoString(tag), nil) {
+	for result, err := range client.GetRunResults(C.GoString(tag), algName) {
 		if result != nil {
 			results = append(results, result)
 		} else if err != nil {
@@ -275,13 +281,124 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 	}
 }
 
+//export GetRun
+func GetRun(requestId *C.char, algorithmName *C.char) C.RunResult {
+	result, err := client.GetRun(C.GoString(requestId), C.GoString(algorithmName))
+
+	if err != nil {
+		return C.RunResult{
+			algorithm:            algorithmName,
+			request_id:           requestId,
+			result_uri:           nil,
+			run_error_message:    nil,
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+			status:               nil,
+		}
+	}
+
+	return C.RunResult{
+		algorithm:            algorithmName,
+		request_id:           requestId,
+		result_uri:           C.CString(result.ResultUri.Value),
+		run_error_message:    C.CString(result.RunErrorMessage.Value),
+		client_error_type:    nil,
+		client_error_message: nil,
+		status:               C.CString(result.Status.Value),
+	}
+}
+
+//export AwaitRun
+func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int32) C.RunResult {
+	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
+
+	result, err := client.AwaitRun(C.GoString(requestId), C.GoString(algorithmName), &pollInterval)
+
+	if err != nil {
+		return C.RunResult{
+			algorithm:            algorithmName,
+			request_id:           requestId,
+			result_uri:           nil,
+			run_error_message:    nil,
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+			status:               nil,
+		}
+	}
+
+	return C.RunResult{
+		algorithm:            algorithmName,
+		request_id:           requestId,
+		result_uri:           C.CString(result.ResultUri.Value),
+		run_error_message:    C.CString(result.RunErrorMessage.Value),
+		client_error_type:    nil,
+		client_error_message: nil,
+		status:               C.CString(result.Status.Value),
+	}
+}
+
+//export AwaitRuns
+func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32) *C.RunResult {
+	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
+	var algName *string
+	if C.GoString(algorithm) != "" {
+		value := C.GoString(algorithm)
+		algName = &value
+	}
+	goTags := []string{}
+	// copy tags into a Go slice
+	for _, tag := range unsafe.Slice(tags, 1000) {
+		goTags = append(goTags, C.GoString(tag))
+	}
+
+	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval)
+	results := []*api.ModelsTaggedRequestResult{}
+
+	if err != nil {
+		client.Logger.V(1).Error(err, "error retrieving results")
+		errorResults := C.malloc(C.size_t(1) * C.size_t(unsafe.Sizeof(C.RunResult{})))
+		goCResults := (*[10]C.RunResult)(errorResults)
+		goCResults[0] = C.RunResult{
+			algorithm:            nil,
+			request_id:           nil,
+			result_uri:           nil,
+			run_error_message:    nil,
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+			status:               nil,
+		}
+		return (*C.RunResult)(errorResults)
+	}
+
+	for result := range resultsIter {
+		results = append(results, result)
+	}
+
+	cResults := C.calloc(C.size_t(len(results)+1), C.size_t(unsafe.Sizeof(C.RunResult{})))
+	goCResults := (*[10000]C.RunResult)(unsafe.Pointer(cResults))
+
+	for i, result := range results {
+		goCResults[i] = C.RunResult{
+			algorithm:            C.CString(result.AlgorithmName.Value),
+			request_id:           C.CString(result.RequestId.Value),
+			result_uri:           C.CString(result.ResultUri.Value),
+			run_error_message:    C.CString(result.RunErrorMessage.Value),
+			client_error_type:    nil,
+			client_error_message: nil,
+			status:               C.CString(result.Status.Value),
+		}
+	}
+
+	return (*C.RunResult)(cResults)
+}
+
 //export UpdateToken
 func UpdateToken(token *C.char) {
 	client.RefreshAuth(C.GoString(token))
 }
 
 //export FreeRunResult
-func FreeRunResult(result *C.RunResult) {
+func FreeRunResult(result C.RunResult) {
 	C.free(unsafe.Pointer(result.algorithm))
 	C.free(unsafe.Pointer(result.request_id))
 	C.free(unsafe.Pointer(result.result_uri))
@@ -289,15 +406,18 @@ func FreeRunResult(result *C.RunResult) {
 	C.free(unsafe.Pointer(result.client_error_type))
 	C.free(unsafe.Pointer(result.client_error_message))
 	C.free(unsafe.Pointer(result.status))
-	C.free(unsafe.Pointer(result))
 }
 
 //export FreeAlgorithmRun
-func FreeAlgorithmRun(algRun *C.AlgorithmRun) {
+func FreeAlgorithmRun(algRun C.AlgorithmRun) {
 	C.free(unsafe.Pointer(algRun.client_error_type))
 	C.free(unsafe.Pointer(algRun.client_error_message))
 	C.free(unsafe.Pointer(algRun.request_id))
-	C.free(unsafe.Pointer(algRun))
+}
+
+//export FreeRunResultsPointer
+func FreeRunResultsPointer(results *C.RunResult) {
+	C.free(unsafe.Pointer(results))
 }
 
 //export FreeClient
