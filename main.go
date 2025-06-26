@@ -338,7 +338,7 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 }
 
 //export AwaitRuns
-func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32) *C.RunResult {
+func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, completed *int32) *C.RunResult {
 	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
 	var algName *string
 	if C.GoString(algorithm) != "" {
@@ -351,7 +351,17 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32) *C.R
 		goTags = append(goTags, C.GoString(tag))
 	}
 
-	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval)
+	counter := make(chan int32)
+	// activate progress counter
+	if unsafe.Pointer(completed) != nil {
+		go func() {
+			for range counter {
+				*(*C.int)(unsafe.Pointer(completed))++
+			}
+		}()
+	}
+
+	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counter)
 	results := []*api.ModelsTaggedRequestResult{}
 
 	if err != nil {

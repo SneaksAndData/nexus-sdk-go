@@ -119,7 +119,7 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed chan<- int32) ([]*api.ModelsTaggedRequestResult, error) {
 	resultChannel := make(chan *AwaitTaggedResult)
 	for run, runErr := range runs {
 		go func() {
@@ -129,6 +129,7 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					Result: nil,
 				}
 				close(resultChannel)
+				return
 			}
 
 			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
@@ -138,7 +139,10 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					Result: nil,
 				}
 				close(resultChannel)
+				return
 			}
+
+			completed <- 1
 
 			resultChannel <- &AwaitTaggedResult{
 				Error: nil,
@@ -258,8 +262,8 @@ func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string,
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
-	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval)
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed chan<- int32) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval, completed)
 	if err != nil {
 		return nil, err
 	}
