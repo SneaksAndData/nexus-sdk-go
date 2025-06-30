@@ -186,8 +186,6 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					},
 				},
 			}
-
-			return
 		}()
 	}
 
@@ -278,7 +276,6 @@ func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string,
 			Result: result,
 		}
 		close(resultChannel)
-		return
 	}()
 
 	runResult := <-resultChannel
