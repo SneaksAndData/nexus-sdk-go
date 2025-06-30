@@ -9,11 +9,17 @@ import (
 	"iter"
 	"k8s.io/klog/v2"
 	"runtime"
+	"sync"
 	"time"
 )
 
-type AwaitResult struct {
+type AwaitTaggedResult struct {
 	Result *api.ModelsTaggedRequestResult
+	Error  error
+}
+
+type AwaitResult struct {
+	Result *api.ModelsRequestResult
 	Error  error
 }
 
@@ -67,7 +73,9 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 }
 
 func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
+	invalidRequestResponseDuration := 0 * time.Second
 	for {
+		nc.Logger.V(0).Info(fmt.Sprintf("Checking status of a request %s/%s", algorithmName, requestId))
 		response, err := nc.ApiClient.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
@@ -79,7 +87,11 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 
 		switch result := response.(type) {
 		case *api.ModelsRequestResult:
+
+			nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s status: %s", algorithmName, requestId, result.Status.Value))
+
 			if getRequestStub(result).IsFinished() {
+				nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s finished", algorithmName, requestId))
 				return result, nil
 			}
 
@@ -88,38 +100,68 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 			} else {
 				time.Sleep(5 * time.Second)
 			}
-		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON:
-			return nil, fmt.Errorf("request %s for algorithm %s not found", requestId, algorithmName)
-		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON:
-			return nil, fmt.Errorf("server returned BadRequest when looking up result for request %s for algorithm %s", requestId, algorithmName)
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
+			if invalidRequestResponseDuration > 5*time.Minute {
+				return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithmName, requestId))
+			}
+
+			nc.Logger.V(0).Info("received bad request when trying to read a result - possible lag in submission accounting, will try again")
+
+			if pollInterval != nil {
+				invalidRequestResponseDuration += *pollInterval
+				time.Sleep(*pollInterval)
+			} else {
+				invalidRequestResponseDuration += 5 * time.Second
+				time.Sleep(5 * time.Second)
+			}
+
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML:
+			return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
+		case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
+			return nil, nil
 		default:
-			return nil, fmt.Errorf("unexpected response type for request %s for algorithm %s", requestId, algorithmName)
+			return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
 		}
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
-	resultChannel := make(chan *AwaitResult)
+func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed *chan int32) ([]*api.ModelsTaggedRequestResult, error) {
+	resultChannel := make(chan *AwaitTaggedResult, 10)
+	var wg sync.WaitGroup
+
 	for run, runErr := range runs {
+		wg.Add(1)
 		go func() {
+			defer func() {
+				nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
+				if completed != nil {
+					*completed <- 1
+				}
+				wg.Done()
+			}()
+
+			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
+
 			if runErr != nil {
-				resultChannel <- &AwaitResult{
+				resultChannel <- &AwaitTaggedResult{
 					Error:  runErr,
 					Result: nil,
 				}
-				close(resultChannel)
+				nc.Logger.V(0).Error(runErr, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
+				return
 			}
 
 			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
 			if err != nil {
-				resultChannel <- &AwaitResult{
+				resultChannel <- &AwaitTaggedResult{
 					Error:  err,
 					Result: nil,
 				}
-				close(resultChannel)
+				nc.Logger.V(0).Error(err, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
+				return
 			}
 
-			resultChannel <- &AwaitResult{
+			resultChannel <- &AwaitTaggedResult{
 				Error: nil,
 				Result: &api.ModelsTaggedRequestResult{
 					AlgorithmName: api.OptString{
@@ -146,6 +188,12 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 			}
 		}()
 	}
+
+	go func() {
+		wg.Wait()
+		nc.Logger.V(0).Info("Successfully awaited all tagged runs")
+		close(resultChannel)
+	}()
 
 	results := []*api.ModelsTaggedRequestResult{}
 	for result := range resultChannel {
@@ -211,24 +259,33 @@ func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string)
 
 // AwaitRun awaits results for a submission identified by a request id and an algorithm name
 func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
-	resultChannel := make(chan *api.ModelsRequestResult, 1)
+	resultChannel := make(chan *AwaitResult, 1)
 	go func() {
 		result, err := nc.awaitRun(requestId, algorithmName, pollInterval)
 		if err != nil {
+			resultChannel <- &AwaitResult{
+				Error:  err,
+				Result: nil,
+			}
 			close(resultChannel)
+			return
 		}
 
-		resultChannel <- result
+		resultChannel <- &AwaitResult{
+			Error:  nil,
+			Result: result,
+		}
+		close(resultChannel)
 	}()
 
 	runResult := <-resultChannel
 
-	return runResult, nil
+	return runResult.Result, runResult.Error
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
-	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval)
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval, completed)
 	if err != nil {
 		return nil, err
 	}
@@ -260,5 +317,26 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 		return (*createdRunResponseType)["requestId"], nil
 	default:
 		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm '%s'", algorithmName))
+	}
+}
+
+func (nc *NexusSchedulerClient) GetRun(requestId string, algorithm string) (*api.ModelsRequestResult, error) {
+	getRunResponse, err := nc.ApiClient.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
+
+	if err != nil {
+		return nil, models2.NewSdkErr(err)
+	}
+
+	switch getRunResponseType := getRunResponse.(type) {
+	case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
+		return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML:
+		return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	case *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
+		return nil, nil
+	case *api.ModelsRequestResult:
+		return getRunResponseType, nil
+	default:
+		return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	}
 }
