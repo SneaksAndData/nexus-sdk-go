@@ -30,6 +30,29 @@ package main
 //char* algorithm_name;
 //char* request_id;
 //} ParentRequest;
+//typedef struct RequestMetadata {
+//char* algorithm;
+//char* id;
+//char* algorithm_failure_cause;
+//char* algorithm_failure_details;
+//char* api_version;
+//char* applied_configuration;
+//char* configuration_overrides;
+//char* content_hash;
+//char* job_uid;
+//char* last_modified;
+//char* lifecycle_stage;
+//char* parent_job;
+//char* payload_uri;
+//char* payload_valid_for;
+//char* received_at;
+//char* received_by_host;
+//char* result_uri;
+//char* sent_at;
+//char* tag;
+//char* client_error_type;
+//char* client_error_message;
+//} RequestMetadata;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
@@ -287,8 +310,8 @@ func GetRun(requestId *C.char, algorithmName *C.char) C.RunResult {
 
 	if err != nil {
 		return C.RunResult{
-			algorithm:            algorithmName,
-			request_id:           requestId,
+			algorithm:            C.CString(C.GoString(algorithmName)),
+			request_id:           C.CString(C.GoString(requestId)),
 			result_uri:           nil,
 			run_error_message:    nil,
 			client_error_type:    C.CString(reflect.TypeOf(err).String()),
@@ -298,13 +321,81 @@ func GetRun(requestId *C.char, algorithmName *C.char) C.RunResult {
 	}
 
 	return C.RunResult{
-		algorithm:            algorithmName,
-		request_id:           requestId,
+		algorithm:            C.CString(C.GoString(algorithmName)),
+		request_id:           C.CString(C.GoString(requestId)),
 		result_uri:           C.CString(result.ResultUri.Value),
 		run_error_message:    C.CString(result.RunErrorMessage.Value),
 		client_error_type:    nil,
 		client_error_message: nil,
 		status:               C.CString(result.Status.Value),
+	}
+}
+
+//export GetRequestMetadata
+func GetRequestMetadata(requestId *C.char, algorithmName *C.char) C.RequestMetadata {
+	metadata, err := client.GetMetadata(C.GoString(requestId), C.GoString(algorithmName))
+
+	if err != nil {
+		return C.RequestMetadata{
+			algorithm:                 C.CString(C.GoString(algorithmName)),
+			id:                        C.CString(C.GoString(requestId)),
+			algorithm_failure_cause:   nil,
+			algorithm_failure_details: nil,
+			api_version:               nil,
+			applied_configuration:     nil,
+			configuration_overrides:   nil,
+			content_hash:              nil,
+			job_uid:                   nil,
+			last_modified:             nil,
+			lifecycle_stage:           nil,
+			parent_job:                nil,
+			payload_uri:               nil,
+			payload_valid_for:         nil,
+			received_at:               nil,
+			received_by_host:          nil,
+			result_uri:                nil,
+			sent_at:                   nil,
+			tag:                       nil,
+			client_error_type:         C.CString(reflect.TypeOf(err).String()),
+			client_error_message:      C.CString(err.Error()),
+		}
+	}
+
+	var appliedConfig string
+	var configOverride string
+
+	if metadata.AppliedConfiguration.Set {
+		configBytes, _ := json.Marshal(metadata.AppliedConfiguration.Value)
+		appliedConfig = string(configBytes)
+	}
+
+	if metadata.ConfigurationOverrides.Set {
+		configBytes, _ := json.Marshal(metadata.ConfigurationOverrides.Value)
+		configOverride = string(configBytes)
+	}
+
+	return C.RequestMetadata{
+		algorithm:                 C.CString(C.GoString(algorithmName)),
+		id:                        C.CString(C.GoString(requestId)),
+		algorithm_failure_cause:   C.CString(metadata.AlgorithmFailureCause.Value),
+		algorithm_failure_details: C.CString(metadata.AlgorithmFailureDetails.Value),
+		api_version:               C.CString(metadata.APIVersion.Value),
+		applied_configuration:     C.CString(appliedConfig),
+		configuration_overrides:   C.CString(configOverride),
+		content_hash:              C.CString(metadata.ContentHash.Value),
+		job_uid:                   C.CString(metadata.JobUID.Value),
+		last_modified:             C.CString(metadata.LastModified.Value),
+		lifecycle_stage:           C.CString(metadata.LifecycleStage.Value),
+		parent_job:                nil,
+		payload_uri:               C.CString(metadata.PayloadURI.Value),
+		payload_valid_for:         C.CString(metadata.PayloadValidFor.Value),
+		received_at:               C.CString(metadata.ReceivedAt.Value),
+		received_by_host:          C.CString(metadata.ReceivedByHost.Value),
+		result_uri:                C.CString(metadata.ResultURI.Value),
+		sent_at:                   C.CString(metadata.SentAt.Value),
+		tag:                       C.CString(metadata.Tag.Value),
+		client_error_type:         nil,
+		client_error_message:      nil,
 	}
 }
 
@@ -424,6 +515,31 @@ func FreeRunResult(result C.RunResult) {
 	C.free(unsafe.Pointer(result.client_error_type))
 	C.free(unsafe.Pointer(result.client_error_message))
 	C.free(unsafe.Pointer(result.status))
+}
+
+//export FreeRequestMetadata
+func FreeRequestMetadata(result C.RequestMetadata) {
+	C.free(unsafe.Pointer(result.algorithm))
+	C.free(unsafe.Pointer(result.id))
+	C.free(unsafe.Pointer(result.algorithm_failure_cause))
+	C.free(unsafe.Pointer(result.algorithm_failure_details))
+	C.free(unsafe.Pointer(result.api_version))
+	C.free(unsafe.Pointer(result.applied_configuration))
+	C.free(unsafe.Pointer(result.configuration_overrides))
+	C.free(unsafe.Pointer(result.content_hash))
+	C.free(unsafe.Pointer(result.job_uid))
+	C.free(unsafe.Pointer(result.last_modified))
+	C.free(unsafe.Pointer(result.lifecycle_stage))
+	C.free(unsafe.Pointer(result.parent_job))
+	C.free(unsafe.Pointer(result.payload_uri))
+	C.free(unsafe.Pointer(result.payload_valid_for))
+	C.free(unsafe.Pointer(result.received_at))
+	C.free(unsafe.Pointer(result.received_by_host))
+	C.free(unsafe.Pointer(result.result_uri))
+	C.free(unsafe.Pointer(result.sent_at))
+	C.free(unsafe.Pointer(result.tag))
+	C.free(unsafe.Pointer(result.client_error_type))
+	C.free(unsafe.Pointer(result.client_error_message))
 }
 
 //export FreeAlgorithmRun
