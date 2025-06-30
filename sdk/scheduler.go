@@ -340,3 +340,24 @@ func (nc *NexusSchedulerClient) GetRun(requestId string, algorithm string) (*api
 		return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	}
 }
+
+func (nc *NexusSchedulerClient) GetMetadata(requestId string, algorithm string) (*api.ModelsCheckpointedRequest, error) {
+	getMetadataResponse, err := nc.ApiClient.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
+
+	if err != nil {
+		return nil, models2.NewSdkErr(err)
+	}
+
+	switch getMetadataResponseType := getMetadataResponse.(type) {
+	case *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
+		return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML:
+		return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	case *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
+		return nil, nil
+	case *api.ModelsCheckpointedRequest:
+		return getMetadataResponseType, nil
+	default:
+		return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	}
+}
