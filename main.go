@@ -94,7 +94,7 @@ func CreateSchedulerClient(url *C.char, token *C.char) {
 		client = sdk.NewNexusSchedulerClient(C.GoString(url), &logger, nil, &pinner)
 	}
 
-	client = sdk.NewNexusSchedulerClient(C.GoString(url), &logger, &[]api.RequestOption{sdk.GetAuthOption(C.GoString(token))}, &pinner)
+	client = sdk.NewNexusSchedulerClient(C.GoString(url), &logger, &[]api.RequestOption{sdk.GetSchedulerAuthOption(C.GoString(token))}, &pinner)
 }
 
 //export GetRunResults

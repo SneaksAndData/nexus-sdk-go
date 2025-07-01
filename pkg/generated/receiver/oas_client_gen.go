@@ -80,12 +80,12 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
-	// AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/complete/{algorithmName}/requests/{requestId} operation.
+	// AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1.2/complete/{algorithmName}/requests/{requestId} operation.
 	//
 	// Commits the run result to the checkpoint store and transitions the state to COMPLETED.
 	//
-	// GET /algorithm/v1.2/complete/{algorithmName}/requests/{requestId}
-	AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes, error)
+	// POST /algorithm/v1.2/complete/{algorithmName}/requests/{requestId}
+	AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *ModelsAlgorithmResult, params AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes, error)
 }
 
 // Client implements OAS client.
@@ -112,17 +112,17 @@ func NewClient(serverURL string, opts ...ClientOption) (*Client, error) {
 	}, nil
 }
 
-// AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1.2/complete/{algorithmName}/requests/{requestId} operation.
+// AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1.2/complete/{algorithmName}/requests/{requestId} operation.
 //
 // Commits the run result to the checkpoint store and transitions the state to COMPLETED.
 //
-// GET /algorithm/v1.2/complete/{algorithmName}/requests/{requestId}
-func (c *Client) AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes, error) {
-	res, err := c.sendAlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+// POST /algorithm/v1.2/complete/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *ModelsAlgorithmResult, params AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes, error) {
+	res, err := c.sendAlgorithmV12CompleteAlgorithmNameRequestsRequestIdPost(ctx, request, params, options...)
 	return res, err
 }
 
-func (c *Client) sendAlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes, err error) {
+func (c *Client) sendAlgorithmV12CompleteAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *ModelsAlgorithmResult, params AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostParams, requestOptions ...RequestOption) (res AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes, err error) {
 
 	var reqCfg requestConfig
 	reqCfg.setDefaults(c.baseClient)
@@ -176,9 +176,12 @@ func (c *Client) sendAlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet(ctx c
 	}
 	uri.AddPathParts(u, pathParts[:]...)
 
-	r, err := ht.NewRequest(ctx, "GET", u)
+	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeAlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	if err := reqCfg.onRequest(r); err != nil {
@@ -195,7 +198,7 @@ func (c *Client) sendAlgorithmV12CompleteAlgorithmNameRequestsRequestIdGet(ctx c
 		return res, errors.Wrap(err, "edit response")
 	}
 
-	result, err := decodeAlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetResponse(resp)
+	result, err := decodeAlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
