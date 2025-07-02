@@ -13,7 +13,7 @@ spec:
                 operator: In
                 values:
                   - default
-  cluster: nexus-shard-0
+  cluster: kind-nexus-shard-0
   description: Default workgroup
   tolerations:
     - effect: NoSchedule

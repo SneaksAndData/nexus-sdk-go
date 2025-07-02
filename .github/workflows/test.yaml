@@ -42,7 +42,7 @@ jobs:
       
       - name: Install Nexus Stack
         run: |
-          helm dependency build ./.helm && helm install nexus-test-stack --kube-context nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
+          helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
 # WIP - algorithm YAML needs to be deployed for tests for work          
 #      - name: Test
