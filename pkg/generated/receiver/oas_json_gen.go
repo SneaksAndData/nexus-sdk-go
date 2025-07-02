@@ -8,14 +8,14 @@ import (
 )
 
 // Encode implements json.Marshaler.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) Encode(e *jx.Encoder) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields implements json.Marshaler.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) encodeFields(e *jx.Encoder) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) encodeFields(e *jx.Encoder) {
 	for k, elem := range s {
 		e.FieldStart(k)
 
@@ -23,10 +23,10 @@ func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplication
 	}
 }
 
-// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON from json.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) Decode(d *jx.Decoder) error {
+// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON from json.
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON to nil")
+		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON to nil")
 	}
 	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -44,36 +44,36 @@ func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicatio
 		m[string(k)] = elem
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON")
+		return errors.Wrap(err, "decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON as json.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) Encode(e *jx.Encoder) {
+// Encode encodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON as json.
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := string(s)
 
 	e.Str(unwrapped)
 }
 
-// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON from json.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) Decode(d *jx.Decoder) error {
+// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON from json.
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON to nil")
+		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON to nil")
 	}
 	var unwrapped string
 	if err := func() error {
@@ -86,34 +86,34 @@ func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicat
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON(unwrapped)
+	*s = AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON as json.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) Encode(e *jx.Encoder) {
+// Encode encodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON as json.
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := string(s)
 
 	e.Str(unwrapped)
 }
 
-// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON from json.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) Decode(d *jx.Decoder) error {
+// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON from json.
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON to nil")
+		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON to nil")
 	}
 	var unwrapped string
 	if err := func() error {
@@ -126,34 +126,34 @@ func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicatio
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON(unwrapped)
+	*s = AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON as json.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) Encode(e *jx.Encoder) {
+// Encode encodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON as json.
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := string(s)
 
 	e.Str(unwrapped)
 }
 
-// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON from json.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) Decode(d *jx.Decoder) error {
+// Decode decodes AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON from json.
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON to nil")
+		return errors.New("invalid: unable to decode AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON to nil")
 	}
 	var unwrapped string
 	if err := func() error {
@@ -166,19 +166,151 @@ func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplic
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON(unwrapped)
+	*s = AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *ModelsAlgorithmResult) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *ModelsAlgorithmResult) encodeFields(e *jx.Encoder) {
+	{
+		if s.ErrorCause.Set {
+			e.FieldStart("errorCause")
+			s.ErrorCause.Encode(e)
+		}
+	}
+	{
+		if s.ErrorDetails.Set {
+			e.FieldStart("errorDetails")
+			s.ErrorDetails.Encode(e)
+		}
+	}
+	{
+		if s.ResultUri.Set {
+			e.FieldStart("resultUri")
+			s.ResultUri.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfModelsAlgorithmResult = [3]string{
+	0: "errorCause",
+	1: "errorDetails",
+	2: "resultUri",
+}
+
+// Decode decodes ModelsAlgorithmResult from json.
+func (s *ModelsAlgorithmResult) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ModelsAlgorithmResult to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "errorCause":
+			if err := func() error {
+				s.ErrorCause.Reset()
+				if err := s.ErrorCause.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"errorCause\"")
+			}
+		case "errorDetails":
+			if err := func() error {
+				s.ErrorDetails.Reset()
+				if err := s.ErrorDetails.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"errorDetails\"")
+			}
+		case "resultUri":
+			if err := func() error {
+				s.ResultUri.Reset()
+				if err := s.ResultUri.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"resultUri\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode ModelsAlgorithmResult")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *ModelsAlgorithmResult) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ModelsAlgorithmResult) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes string as json.
+func (o OptString) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes string from json.
+func (o *OptString) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptString to nil")
+	}
+	o.Set = true
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	o.Value = string(v)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptString) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptString) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

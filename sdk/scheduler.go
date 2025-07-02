@@ -33,7 +33,7 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 	client, err := api.NewClient(schedulerUrl)
 
 	if err != nil {
-		logger.Error(err, "unable to initialize Nexus client")
+		logger.Error(err, "unable to initialize Nexus scheduler client")
 		klog.FlushAndExit(klog.ExitFlushTimeout, 1)
 	}
 
@@ -54,7 +54,7 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 }
 
 func (nc *NexusSchedulerClient) RefreshAuth(token string) {
-	nc.RequestOptions = &[]api.RequestOption{GetAuthOption(token)}
+	nc.RequestOptions = &[]api.RequestOption{GetSchedulerAuthOption(token)}
 }
 
 func (nc *NexusSchedulerClient) getRequestOptions() []api.RequestOption {

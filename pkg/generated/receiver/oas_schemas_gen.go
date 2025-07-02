@@ -6,9 +6,9 @@ import (
 	"io"
 )
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON map[string]string
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON map[string]string
 
-func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) init() AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON {
+func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) init() AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON {
 	m := *s
 	if m == nil {
 		m = map[string]string{}
@@ -17,122 +17,208 @@ func (s *AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicatio
 	return m
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetAcceptedApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON string
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestTextHTML struct {
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextHTML struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) Read(p []byte) (n int, err error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextHTML) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextHTML) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextPlain struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON string
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundTextHTML struct {
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextHTML struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) Read(p []byte) (n int, err error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextHTML) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextHTML) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextPlain struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextPlain) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextPlain) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON string
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON string
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML struct {
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain struct {
+type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+func (s AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV12CompleteAlgorithmNameRequestsRequestIdGetRes() {
+func (*AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain) algorithmV12CompleteAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+// Ref: #/components/schemas/models.AlgorithmResult
+type ModelsAlgorithmResult struct {
+	// Failure cause, if any.
+	ErrorCause OptString `json:"errorCause"`
+	// Failure details, if any.
+	ErrorDetails OptString `json:"errorDetails"`
+	// URL to download results.
+	ResultUri OptString `json:"resultUri"`
+}
+
+// GetErrorCause returns the value of ErrorCause.
+func (s *ModelsAlgorithmResult) GetErrorCause() OptString {
+	return s.ErrorCause
+}
+
+// GetErrorDetails returns the value of ErrorDetails.
+func (s *ModelsAlgorithmResult) GetErrorDetails() OptString {
+	return s.ErrorDetails
+}
+
+// GetResultUri returns the value of ResultUri.
+func (s *ModelsAlgorithmResult) GetResultUri() OptString {
+	return s.ResultUri
+}
+
+// SetErrorCause sets the value of ErrorCause.
+func (s *ModelsAlgorithmResult) SetErrorCause(val OptString) {
+	s.ErrorCause = val
+}
+
+// SetErrorDetails sets the value of ErrorDetails.
+func (s *ModelsAlgorithmResult) SetErrorDetails(val OptString) {
+	s.ErrorDetails = val
+}
+
+// SetResultUri sets the value of ResultUri.
+func (s *ModelsAlgorithmResult) SetResultUri(val OptString) {
+	s.ResultUri = val
+}
+
+// NewOptString returns new OptString with value set to v.
+func NewOptString(v string) OptString {
+	return OptString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptString is optional string.
+type OptString struct {
+	Value string
+	Set   bool
+}
+
+// IsSet returns true if OptString was set.
+func (o OptString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptString) SetTo(v string) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptString) Get() (v string, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
