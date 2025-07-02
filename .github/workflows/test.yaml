@@ -33,14 +33,10 @@ jobs:
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1
       
-      - name: Install Latest Nexus CRD
+      - name: Install Nexus Stack
         run: |
-          helm install nexus-crd --namespace nexus --create-namespace --version v0.0.0-3-ga307185 oci://ghcr.io/sneaksanddata/helm/nexus-crd
-          
-      - name: Install Latest Nexus
-        run: |
-          helm install nexus --namespace nexus --create-namespace --version v0.0.0-23-gdbc882c oci://ghcr.io/sneaksanddata/helm/nexus
-          
+          helm install nexus-test-stack --namespace nexus --create-namespace --version 0.0.0 ./.helm
+
 # WIP - algorithm YAML needs to be deployed for tests for work          
 #      - name: Test
 #        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
