@@ -1,0 +1,22 @@
+apiVersion: science.sneaksanddata.com/v1
+kind: NexusAlgorithmWorkgroup
+metadata:
+  name: default
+  namespace: nexus
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.sneaksanddata.com/service-node-group
+                operator: In
+                values:
+                  - default
+  cluster: nexus-shard-0
+  description: Default workgroup
+  tolerations:
+    - effect: NoSchedule
+      key: kubernetes.sneaksanddata.com/service-node-group
+      operator: Equal
+      value: default

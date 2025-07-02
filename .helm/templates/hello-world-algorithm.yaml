@@ -1,0 +1,53 @@
+apiVersion: science.sneaksanddata.com/v1
+kind: NexusAlgorithmTemplate
+metadata:
+  name: hello-world
+  namespace: nexus
+spec:
+  args:
+    - main.py
+    - '--sas-uri=%s'
+    - '--request-id=%s'
+  command: python
+  computeResources:
+    cpuLimit: 1000m
+    memoryLimit: 1000Mi
+  container:
+    image: nexus-hello
+    registry: oci://ghcr.io/sneaksanddata/nexus-hello-world-algorithm
+    serviceAccountName: nexus
+    versionTag: v0.0.0
+  datadogIntegrationSettings:
+    mountDatadogSocket: true
+  errorHandlingBehaviour:
+    fatalExitCodes:
+      - 137
+    transientExitCodes:
+      - 139
+  runtimeEnvironment:
+    deadlineSeconds: 300
+    environmentVariables:
+      - name: DD_AGENT_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      - name: PROTEUS__DD_SITE
+        value: datadoghq.eu
+      - name: NEXUS__ALGORITHM_NAME
+        value: nexus-hello
+      - name: NEXUS__SCHEDULER_URL
+        value: http://nexus.nexus.svc.cluster.local:8080
+      - name: NEXUS__RECEIVER_URL
+        value: http://nexus-receiver.nexus.svc.cluster.local:8080
+      - name: DD_ENTITY_ID
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.uid
+    mappedEnvironmentVariables:
+      - secretRef:
+          name: hashicorp-vault-crystal-omnichannel-datadog
+    maximumRetries: 5
+  workgroupRef:
+    group: science.sneaksandata.com
+    kind: NexusAlgorithmWorkgroup
+    name: default

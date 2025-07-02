@@ -30,12 +30,19 @@ jobs:
       - name: Build
         run: go build -v ./...
         
-      - name: Create k8s Kind Cluster
+      - name: Create Controller Kind Cluster
         uses: helm/kind-action@v1
+        with:
+          cluster_name: 'nexus-controller'
+
+      - name: Create Shard Kind Cluster
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: 'nexus-shard-0'
       
       - name: Install Nexus Stack
         run: |
-          helm dependency build ./.helm && helm install nexus-test-stack --namespace nexus --create-namespace --version 0.0.0 ./.helm
+          helm dependency build ./.helm && helm install nexus-test-stack --context nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
 # WIP - algorithm YAML needs to be deployed for tests for work          
 #      - name: Test
