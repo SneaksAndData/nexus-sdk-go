@@ -61,8 +61,6 @@ package main
 //char* result_uri;
 //char* error_cause;
 //char* error_details;
-//char* client_error_type;
-//char* client_error_message;
 //} CompletedRunResult;
 import "C"
 import (
@@ -537,8 +535,8 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 	return (*C.RunResult)(cResults)
 }
 
-//export CompleteRequest
-func CompleteRequest(runResult *C.CompletedRunResult, algorithm *C.char, requestId *C.char) C.ErrorResponse {
+//export CompleteRun
+func CompleteRun(runResult *C.CompletedRunResult, algorithm *C.char, requestId *C.char) C.ErrorResponse {
 	modelRequestResult := &rapi.ModelsAlgorithmResult{
 		ErrorCause: rapi.OptString{
 			Value: C.GoString(runResult.error_cause),
