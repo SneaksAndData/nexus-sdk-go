@@ -53,10 +53,22 @@ package main
 //char* client_error_type;
 //char* client_error_message;
 //} RequestMetadata;
+//typedef struct ErrorResponse {
+//char* client_error_type;
+//char* client_error_message;
+//} ErrorResponse;
+//typedef struct CompletedRunResult {
+//char* result_uri;
+//char* error_cause;
+//char* error_details;
+//char* client_error_type;
+//char* client_error_message;
+//} CompletedRunResult;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
+	rapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/SneaksAndData/nexus-sdk-go/sdk"
 	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
@@ -73,6 +85,7 @@ import (
 
 var pinner = runtime.Pinner{}
 var client *sdk.NexusSchedulerClient
+var receiver *sdk.NexusReceiverClient
 
 //export CreateSchedulerClient
 func CreateSchedulerClient(url *C.char, token *C.char) {
@@ -95,6 +108,29 @@ func CreateSchedulerClient(url *C.char, token *C.char) {
 	}
 
 	client = sdk.NewNexusSchedulerClient(C.GoString(url), &logger, &[]api.RequestOption{sdk.GetSchedulerAuthOption(C.GoString(token))}, &pinner)
+}
+
+//export CreateReceiverClient
+func CreateReceiverClient(url *C.char, token *C.char) {
+	logLevelString := os.Getenv("NEXUS__SDK_LOG_LEVEL")
+	if logLevelString == "" {
+		logLevelString = telemetry.LoggingDisabled
+	}
+	ctx := signals.SetupSignalHandler()
+	appLogger, err := telemetry.ConfigureLogger(ctx, map[string]string{}, logLevelString)
+	klog.SetSlogLogger(appLogger)
+
+	logger := klog.FromContext(ctx)
+
+	if err != nil {
+		logger.V(1).Error(err, "one of the logging handlers cannot be configured")
+	}
+
+	if C.GoString(token) == "" {
+		receiver = sdk.NewNexusReceiverClient(C.GoString(url), &logger, nil, &pinner)
+	}
+
+	receiver = sdk.NewNexusReceiverClient(C.GoString(url), &logger, &[]rapi.RequestOption{sdk.GetReceiverAuthOption(C.GoString(token))}, &pinner)
 }
 
 //export GetRunResults
@@ -501,9 +537,52 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 	return (*C.RunResult)(cResults)
 }
 
+//export CompleteRequest
+func CompleteRequest(runResult *C.CompletedRunResult, algorithm *C.char, requestId *C.char) C.ErrorResponse {
+	modelRequestResult := &rapi.ModelsAlgorithmResult{
+		ErrorCause: rapi.OptString{
+			Value: C.GoString(runResult.error_cause),
+			Set:   true,
+		},
+		ErrorDetails: rapi.OptString{
+			Value: C.GoString(runResult.error_details),
+			Set:   true,
+		},
+		ResultUri: rapi.OptString{
+			Value: C.GoString(runResult.result_uri),
+			Set:   true,
+		},
+	}
+
+	err := receiver.CompleteRequest(modelRequestResult, C.GoString(algorithm), C.GoString(requestId))
+
+	if err != nil {
+		return C.ErrorResponse{
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+		}
+	}
+
+	return C.ErrorResponse{
+		client_error_type:    nil,
+		client_error_message: nil,
+	}
+}
+
 //export UpdateToken
 func UpdateToken(token *C.char) {
 	client.RefreshAuth(C.GoString(token))
+}
+
+//export UpdateReceiverToken
+func UpdateReceiverToken(token *C.char) {
+	receiver.RefreshAuth(C.GoString(token))
+}
+
+//export FreeErrorResponse
+func FreeErrorResponse(errorResponse C.ErrorResponse) {
+	C.free(unsafe.Pointer(errorResponse.client_error_type))
+	C.free(unsafe.Pointer(errorResponse.client_error_message))
 }
 
 //export FreeRunResult
