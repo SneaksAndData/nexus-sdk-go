@@ -9,13 +9,13 @@ version: 0.0.0
 dependencies:
   - name: nexus-crd
     version: "v0.0.0-3-ga307185"
-    repository: "oci://ghcr.io/sneaksanddata/helm/nexus-crd"
+    repository: "oci://ghcr.io/sneaksanddata/helm"
   - name: nexus
     version: "v0.0.0-18-ge6281f6"
-    repository: "oci://ghcr.io/sneaksanddata/helm/nexus-crd"
+    repository: "oci://ghcr.io/sneaksanddata/helm"
   - name: nexus-receiver
     version: "v0.0.0-8-g8d07d9a"
-    repository: "oci://ghcr.io/sneaksanddata/helm/nexus-receiver"
+    repository: "oci://ghcr.io/sneaksanddata/helm"
   - name: nexus-supervisor
     version: "v0.0.0-8-g36a50e5"
-    repository: "oci://ghcr.io/sneaksanddata/helm/nexus-supervisor"
+    repository: "oci://ghcr.io/sneaksanddata/helm"
