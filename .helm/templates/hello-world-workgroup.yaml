@@ -3,6 +3,10 @@ kind: NexusAlgorithmWorkgroup
 metadata:
   name: default
   namespace: nexus
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   affinity:
     nodeAffinity:
