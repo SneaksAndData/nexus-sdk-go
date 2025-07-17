@@ -2,6 +2,7 @@ package sdk
 
 import (
 	"context"
+	"fmt"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/go-faster/jx"
@@ -41,7 +42,7 @@ func Test_GetRunResultsTagDoesNotExist(t *testing.T) {
 		}
 
 		if err != nil && !strings.Contains(err.Error(), "no submissions found for tag") {
-			f.t.Error("Incorrect error returned, should be: no submissions found for tag")
+			f.t.Error(fmt.Sprintf("Incorrect error %s returned, should be: no submissions found for tag", err.Error()))
 		}
 	}
 }
@@ -61,7 +62,7 @@ func Test_PostNonExistingAlgorithm(t *testing.T) {
 	}
 
 	if err != nil && !strings.Contains(strings.ToLower(err.Error()), "no valid configuration found") {
-		f.t.Error("Incorrect error returned, should contain: `no valid configuration found`")
+		f.t.Error(fmt.Sprintf("Incorrect error %s returned, should contain: `no valid configuration found`", err.Error()))
 	}
 }
 
