@@ -18,9 +18,9 @@ spec:
     memoryLimit: 1000Mi
   container:
     image: nexus-hello
-    registry: oci://ghcr.io/sneaksanddata/nexus-hello-world-algorithm
+    registry: oci://ghcr.io/sneaksanddata
     serviceAccountName: nexus
-    versionTag: v0.0.0
+    versionTag: v0.1.0-2-gdaf24f0
   datadogIntegrationSettings:
     mountDatadogSocket: true
   errorHandlingBehaviour:
@@ -47,11 +47,9 @@ spec:
         valueFrom:
           fieldRef:
             fieldPath: metadata.uid
-    mappedEnvironmentVariables:
-      - secretRef:
-          name: hashicorp-vault-crystal-omnichannel-datadog
+    mappedEnvironmentVariables: []
     maximumRetries: 5
   workgroupRef:
-    group: science.sneaksandata.com
+    group: science.sneaksanddata.com
     kind: NexusAlgorithmWorkgroup
     name: default
