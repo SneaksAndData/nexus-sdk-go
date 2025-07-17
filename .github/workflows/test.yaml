@@ -45,6 +45,8 @@ jobs:
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
       - name: Test
+        env:
+          NEXUS_TEST_SCHEDULER_URL: http://nexus.nexus.svc.cluster.local:8080
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
       - name: Visualise Coverage
