@@ -39,14 +39,27 @@ jobs:
         uses: helm/kind-action@v1
         with:
           cluster_name: 'nexus-shard-0'
+
+      - name: Install Load Balancer Support
+        run: |
+          go install sigs.k8s.io/cloud-provider-kind@latest          
       
       - name: Install Nexus Stack
         run: |
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
+      - name: Fetch LB IP addresses
+        run: |
+          SCHEDULER_LB_IP=$(kubectl get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          RECEIVER_LB_IP=$(kubectl get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          
+          echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
+          echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
+        id: ips
+
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: http://nexus.nexus.svc.cluster.local:8080
+          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
       - name: Visualise Coverage
