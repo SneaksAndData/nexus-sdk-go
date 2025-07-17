@@ -60,8 +60,8 @@ func Test_PostNonExistingAlgorithm(t *testing.T) {
 		f.t.Error("CreateRun should have returned an error, since algorithm 'non-existing' is not deployed")
 	}
 
-	if err != nil && !strings.Contains(err.Error(), "no submissions found for tag") {
-		f.t.Error("Incorrect error returned, should be: no submissions found for tag")
+	if err != nil && !strings.Contains(strings.ToLower(err.Error()), "no valid configuration found") {
+		f.t.Error("Incorrect error returned, should contain: `no valid configuration found`")
 	}
 }
 
