@@ -34,16 +34,14 @@ jobs:
         uses: helm/kind-action@v1
         with:
           cluster_name: 'nexus-controller'
+          cloud_provider: true
 
       - name: Create Shard Kind Cluster
         uses: helm/kind-action@v1
         with:
           cluster_name: 'nexus-shard-0'
+          cloud_provider: false
 
-      - name: Install Load Balancer Support
-        run: |
-          go install sigs.k8s.io/cloud-provider-kind@latest          
-      
       - name: Install Nexus Stack
         run: |
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
