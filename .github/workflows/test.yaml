@@ -64,7 +64,7 @@ jobs:
 
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
+          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8888"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
       - name: Visualise Coverage
