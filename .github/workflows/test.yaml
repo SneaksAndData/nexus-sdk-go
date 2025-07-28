@@ -31,13 +31,13 @@ jobs:
         run: go build -v ./...
         
       - name: Create Controller Kind Cluster
-        uses: helm/kind-action@v1
+        uses: helm/kind-action@main
         with:
           cluster_name: 'nexus-controller'
           cloud_provider: true
 
       - name: Create Shard Kind Cluster
-        uses: helm/kind-action@v1
+        uses: helm/kind-action@main
         with:
           cluster_name: 'nexus-shard-0'
           cloud_provider: false
