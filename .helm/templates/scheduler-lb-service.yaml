@@ -7,6 +7,7 @@ spec:
   type: LoadBalancer
   selector:
     app.kubernetes.io/component: scheduler
+    app.kubernetes.io/name: nexus
   ports:
-    - port: 8888
+    - port: 8080
       targetPort: 8080

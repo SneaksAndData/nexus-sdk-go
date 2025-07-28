@@ -40,7 +40,6 @@ jobs:
         uses: helm/kind-action@main
         with:
           cluster_name: 'nexus-shard-0'
-          cloud_provider: false
 
       - name: Install Nexus Stack
         run: |
@@ -52,20 +51,15 @@ jobs:
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
-          lb=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o json)
           
-          echo "$lb"
-          
-          echo "$SCHEDULER_LB_IP"
-          echo "$RECEIVER_LB_IP"
-          
+
           echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
           echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
         id: ips
 
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8888"
+          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
       - name: Visualise Coverage
