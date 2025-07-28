@@ -292,46 +292,6 @@ func (s *AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON) Unmarsha
 	return s.Decode(d)
 }
 
-// Encode encodes AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON as json.
-func (s AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := string(s)
-
-	e.Str(unwrapped)
-}
-
-// Decode decodes AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON from json.
-func (s *AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON to nil")
-	}
-	var unwrapped string
-	if err := func() error {
-		v, err := d.Str()
-		unwrapped = string(v)
-		if err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON as json.
 func (s AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := []ModelsTaggedRequestResult(s)

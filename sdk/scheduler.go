@@ -231,10 +231,6 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 						return
 					}
 				}
-			case *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain:
-				if !yield(nil, models2.NewNotFoundError(fmt.Errorf("no submissions found for tag '%s'", tag))) {
-					return
-				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain:
 				if !yield(nil, models2.NewBadRequestError(fmt.Errorf("invalid request for tag %s", tag))) {
 					return

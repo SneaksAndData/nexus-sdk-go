@@ -37,12 +37,8 @@ func newFixture(t *testing.T) *fixture {
 func Test_GetRunResultsTagDoesNotExist(t *testing.T) {
 	f := newFixture(t)
 	for _, err := range f.client.GetRunResults("aaa", nil) {
-		if err == nil {
-			f.t.Error("GetRunResults should have returned an error")
-		}
-
-		if err != nil && !strings.Contains(err.Error(), "no submissions found for tag") {
-			f.t.Errorf("Incorrect error %s returned, should be: no submissions found for tag", err.Error())
+		if err != nil {
+			f.t.Errorf("GetRunResults should have not returned an error %s", err.Error())
 		}
 	}
 }
