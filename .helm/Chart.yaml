@@ -19,15 +19,6 @@ dependencies:
   - name: nexus-supervisor
     version: "v0.0.0-8-g36a50e5"
     repository: "oci://ghcr.io/sneaksanddata/helm"
-  - name: scylla
-    version: "1.17.1"
-    repository: "https://scylla-operator-charts.storage.googleapis.com/stable"
-  - name: scylla-operator
-    version: "1.17.1"
-    repository: "https://scylla-operator-charts.storage.googleapis.com/stable"
-  - name: scylla-manager
-    version: "1.17.1"
-    repository: "https://scylla-operator-charts.storage.googleapis.com/stable"
 #  - name: nexus-configuration-controller
 #    version: "v0.2.1-5-gc22316e"
 #    repository: "oci://ghcr.io/sneaksanddata/helm"
