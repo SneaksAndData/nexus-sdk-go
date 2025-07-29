@@ -47,7 +47,7 @@ jobs:
           
           shards_config=$(kind export kubeconfig --name nexus-shard-0 --kubeconfig '/tmp/kind-nexus-shard-0.kubeconfig')
           
-          kubectl create namespace nexus
+          kubectl --context kind-nexus-controller create namespace nexus
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
 
       - name: Install Nexus Stack
