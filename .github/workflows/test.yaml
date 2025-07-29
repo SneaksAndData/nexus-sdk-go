@@ -51,7 +51,7 @@ jobs:
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
-          shards_config=$(kind export kubeconfig --name kind-nexus-shard-0 --kubeconfig '/tmp/kind-nexus-shard-0.kubeconfig')
+          shards_config=$(kind export kubeconfig --name nexus-shard-0 --kubeconfig '/tmp/kind-nexus-shard-0.kubeconfig')
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
           
           pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
