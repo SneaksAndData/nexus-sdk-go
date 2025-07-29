@@ -56,10 +56,14 @@ jobs:
           helm repo add scylla https://scylla-operator-charts.storage.googleapis.com/stable --force-update
           
           helm --kube-context kind-nexus-controller install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.18.2 --set crds.enabled=true
+          sleep 15
           helm --kube-context kind-nexus-controller install scylla-operator scylla/scylla-operator --namespace scylla-operator --create-namespace --version 1.17.1
+          sleep 30
           helm --kube-context kind-nexus-controller install scylla scylla/scylla --namespace scylla --create-namespace --version 1.17.1 --set developerMode=true --set datacenter=us-east-1 \
           --set racks[0].name=us-east-1b --set members=1 --set storage.capacity=5Gi --set storage.storageClassName=standard \
           --set resources.limits.memory=1Gi --set resources.requests.memory=1Gi
+          
+          sleep 60
           
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
