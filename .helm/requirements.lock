@@ -11,9 +11,6 @@ dependencies:
 - name: nexus-supervisor
   repository: oci://ghcr.io/sneaksanddata/helm
   version: v0.0.0-8-g36a50e5
-- name: cert-manager
-  repository: https://charts.jetstack.io
-  version: v1.18.2
 - name: scylla
   repository: https://scylla-operator-charts.storage.googleapis.com/stable
   version: v1.17.1
@@ -23,5 +20,5 @@ dependencies:
 - name: scylla-manager
   repository: https://scylla-operator-charts.storage.googleapis.com/stable
   version: v1.17.1
-digest: sha256:5ddd1786eb271e3477a4055710e2e41477f347bc63302bdcc8a26077d7785fea
-generated: "2025-07-29T17:17:18.669114+02:00"
+digest: sha256:96cdb9562d5da8309269b19a5d25aa2b4538506022e9891c9258d44fb9296f8e
+generated: "2025-07-29T17:19:32.162868+02:00"

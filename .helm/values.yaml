@@ -21,9 +21,6 @@ scylla:
         requests:
           cpu: 1
           memory: 1Gi
-cert-manager:
-  crds:
-    enabled: true
 scylla-manager:
   resources:
     limits:
