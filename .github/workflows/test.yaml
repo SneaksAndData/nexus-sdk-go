@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: Test SDK
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16-cores-public
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,10 +45,14 @@ jobs:
         run: |
           set -e
           
+          sleep 15
+          
           shards_config=$(kind export kubeconfig --name nexus-shard-0 --kubeconfig '/tmp/kind-nexus-shard-0.kubeconfig')
+          SCYLLA_LB_IP=$(kubectl --context kind-nexus-controller -n scylla get svc/scylla-cql -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
           kubectl --context kind-nexus-controller create namespace nexus
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
+          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS_0="$SCYLLA_LB_IP:9042"
 
       - name: Install Nexus Stack
         run: |
@@ -56,9 +60,10 @@ jobs:
 
       - name: Fetch LB IP addresses
         run: |
-          sleep 30
+          sleep 15
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          
                    
           pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
           msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)

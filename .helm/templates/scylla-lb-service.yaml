@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: scylla-cql
+  namespace: scylla
+spec:
+  type: LoadBalancer
+  selector:
+    app: scylla
+    app.kubernetes.io/name: scylla
+    scylla/cluster: scylla
+  ports:
+    - port: 9042
+      targetPort: 9042

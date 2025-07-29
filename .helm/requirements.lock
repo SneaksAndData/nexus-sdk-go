@@ -4,12 +4,24 @@ dependencies:
   version: v0.0.0-3-ga307185
 - name: nexus
   repository: oci://ghcr.io/sneaksanddata/helm
-  version: v0.0.0-18-ge6281f6
+  version: v0.0.0-20-gfbbcdb3
 - name: nexus-receiver
   repository: oci://ghcr.io/sneaksanddata/helm
   version: v0.0.0-8-g8d07d9a
 - name: nexus-supervisor
   repository: oci://ghcr.io/sneaksanddata/helm
   version: v0.0.0-8-g36a50e5
-digest: sha256:3b329639b151a64f0ba89494a21b190ceadbcb06e28f0b8c6bd94d3ad8839586
-generated: "2025-07-02T15:36:46.689707+02:00"
+- name: scylla
+  repository: https://scylla-operator-charts.storage.googleapis.com/stable
+  version: v1.17.1
+- name: scylla-operator
+  repository: https://scylla-operator-charts.storage.googleapis.com/stable
+  version: v1.17.1
+- name: scylla-manager
+  repository: https://scylla-operator-charts.storage.googleapis.com/stable
+  version: v1.17.1
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.18.2
+digest: sha256:92ebd5fccd630cecddca8edf9161f254e84fee9e3fa0dd88cd2ab612bc1dee2e
+generated: "2025-07-29T16:22:18.421414+02:00"
