@@ -52,6 +52,9 @@ jobs:
 
       - name: Install Nexus Stack
         run: |
+          helm repo add jetstack https://charts.jetstack.io --force-update
+          helm repo add scylla https://scylla-operator-charts.storage.googleapis.com/stable --force-update
+          
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
       - name: Fetch LB IP addresses
