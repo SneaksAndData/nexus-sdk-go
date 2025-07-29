@@ -41,6 +41,15 @@ jobs:
         with:
           cluster_name: 'nexus-shard-0'
 
+      - name: Create necessary configurations
+        run: |
+          set -e
+          
+          shards_config=$(kind export kubeconfig --name nexus-shard-0 --kubeconfig '/tmp/kind-nexus-shard-0.kubeconfig')
+          
+          kubectl create namespace nexus
+          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
+
       - name: Install Nexus Stack
         run: |
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
