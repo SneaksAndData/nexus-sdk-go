@@ -51,8 +51,11 @@ jobs:
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
-          curl -vvv http://$SCHEDULER_LB_IP:8080/algorithm/v1.2/results/tags/aaa
-
+          pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
+          msg=$(kubectl describe pod $pod --context kind-nexus-controller -n nexus -o yaml)
+          
+          echo "$msg"
+          
           echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
           echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
         id: ips

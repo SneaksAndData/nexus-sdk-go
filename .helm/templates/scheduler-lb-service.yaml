@@ -8,9 +8,6 @@ spec:
   selector:
     app.kubernetes.io/component: scheduler
     app.kubernetes.io/name: nexus
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: 0.0.0-18-ge6281f6
-    helm.sh/chart: nexus-v0.0.0-18-ge6281f6
   ports:
     - port: 8080
       targetPort: 8080
