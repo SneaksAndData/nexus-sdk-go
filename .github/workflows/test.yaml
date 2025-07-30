@@ -45,7 +45,8 @@ jobs:
         run: |
           set -e
           
-          shards_config=$(kind export kubeconfig --name nexus-shard-0 --kubeconfig '/tmp/kind-nexus-shard-0.kubeconfig')
+          kind export kubeconfig --name nexus-shard-0 --kubeconfig /tmp/kind-nexus-shard-0.kubeconfig
+          shards_config=$(cat /tmp/kind-nexus-shard-0.kubeconfig)
           
           kubectl --context kind-nexus-controller create namespace nexus
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
