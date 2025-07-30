@@ -11,3 +11,6 @@ nexus:
         s3Credentials:
           secretRefEnabled: true
           secretName: nexus-s3
+  extraEnvFrom:
+    - secretRef:
+        name: dummy # bug in Nexus helm chart - needed to actual configs are mounted

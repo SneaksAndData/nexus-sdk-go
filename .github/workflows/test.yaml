@@ -49,6 +49,7 @@ jobs:
           
           kubectl --context kind-nexus-controller create namespace nexus
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
+          kubectl --context kind-nexus-controller -n nexus create secret generic dummy --from-literal=dummy=dummy"
 
       - name: Install Scylla
         run: |
