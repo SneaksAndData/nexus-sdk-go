@@ -89,8 +89,7 @@ jobs:
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
       - name: Fetch LB IP addresses
-        run: |
-          sleep 30         
+        run: | 
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
@@ -100,7 +99,8 @@ jobs:
           
           echo "$msg"
           
-          kubectl logs --context kind-nexus-controller -n nexus -p $pod 
+          kubectl logs --context kind-nexus-controller -n nexus -p $pod
+          kubectl logs --context kind-nexus-controller -n nexus $pod 
           
           echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
           echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
