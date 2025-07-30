@@ -69,7 +69,7 @@ jobs:
           
           sleep 60
           
-          kubectl --context kind-nexus-controller -n scylla get pods -l "app.kubernetes.io/name=scylla"
+          kubectl --context kind-nexus-controller -n scylla get pods
           
           kubectl --context kind-nexus-controller -n scylla apply -f ./test-resources/scylla-lb-service.yaml
           
