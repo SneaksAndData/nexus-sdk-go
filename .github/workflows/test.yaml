@@ -65,13 +65,21 @@ jobs:
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
           --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
           
-          docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1
+          docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1          
 
       - name: Configure Database
         run: |
+          set -e
           pip install scylla-cqlsh
           cqlsh localhost -e 'SELECT * FROM system.local'
           
+          cqlsh localhost -e 'CREATE KEYSPACE nexus'
+          
+          checkpoints=$(cat ./test-resources/storage/checkpoints.cql)
+          
+          cqlsh localhost -e '$checkpoints'
+          
+          cqlsh localhost -e 'SELECT * FROM nexus.checkpoints'
 #
 #
 #      - name: Install Nexus Stack
