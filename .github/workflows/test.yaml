@@ -51,39 +51,13 @@ jobs:
           kubectl --context kind-nexus-controller create namespace nexus
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
           kubectl --context kind-nexus-controller -n nexus create secret generic dummy --from-literal=dummy=dummy
-
-      - name: Install Scylla
-        run: |
-          set -e
           
-          helm repo add jetstack https://charts.jetstack.io --force-update
-          helm repo add scylla https://scylla-operator-charts.storage.googleapis.com/stable --force-update
-          
-          helm --kube-context kind-nexus-controller install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.18.2 --set crds.enabled=true
-          sleep 15
-          helm --kube-context kind-nexus-controller install scylla-operator scylla/scylla-operator --namespace scylla-operator --create-namespace --version 1.17.1
-          sleep 30
-          helm --kube-context kind-nexus-controller install scylla scylla/scylla --namespace scylla --create-namespace --version 1.17.1 --set developerMode=true --set datacenter=us-east-1 \
-          --set racks[0].name=us-east-1b --set members=1 --set storage.capacity=5Gi --set storage.storageClassName=standard \
-          --set racks[0].resources.limits.memory=1Gi --set racks[0].resources.limits.cpu=1000m --set racks[0].resources.requests.memory=1Gi --set racks[0].resources.requests.cpu=1000m
-          
-          sleep 60
-          
-          kubectl --context kind-nexus-controller -n scylla get pods
-          
-          kubectl --context kind-nexus-controller -n scylla apply -f ./test-resources/scylla-lb-service.yaml
-          
-          sleep 15
-          
-          SCYLLA_LB_IP=$(kubectl --context kind-nexus-controller -n scylla get svc/scylla-cql -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS="$SCYLLA_LB_IP:9042"
+          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS="127.0.0.1:9042"
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-s3 \
           --from-literal=NEXUS__S3_BUFFER__ACCESS_KEY_ID="test" \
           --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://localhost:9000" \
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
           --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
-      
-      
 
       - name: Install Nexus Stack
         run: |
@@ -95,6 +69,7 @@ jobs:
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
+          docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1
                    
           pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
           msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
