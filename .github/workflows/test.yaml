@@ -75,9 +75,7 @@ jobs:
           
           cqlsh localhost -e 'CREATE KEYSPACE nexus'
           
-          checkpoints=$(cat ./test-resources/storage/checkpoints.cql)
-          
-          cqlsh localhost -e '$checkpoints'
+          cqlsh localhost -f ./test-resources/storage/checkpoints.cql
           
           cqlsh localhost -e 'SELECT * FROM nexus.checkpoints'
 #
