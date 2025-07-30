@@ -5,4 +5,9 @@ nexus:
       enabled: true
       cqlStore:
         type: scylla
+        secretRefEnabled: true
         secretName: nexus-scylla
+      s3Buffer:
+        s3Credentials:
+          secretRefEnabled: true
+          secretName: nexus-s3

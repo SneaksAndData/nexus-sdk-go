@@ -50,8 +50,10 @@ jobs:
           kubectl --context kind-nexus-controller create namespace nexus
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
 
-      - name: Install Nexus Stack
+      - name: Install Scylla
         run: |
+          set -e
+          
           helm repo add jetstack https://charts.jetstack.io --force-update
           helm repo add scylla https://scylla-operator-charts.storage.googleapis.com/stable --force-update
           
@@ -65,14 +67,26 @@ jobs:
           
           sleep 60
           
+          kubectl --context kind-nexus-controller -n scylla get all
+          kubectl --context kind-nexus-controller -n scylla-operator get all
+          
+          SCYLLA_LB_IP=$(kubectl --context kind-nexus-controller -n scylla get svc/scylla-cql -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS_0="$SCYLLA_LB_IP:9042"
+          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-s3 \
+          --from-literal=NEXUS__S3_BUFFER__ACCESS_KEY_ID="test" \
+          --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://localhost:9000" \
+          --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
+          --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
+      
+      
+
+      - name: Install Nexus Stack
+        run: |
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
       - name: Fetch LB IP addresses
         run: |
-          sleep 30
-          SCYLLA_LB_IP=$(kubectl --context kind-nexus-controller -n scylla get svc/scylla-cql -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS_0="$SCYLLA_LB_IP:9042"
-          
+          sleep 30         
           SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
