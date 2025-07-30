@@ -70,6 +70,8 @@ jobs:
           RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           
           docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1
+          
+          sleep 10
                    
           pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
           msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)

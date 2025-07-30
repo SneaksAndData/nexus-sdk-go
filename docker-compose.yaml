@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  scylla-dev:
-    image: scylladb/scylla
-    network_mode: host
-    command:
-      - --listen-address 127.0.0.1
