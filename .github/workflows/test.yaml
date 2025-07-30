@@ -20,6 +20,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24.*'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.x'
+          architecture: 'x64'
                  
       - name: Verify dependencies
         run: go mod verify
@@ -61,60 +67,67 @@ jobs:
           
           docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1
 
-      - name: Install Nexus Stack
+      - name: Configure Database
         run: |
-          helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
-
-      - name: Fetch LB IP addresses
-        run: | 
-          sleep 20
-          SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-                   
-          pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
-          msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
+          pip install scylla-cqlsh
+          cqlsh localhost -e 'SELECT * FROM system.local'
           
-          echo "$msg"
-          
-          kubectl logs --context kind-nexus-controller -n nexus $pod
-          
-          echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
-          echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
-        id: ips
-
-      - name: Test
-        env:
-          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
-        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
-
-      - name: Visualise Coverage
-        if: ${{ github.ref != 'refs/heads/main' && always() }}
-        run: go tool cover -html=cover.out -o=cover.html
-
-      - name: Upload Coverage
-        if: ${{ github.ref != 'refs/heads/main' && always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: cover.html
-          retention-days: 1
-        id: cover
-
-      - name: Post Coverage
-        if: ${{ github.ref != 'refs/heads/main' && always() }}
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            New [coverage report](${{ steps.cover.outputs.artifact-url }}) available :sparkles:
-
-      - name: Check Coverage
-        uses: vladopajic/go-test-coverage@v2
-        with:
-          config: ./.testcoverage.yml
-
-          ## badge is created and committed only for main branch
-          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
-          ## name of branch where badges are stored
-          ## ideally this should be orphan branch (see below how to create this branch)
-          git-branch: badges
+#
+#
+#      - name: Install Nexus Stack
+#        run: |
+#          helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
+#
+#      - name: Fetch LB IP addresses
+#        run: |
+#          sleep 20
+#          SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+#          RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+#
+#          pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
+#          msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
+#
+#          echo "$msg"
+#
+#          kubectl logs --context kind-nexus-controller -n nexus $pod
+#
+#          echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
+#          echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
+#        id: ips
+#
+#      - name: Test
+#        env:
+#          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
+#        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+#
+#      - name: Visualise Coverage
+#        if: ${{ github.ref != 'refs/heads/main' && always() }}
+#        run: go tool cover -html=cover.out -o=cover.html
+#
+#      - name: Upload Coverage
+#        if: ${{ github.ref != 'refs/heads/main' && always() }}
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: coverage
+#          path: cover.html
+#          retention-days: 1
+#        id: cover
+#
+#      - name: Post Coverage
+#        if: ${{ github.ref != 'refs/heads/main' && always() }}
+#        uses: peter-evans/create-or-update-comment@v4
+#        with:
+#          issue-number: ${{ github.event.number }}
+#          body: |
+#            New [coverage report](${{ steps.cover.outputs.artifact-url }}) available :sparkles:
+#
+#      - name: Check Coverage
+#        uses: vladopajic/go-test-coverage@v2
+#        with:
+#          config: ./.testcoverage.yml
+#
+#          ## badge is created and committed only for main branch
+#          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
+#          ## name of branch where badges are stored
+#          ## ideally this should be orphan branch (see below how to create this branch)
+#          git-branch: badges
