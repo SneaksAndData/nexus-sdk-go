@@ -70,6 +70,10 @@ jobs:
           kubectl --context kind-nexus-controller -n scylla get all
           kubectl --context kind-nexus-controller -n scylla-operator get all
           
+          kubectl --context kind-nexus-controller -n scylla apply -f ./test-resources/scylla-lb-service.yaml
+          
+          sleep 15
+          
           SCYLLA_LB_IP=$(kubectl --context kind-nexus-controller -n scylla get svc/scylla-cql -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS_0="$SCYLLA_LB_IP:9042"
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-s3 \
