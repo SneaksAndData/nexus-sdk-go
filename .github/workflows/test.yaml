@@ -65,7 +65,9 @@ jobs:
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
           --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
           
-          docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1          
+          docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1
+          
+          sleep 10
 
       - name: Configure Database
         run: |
