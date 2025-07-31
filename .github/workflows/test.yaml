@@ -121,7 +121,7 @@ jobs:
       - name: Fetch LB IP addresses
         run: |
           sleep 20
-          LOADBALANCER_IP=$(kubectl get services \
+          LOADBALANCER_IP=$(kubectl --context kind-nexus-controller get services \
               --namespace ingress-nginx \
               ingress-nginx-controller \
               --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
