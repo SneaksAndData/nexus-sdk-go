@@ -18,10 +18,6 @@ subsets:
         name: minio-console
         protocol: TCP
         appProtocol: http
-      - port: 8080
-        name: nexus
-        protocol: TCP
-        appProtocol: http
 ---
 apiVersion: v1
 kind: Service
@@ -40,9 +36,5 @@ spec:
       appProtocol: http
     - port: 9001
       name: minio-console
-      protocol: TCP
-      appProtocol: http
-    - port: 8080
-      name: nexus
       protocol: TCP
       appProtocol: http
