@@ -58,7 +58,7 @@ jobs:
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
           kubectl --context kind-nexus-controller -n nexus create secret generic dummy --from-literal=dummy=dummy
           
-          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS="127.0.0.1:9042"
+          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS="172.17.0.1:9042"
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-s3 \
           --from-literal=NEXUS__S3_BUFFER__ACCESS_KEY_ID="test" \
           --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://localhost:9000" \
@@ -97,28 +97,27 @@ jobs:
           echo 'Checking table'
           
           cqlsh localhost -e 'SELECT * FROM nexus.submission_buffer'
-#
-#
-#      - name: Install Nexus Stack
-#        run: |
-#          helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
-#
-#      - name: Fetch LB IP addresses
-#        run: |
-#          sleep 20
-#          SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-#          RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-#
-#          pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
-#          msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
-#
-#          echo "$msg"
-#
-#          kubectl logs --context kind-nexus-controller -n nexus $pod
-#
-#          echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
-#          echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
-#        id: ips
+
+      - name: Install Nexus Stack
+        run: |
+          helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
+
+      - name: Fetch LB IP addresses
+        run: |
+          sleep 20
+          SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+          pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
+          msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
+
+          echo "$msg"
+
+          kubectl logs --context kind-nexus-controller -n nexus $pod
+
+          echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
+          echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
+        id: ips
 #
 #      - name: Test
 #        env:
