@@ -9,6 +9,15 @@ subsets:
     ports:
       - port: 9042
         protocol: TCP
+      - port: 9000
+        protocol: TCP
+        appProtocol: http
+      - port: 9001
+        protocol: TCP
+        appProtocol: http
+      - port: 8080
+        protocol: TCP
+        appProtocol: http
 ---
 apiVersion: v1
 kind: Service
@@ -21,3 +30,12 @@ spec:
     - port: 9042
       targetPort: 9042
       protocol: TCP
+    - port: 9000
+      protocol: TCP
+      appProtocol: http
+    - port: 9001
+      protocol: TCP
+      appProtocol: http
+    - port: 8080
+      protocol: TCP
+      appProtocol: http

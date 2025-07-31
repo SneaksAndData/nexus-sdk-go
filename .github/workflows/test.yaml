@@ -72,10 +72,10 @@ jobs:
           
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS="dockerhost.nexus.svc.cluster.local:9042"
           kubectl --context kind-nexus-controller -n nexus create secret generic nexus-s3 \
-          --from-literal=NEXUS__S3_BUFFER__ACCESS_KEY_ID="test" \
-          --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://localhost:9000" \
+          --from-literal=NEXUS__S3_BUFFER__ACCESS_KEY_ID="minioadmin" \
+          --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://dockerhost.nexus.svc.cluster.local:9000" \
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
-          --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
+          --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="minioadmin"
 
       - name: Configure Database
         run: |
@@ -129,7 +129,7 @@ jobs:
 
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
+          NEXUS_TEST_SCHEDULER_URL: "http://dockerhost.nexus.svc.cluster.local:8080"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 #
 #      - name: Visualise Coverage
