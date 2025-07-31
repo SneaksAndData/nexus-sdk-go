@@ -8,14 +8,18 @@ subsets:
       - ip: 172.17.0.1 # this is the gateway IP in the "bridge" docker network
     ports:
       - port: 9042
+        name: cql
         protocol: TCP
       - port: 9000
+        name: minio
         protocol: TCP
         appProtocol: http
       - port: 9001
+        name: minio-console
         protocol: TCP
         appProtocol: http
       - port: 8080
+        name: nexus
         protocol: TCP
         appProtocol: http
 ---
@@ -28,14 +32,17 @@ spec:
   clusterIP: None
   ports:
     - port: 9042
-      targetPort: 9042
+      name: cql
       protocol: TCP
     - port: 9000
+      name: minio
       protocol: TCP
       appProtocol: http
     - port: 9001
+      name: minio-console
       protocol: TCP
       appProtocol: http
     - port: 8080
+      name: nexus
       protocol: TCP
       appProtocol: http
