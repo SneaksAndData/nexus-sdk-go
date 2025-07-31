@@ -24,7 +24,6 @@ jobs:
           - 9000:9000
           - 9001:9001
         options:
-          --command 'server /data --console-address :9001'
           --health-cmd 'curl -f http://localhost:9001'
           --health-interval 10s
           --health-timeout 5s
