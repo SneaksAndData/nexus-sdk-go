@@ -71,8 +71,6 @@ jobs:
           --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://localhost:9000" \
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
           --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
-                  
-          sleep 10
 
       - name: Configure Database
         run: |
