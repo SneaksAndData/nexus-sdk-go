@@ -18,6 +18,17 @@ jobs:
         image: scylladb/scylla
         ports:
           - 9042:9042
+      s3:
+        image: quay.io/minio/minio
+        ports:
+          - 9000:9000
+          - 9001:9001
+        options:
+          --command 'server /data --console-address :9001'
+          --health-cmd 'curl -f http://localhost:9001'
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
