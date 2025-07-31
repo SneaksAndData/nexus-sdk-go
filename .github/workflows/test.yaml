@@ -92,6 +92,8 @@ jobs:
           
           echo 'Applying submission_buffer table'
           
+          cqlsh localhost -f ./test-resources/storage/submission_buffer.cql
+          
           echo 'Checking table'
           
           cqlsh localhost -e 'SELECT * FROM nexus.submission_buffer'
