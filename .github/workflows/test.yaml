@@ -87,6 +87,12 @@ jobs:
           echo 'Checking table'
           
           cqlsh localhost -e 'SELECT * FROM nexus.checkpoints'
+          
+          echo 'Applying submission_buffer table'
+          
+          echo 'Checking table'
+          
+          cqlsh localhost -e 'SELECT * FROM nexus.submission_buffer'
 #
 #
 #      - name: Install Nexus Stack
