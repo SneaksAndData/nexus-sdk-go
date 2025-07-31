@@ -12,6 +12,13 @@ jobs:
   test:
     name: Test SDK
     runs-on: ubuntu-latest-16-cores-public
+
+    services:
+      scylla:
+        image: scylladb/scylla
+        ports:
+          - 9042:9042
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -64,9 +71,7 @@ jobs:
           --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://localhost:9000" \
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
           --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="test"
-          
-          docker run --name some-scylla --network host -d scylladb/scylla --listen-address 127.0.0.1
-          
+                  
           sleep 10
 
       - name: Configure Database
