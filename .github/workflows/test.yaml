@@ -77,6 +77,14 @@ jobs:
           --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
           --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="minioadmin"
 
+      - name: Setup Ingress
+        run: |
+          kubectl --context kind-nexus-controller apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+          kubectl --context kind-nexus-controller wait --namespace ingress-nginx \
+            --for=condition=ready pod \
+            --selector=app.kubernetes.io/component=controller \
+            --timeout=90s
+
       - name: Configure Database
         run: |
           set -e
@@ -113,8 +121,10 @@ jobs:
       - name: Fetch LB IP addresses
         run: |
           sleep 20
-          SCHEDULER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          RECEIVER_LB_IP=$(kubectl --context kind-nexus-controller -n nexus get svc/nexus-receiver-lb -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          LOADBALANCER_IP=$(kubectl get services \
+              --namespace ingress-nginx \
+              ingress-nginx-controller \
+              --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
           pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
           msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
@@ -125,13 +135,12 @@ jobs:
 
           kubectl logs --context kind-nexus-controller -n nexus $pod
 
-          echo "SCHEDULER_LB_IP=$SCHEDULER_LB_IP" >> "$GITHUB_OUTPUT"
-          echo "RECEIVER_LB_IP=$RECEIVER_LB_IP" >> "$GITHUB_OUTPUT"
+          echo "SCHEDULER_IP=$LOADBALANCER_IP" >> "$GITHUB_OUTPUT"
         id: ips
 
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_LB_IP}}:8080"
+          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_IP}}:8080"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 #
 #      - name: Visualise Coverage
