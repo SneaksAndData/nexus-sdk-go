@@ -6,6 +6,9 @@ metadata:
 subsets:
   - addresses:
       - ip: 172.17.0.1 # this is the gateway IP in the "bridge" docker network
+    ports:
+      - port: 9042
+        protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -14,3 +17,7 @@ metadata:
   namespace: nexus
 spec:
   clusterIP: None
+  ports:
+    - port: 9042
+      targetPort: 9042
+      protocol: TCP
