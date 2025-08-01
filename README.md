@@ -27,6 +27,6 @@ cd .helm
 helm dependency build .
 helm --kube-context kind-nexus-controller install nexus-test-stack . --create-namespace --namespace nexus
 
-helm dependency build .
+sleep 5
 helm --kube-context kind-nexus-shard-0 install nexus-test-stack . --create-namespace --namespace nexus
 ```

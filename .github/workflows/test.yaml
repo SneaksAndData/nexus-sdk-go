@@ -64,7 +64,7 @@ jobs:
 
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: "http://localhost:8080"
+          NEXUS_TEST_SCHEDULER_URL: "http://127.0.0.1:8080"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 #
 #      - name: Visualise Coverage
