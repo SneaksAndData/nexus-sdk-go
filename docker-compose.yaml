@@ -27,10 +27,34 @@ services:
       - "--console-address"
       - ":9123"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9001" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:9123" ]
       interval: 30s
       timeout: 10s
       retries: 5
+  nexus:
+    container_name: nexus
+    image: ghcr.io/sneaksanddata/nexus:0.0.0-20-gfbbcdb3
+    volumes:
+      - ./test-resources/kubecfg/controller:/opt/kubecfg/controller
+      - ./test-resources/kubecfg/shards:/opt/kubecfg/shards
+    environment:
+      NEXUS__RESOURCE_NAMESPACE: nexus
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__PAYLOAD_STORAGE_PATH: s3a://nexus
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__PAYLOAD_VALID_FOR: 72h
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__FAILURE_RATE_BASE_DELAY: 100ms
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__FAILURE_RATE_MAX_DELAY: 1s
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__RATE_LIMIT_ELEMENTS_PER_SECOND: 20
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__RATE_LIMIT_ELEMENTS_BURST: 200
+      NEXUS__S3_BUFFER__BUFFER_CONFIG__WORKERS: 10
+      NEXUS__KUBE_CONFIG_PATH: /opt/kubecfg/controller
+      NEXUS__SHARD_KUBE_CONFIG_PATH: /opt/kubecfg/shards
+      NEXUS__S3_BUFFER__ACCESS_KEY_ID: minioadmin
+      NEXUS__S3_BUFFER__ENDPOINT: http://localhost:9000
+      NEXUS__S3_BUFFER__REGION: us-east-1
+      NEXUS__S3_BUFFER__SECRET_ACCESS_KEY: minioadmin
+      NEXUS__CQL_STORE_TYPE: scylla
+      DD_DOGSTATSD_URL: udp://localhost:8125
+
   prepare_buckets:
     container_name: minio-setup
     image: quay.io/minio/minio
