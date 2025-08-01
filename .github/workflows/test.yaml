@@ -53,7 +53,12 @@ jobs:
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
       - name: Launch Compose Stack
-        run: docker compose up --quiet-pull -d
+        run: |
+          mkdir -p ./test-resources/kubecfg/shards
+          kind export kubeconfig --name nexus-controller --kubeconfig ./test-resources/kubecfg/controller
+          kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
+  
+          docker compose up --quiet-pull -d
 
       - name: Test
         env:

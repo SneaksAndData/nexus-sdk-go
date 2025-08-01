@@ -33,12 +33,19 @@ services:
       retries: 5
   nexus:
     container_name: nexus
+    network_mode: host
+    depends_on:
+      scylla:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     image: ghcr.io/sneaksanddata/nexus:0.0.0-20-gfbbcdb3
     volumes:
       - ./test-resources/kubecfg/controller:/opt/kubecfg/controller
       - ./test-resources/kubecfg/shards:/opt/kubecfg/shards
     environment:
       NEXUS__RESOURCE_NAMESPACE: nexus
+      NEXUS__MAX_PAYLOAD_SIZE: 536870912
       NEXUS__S3_BUFFER__BUFFER_CONFIG__PAYLOAD_STORAGE_PATH: s3a://nexus
       NEXUS__S3_BUFFER__BUFFER_CONFIG__PAYLOAD_VALID_FOR: 72h
       NEXUS__S3_BUFFER__BUFFER_CONFIG__FAILURE_RATE_BASE_DELAY: 100ms
@@ -53,6 +60,7 @@ services:
       NEXUS__S3_BUFFER__REGION: us-east-1
       NEXUS__S3_BUFFER__SECRET_ACCESS_KEY: minioadmin
       NEXUS__CQL_STORE_TYPE: scylla
+      NEXUS__SCYLLA_CQL_STORE__HOSTS: 127.0.0.1
       DD_DOGSTATSD_URL: udp://localhost:8125
 
   prepare_buckets:
