@@ -128,8 +128,6 @@ jobs:
 
           pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
           msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
-          
-          kubectl --context kind-nexus-controller -n nexus get svc/nexus-lb -o json
 
           echo "$msg"
 
