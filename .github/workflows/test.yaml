@@ -13,17 +13,6 @@ jobs:
     name: Test SDK
     runs-on: ubuntu-latest-16-cores-public
 
-    services:
-      scylla:
-        image: scylladb/scylla
-        ports:
-          - 9042:9042
-      s3:
-        image: quay.io/minio/minio
-        ports:
-          - 9000:9000
-          - 9001:9001
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,86 +48,16 @@ jobs:
         with:
           cluster_name: 'nexus-shard-0'
 
-      - name: Create necessary configurations
-        run: |
-          set -e
-          
-          kind export kubeconfig --name nexus-shard-0 --kubeconfig /tmp/kind-nexus-shard-0.kubeconfig
-          shards_config=$(cat /tmp/kind-nexus-shard-0.kubeconfig)
-          
-          kubectl --context kind-nexus-controller create namespace nexus
-          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-shards --from-literal=kind-nexus-shard-0.kubeconfig="$shards_config"
-          kubectl --context kind-nexus-controller -n nexus create secret generic dummy --from-literal=dummy=dummy
-          
-          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-scylla --from-literal=NEXUS__SCYLLA_CQL_STORE__HOSTS="dockerhost.nexus.svc.cluster.local:9042"
-          kubectl --context kind-nexus-controller -n nexus create secret generic nexus-s3 \
-          --from-literal=NEXUS__S3_BUFFER__ACCESS_KEY_ID="minioadmin" \
-          --from-literal=NEXUS__S3_BUFFER__ENDPOINT="http://dockerhost.nexus.svc.cluster.local:9000" \
-          --from-literal=NEXUS__S3_BUFFER__REGION="us-east-1" \
-          --from-literal=NEXUS__S3_BUFFER__SECRET_ACCESS_KEY="minioadmin"
-
-      - name: Setup Ingress
-        run: |
-          kubectl --context kind-nexus-controller apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
-          kubectl --context kind-nexus-controller wait --namespace ingress-nginx \
-            --for=condition=ready pod \
-            --selector=app.kubernetes.io/component=controller \
-            --timeout=90s
-
-      - name: Configure Database
-        run: |
-          set -e
-          pip install scylla-cqlsh
-          
-          echo 'Checking connectivity'
-          
-          cqlsh localhost -e 'SELECT * FROM system.local'
-          
-          echo 'Creating keyspace'
-          
-          cqlsh localhost -e "CREATE KEYSPACE nexus WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': 1 };"
-          
-          echo 'Applying checkpoints table'
-          
-          cqlsh localhost -f ./test-resources/storage/checkpoints.cql
-          
-          echo 'Checking table'
-          
-          cqlsh localhost -e 'SELECT * FROM nexus.checkpoints'
-          
-          echo 'Applying submission_buffer table'
-          
-          cqlsh localhost -f ./test-resources/storage/submission_buffer.cql
-          
-          echo 'Checking table'
-          
-          cqlsh localhost -e 'SELECT * FROM nexus.submission_buffer'
-
       - name: Install Nexus Stack
         run: |
           helm dependency build ./.helm && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 ./.helm
 
-      - name: Fetch LB IP addresses
-        run: |
-          sleep 20
-          LOADBALANCER_IP=$(kubectl --context kind-nexus-controller get services \
-              --namespace ingress-nginx \
-              ingress-nginx-controller \
-              --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-          pod=$(kubectl get pods --context kind-nexus-controller -n nexus --no-headers -o custom-columns=":metadata.name" | head -n 1)
-          msg=$(kubectl get pod $pod --context kind-nexus-controller -n nexus -o yaml)
-
-          echo "$msg"
-
-          kubectl logs --context kind-nexus-controller -n nexus $pod
-
-          echo "SCHEDULER_IP=$LOADBALANCER_IP" >> "$GITHUB_OUTPUT"
-        id: ips
+      - name: Launch Compose Stack
+        run: docker compose up --quiet-pull -d
 
       - name: Test
         env:
-          NEXUS_TEST_SCHEDULER_URL: "http://${{steps.ips.outputs.SCHEDULER_IP}}:8080"
+          NEXUS_TEST_SCHEDULER_URL: "http://localhost:8080"
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 #
 #      - name: Visualise Coverage
