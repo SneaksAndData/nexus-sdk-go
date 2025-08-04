@@ -3,7 +3,7 @@ Nexus SDK Go is a Golang development kit for Nexus client applications. Base cli
 
 SDK is tested against a Nexus stack deployed to a `kind` cluster (WIP).
 
-## Local testing with `kind`
+## Local testing with `kind` and `docker`
 
 1. Create a controller cluster:
 ```shell
@@ -19,6 +19,10 @@ kind create cluster --name nexus-shard-0
 ```shell
 kind export kubeconfig --name nexus-controller --kubeconfig ./test-resources/kubecfg/controller
 kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
+
+# update permissions
+chmod 777 ./test-resources/kubecfg/controller
+chmod 777 ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
 ```
 
 4. Install CRDs into both clusters:
@@ -26,7 +30,34 @@ kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecf
 cd .helm
 helm dependency build .
 helm --kube-context kind-nexus-controller install nexus-test-stack . --create-namespace --namespace nexus
-
-sleep 5
 helm --kube-context kind-nexus-shard-0 install nexus-test-stack . --create-namespace --namespace nexus
+```
+
+5. Launch docker-compose stack
+```shell
+docker compose up --quiet-pull -d
+```
+
+Now, try to access the scheduler API:
+```shell
+> curl -vvv http://localhost:8080/algorithm/v1.2/results/tags/aaa
+```
+
+and check for a response like below:
+```text
+* Host localhost:8080 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:8080...
+* Connected to localhost (::1) port 8080
+> GET /algorithm/v1.2/results/tags/aaa HTTP/1.1
+> Host: localhost:8080
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+< Date: Mon, 04 Aug 2025 08:23:44 GMT
+< Content-Length: 2
 ```

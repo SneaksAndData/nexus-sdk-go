@@ -14,6 +14,11 @@ import (
 	"time"
 )
 
+var helloParams = map[string]jx.Raw{
+	"hello_text":   jx.Raw("\"hello from SDK Go!\""),
+	"hello_author": jx.Raw("\"unit tests\""),
+}
+
 type fixture struct {
 	t      *testing.T
 	url    string
@@ -125,27 +130,17 @@ func Test_PostNonExistingAlgorithm_CodeParams(t *testing.T) {
 
 func Test_PostRun(t *testing.T) {
 	f := newFixture(t)
-	params := map[string]jx.Raw{
-		"hello_text":   jx.Raw("\"hello from SDK Go!\""),
-		"hello_author": jx.Raw("\"unit tests\""),
-	}
-
-	verifyExistingRun(f, params, "hello_test")
+	verifyExistingRun(f, helloParams, "hello_test")
 }
 
 func Test_GetRunResultsTagExists(t *testing.T) {
 	f := newFixture(t)
 	expectedLength := 3
 	actualLength := 0
-	params := map[string]jx.Raw{
-		"hello_text":   jx.Raw("\"hello from SDK Go!\""),
-		"hello_author": jx.Raw("\"unit tests\""),
-	}
-
 	tag := uuid.New()
 
 	for i := 0; i < expectedLength; i++ {
-		verifyExistingRun(f, params, tag.String())
+		verifyExistingRun(f, helloParams, tag.String())
 	}
 
 	time.Sleep(1 * time.Second)
@@ -162,41 +157,35 @@ func Test_GetRunResultsTagExists(t *testing.T) {
 	}
 }
 
-//
-//func Test_AwaitRun(t *testing.T) {
-//	f := newFixture(t)
-//	params := map[string]jx.Raw{
-//		"hello_text":   jx.Raw("\"hello from SDK Go!\""),
-//		"hello_author": jx.Raw("\"unit tests\""),
-//	}
-//
-//	runId, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
-//		AlgorithmParameters: params,
-//		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
-//			Set: false,
-//		},
-//		ParentRequest: api.OptModelsAlgorithmRequestRef{
-//			Set: false,
-//		},
-//		PayloadValidFor: api.OptString{
-//			Set: false,
-//		},
-//		RequestApiVersion: api.OptString{
-//			Set: false,
-//		},
-//		Tag: api.OptString{
-//			Value: "abc",
-//			Set:   true,
-//		},
-//	}, "hello-world")
-//
-//	if err != nil {
-//		f.t.Error(err)
-//	}
-//
-//	_, err = f.client.AwaitRun(runId, "hello-world", nil)
-//
-//	if err != nil {
-//		f.t.Error(err)
-//	}
-//}
+func Test_AwaitRun(t *testing.T) {
+	f := newFixture(t)
+	runId, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: api.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: api.OptString{
+			Set: false,
+		},
+		RequestApiVersion: api.OptString{
+			Set: false,
+		},
+		Tag: api.OptString{
+			Value: "abc",
+			Set:   true,
+		},
+	}, "hello-world")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	_, err = f.client.AwaitRun(runId, "hello-world", nil)
+
+	if err != nil {
+		f.t.Error(err)
+	}
+}
