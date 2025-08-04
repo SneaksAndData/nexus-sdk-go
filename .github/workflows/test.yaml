@@ -59,6 +59,9 @@ jobs:
           mkdir -p ./test-resources/kubecfg/shards
           kind export kubeconfig --name nexus-controller --kubeconfig ./test-resources/kubecfg/controller
           kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
+          
+          chmod 777 ./test-resources/kubecfg/controller
+          chmod 777 ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
   
           docker compose up --quiet-pull -d
 
