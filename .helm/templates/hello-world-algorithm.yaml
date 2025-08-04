@@ -1,0 +1,55 @@
+apiVersion: science.sneaksanddata.com/v1
+kind: NexusAlgorithmTemplate
+metadata:
+  name: hello-world
+  namespace: nexus
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  args:
+    - main.py
+    - '--sas-uri=%s'
+    - '--request-id=%s'
+  command: python
+  computeResources:
+    cpuLimit: 1000m
+    memoryLimit: 1000Mi
+  container:
+    image: nexus-hello
+    registry: ghcr.io/sneaksanddata
+    serviceAccountName: nexus
+    versionTag: 0.1.0-2-gdaf24f0
+  datadogIntegrationSettings:
+    mountDatadogSocket: true
+  errorHandlingBehaviour:
+    fatalExitCodes:
+      - 137
+    transientExitCodes:
+      - 139
+  runtimeEnvironment:
+    deadlineSeconds: 15
+    environmentVariables:
+      - name: DD_AGENT_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      - name: PROTEUS__DD_SITE
+        value: datadoghq.eu
+      - name: NEXUS__ALGORITHM_NAME
+        value: nexus-hello
+      - name: NEXUS__SCHEDULER_URL
+        value: http://nexus.nexus.svc.cluster.local:8080
+      - name: NEXUS__RECEIVER_URL
+        value: http://nexus-receiver.nexus.svc.cluster.local:8080
+      - name: DD_ENTITY_ID
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.uid
+    mappedEnvironmentVariables: []
+    maximumRetries: 1
+  workgroupRef:
+    group: science.sneaksanddata.com
+    kind: NexusAlgorithmWorkgroup
+    name: default

@@ -418,45 +418,6 @@ func (s AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain) Read(p []byte) 
 func (*AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain) algorithmV12ResultsTagsRequestTagGetRes() {
 }
 
-type AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON string
-
-func (*AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
-}
-
-type AlgorithmV12ResultsTagsRequestTagGetNotFoundTextHTML struct {
-	Data io.Reader
-}
-
-// Read reads data from the Data reader.
-//
-// Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12ResultsTagsRequestTagGetNotFoundTextHTML) Read(p []byte) (n int, err error) {
-	if s.Data == nil {
-		return 0, io.EOF
-	}
-	return s.Data.Read(p)
-}
-
-func (*AlgorithmV12ResultsTagsRequestTagGetNotFoundTextHTML) algorithmV12ResultsTagsRequestTagGetRes() {
-}
-
-type AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain struct {
-	Data io.Reader
-}
-
-// Read reads data from the Data reader.
-//
-// Kept to satisfy the io.Reader interface.
-func (s AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
-	if s.Data == nil {
-		return 0, io.EOF
-	}
-	return s.Data.Read(p)
-}
-
-func (*AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain) algorithmV12ResultsTagsRequestTagGetRes() {
-}
-
 type AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON []ModelsTaggedRequestResult
 
 func (*AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON) algorithmV12ResultsTagsRequestTagGetRes() {
@@ -2230,7 +2191,7 @@ type V1EnvFromSource struct {
 	// The ConfigMap to select from
 	// +optional.
 	ConfigMapRef OptV1ConfigMapEnvSource `json:"configMapRef"`
-	// An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+	// Optional text to prepend to the name of each environment variable. Must be a C_IDENTIFIER.
 	// +optional.
 	Prefix OptString `json:"prefix"`
 	// The Secret to select from

@@ -1,0 +1,12 @@
+apiVersion: v1
+appVersion: 0.0.0
+description: Nexus Charts packaged into a single Chart for integration testing
+maintainers:
+  - email: esdsupport@ecco.com
+    name: ECCO Data & AI
+name: nexus-test-stack
+version: 0.0.0
+dependencies:
+  - name: nexus-crd
+    version: "v0.0.0-3-ga307185"
+    repository: "oci://ghcr.io/sneaksanddata/helm"

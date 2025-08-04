@@ -2,10 +2,12 @@ package sdk
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
+	"io"
 	"iter"
 	"k8s.io/klog/v2"
 	"runtime"
@@ -231,10 +233,6 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 						return
 					}
 				}
-			case *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetNotFoundTextPlain:
-				if !yield(nil, models2.NewNotFoundError(fmt.Errorf("no submissions found for tag '%s'", tag))) {
-					return
-				}
 			case *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain:
 				if !yield(nil, models2.NewBadRequestError(fmt.Errorf("invalid request for tag %s", tag))) {
 					return
@@ -307,16 +305,19 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 	}
 
 	switch createdRunResponseType := createdRunResponse.(type) {
-	case *api.AlgorithmV12RunAlgorithmNamePostBadRequestApplicationJSON, *api.AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain:
-		return "", models2.NewBadRequestError(fmt.Errorf("invalid request payload for algorithm '%s'", algorithmName))
+	case *api.AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain:
+		responseBytes, _ := io.ReadAll(createdRunResponseType.Data)
+		return "", models2.NewBadRequestError(errors.New(string(responseBytes)))
 	case *api.AlgorithmV12RunAlgorithmNamePostUnauthorizedApplicationJSON, *api.AlgorithmV12RunAlgorithmNamePostUnauthorizedTextPlain, *api.AlgorithmV12RunAlgorithmNamePostUnauthorizedTextHTML:
 		return "", models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm '%s'", algorithmName))
 	case *api.AlgorithmV12RunAlgorithmNamePostInternalServerErrorApplicationJSON, *api.AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextPlain, *api.AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextHTML:
 		return "", models2.NewInternalServerError(fmt.Errorf("server error while creating a run request for algorithm '%s'", algorithmName))
 	case *api.AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON:
 		return (*createdRunResponseType)["requestId"], nil
+	case *api.AlgorithmV12RunAlgorithmNamePostBadRequestApplicationJSON:
+		return "", models2.NewSdkErr(fmt.Errorf("unexpected response type '%s' for algorithm '%s'", *createdRunResponseType, algorithmName))
 	default:
-		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm '%s'", algorithmName))
+		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type '%s' for algorithm '%s'", createdRunResponseType, algorithmName))
 	}
 }
 

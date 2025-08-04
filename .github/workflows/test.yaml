@@ -11,7 +11,8 @@ on:
 jobs:
   test:
     name: Test SDK
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16-cores-public
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,6 +21,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24.*'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.x'
+          architecture: 'x64'
                  
       - name: Verify dependencies
         run: go mod verify
@@ -30,49 +37,74 @@ jobs:
       - name: Build
         run: go build -v ./...
         
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1
-      
-      - name: Install Latest Nexus CRD
+      - name: Create Controller Kind Cluster
+        uses: helm/kind-action@main
+        with:
+          cluster_name: 'nexus-controller'
+          cloud_provider: true
+
+      - name: Create Shard Kind Cluster
+        uses: helm/kind-action@main
+        with:
+          cluster_name: 'nexus-shard-0'
+
+      - name: Install Nexus Stack
         run: |
-          helm install nexus-crd --namespace nexus --create-namespace --version v0.0.0-3-ga307185 oci://ghcr.io/sneaksanddata/helm/nexus-crd
+          helm dependency build ./.helm \
+          && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
+          && helm upgrade nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace ./.helm
           
-      - name: Install Latest Nexus
+          helm install nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
+          && helm upgrade nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace ./.helm
+
+      - name: Launch Compose Stack
         run: |
-          helm install nexus --namespace nexus --create-namespace --version v0.0.0-23-gdbc882c oci://ghcr.io/sneaksanddata/helm/nexus
+          mkdir -p ./test-resources/kubecfg/shards
+          kind export kubeconfig --name nexus-controller --kubeconfig ./test-resources/kubecfg/controller
+          kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
           
-# WIP - algorithm YAML needs to be deployed for tests for work          
-#      - name: Test
-#        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
-#
-#      - name: Visualise Coverage
-#        if: ${{ github.ref != 'refs/heads/main' && always() }}
-#        run: go tool cover -html=cover.out -o=cover.html
-#
-#      - name: Upload Coverage
-#        if: ${{ github.ref != 'refs/heads/main' && always() }}
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: coverage
-#          path: cover.html
-#          retention-days: 1
-#        id: cover
-#
-#      - name: Post Coverage
-#        if: ${{ github.ref != 'refs/heads/main' && always() }}
-#        uses: peter-evans/create-or-update-comment@v4
-#        with:
-#          issue-number: ${{ github.event.number }}
-#          body: |
-#            New [coverage report](${{ steps.cover.outputs.artifact-url }}) available :sparkles:
-#
-#      - name: Check Coverage
-#        uses: vladopajic/go-test-coverage@v2
-#        with:
-#          config: ./.testcoverage.yml
-#
-#          ## badge is created and committed only for main branch
-#          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
-#          ## name of branch where badges are stored
-#          ## ideally this should be orphan branch (see below how to create this branch)
-#          git-branch: badges
+          chmod 777 ./test-resources/kubecfg/controller
+          chmod 777 ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
+  
+          docker compose up --quiet-pull -d
+
+      - name: Get Compose Logs
+        if: always()
+        run: docker compose logs
+
+      - name: Test
+        env:
+          NEXUS_TEST_SCHEDULER_URL: "http://localhost:8080"
+        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+
+      - name: Visualise Coverage
+        if: ${{ github.ref != 'refs/heads/main' && always() }}
+        run: go tool cover -html=cover.out -o=cover.html
+
+      - name: Upload Coverage
+        if: ${{ github.ref != 'refs/heads/main' && always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: cover.html
+          retention-days: 1
+        id: cover
+
+      - name: Post Coverage
+        if: ${{ github.ref != 'refs/heads/main' && always() }}
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            New [coverage report](${{ steps.cover.outputs.artifact-url }}) available :sparkles:
+
+      - name: Check Coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          config: ./.testcoverage.yml
+
+          ## badge is created and committed only for main branch
+          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
+          ## name of branch where badges are stored
+          ## ideally this should be orphan branch (see below how to create this branch)
+          git-branch: badges
