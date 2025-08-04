@@ -64,7 +64,7 @@ services:
       DD_DOGSTATSD_URL: udp://localhost:8125
 
   nexus-supervisor:
-    container_name: supervisor
+    container_name: nexus-supervisor
     network_mode: host
     depends_on:
       scylla:
@@ -83,6 +83,29 @@ services:
       NEXUS__WORKERS: 10
       NEXUS__SCYLLA_CQL_STORE__HOSTS: 127.0.0.1
       DD_DOGSTATSD_URL: udp://localhost:8125
+
+  nexus-receiver:
+    container_name: nexus-receiver
+    network_mode: host
+    depends_on:
+      scylla:
+        condition: service_healthy
+    image: ghcr.io/sneaksanddata/nexus-receiver:0.0.0-12-gd37a1a9
+    volumes:
+      - ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig:/opt/kubecfg/cluster
+    environment:
+      NEXUS__RESOURCE_NAMESPACE: nexus
+      NEXUS__KUBE_CONFIG_PATH: /opt/kubecfg/cluster
+      NEXUS__CQL_STORE_TYPE: scylla
+      NEXUS__FAILURE_RATE_BASE_DELAY: 100ms
+      NEXUS__FAILURE_RATE_MAX_DELAY: 1s
+      NEXUS__RATE_LIMIT_ELEMENTS_PER_SECOND: 5
+      NEXUS__RATE_LIMIT_ELEMENTS_BURST: 100
+      NEXUS__WORKERS: 10
+      NEXUS__BIND_PORT: 8081
+      NEXUS__SCYLLA_CQL_STORE__HOSTS: 127.0.0.1
+      DD_DOGSTATSD_URL: udp://localhost:8125
+
 
   prepare_buckets:
     container_name: minio-setup

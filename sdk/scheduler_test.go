@@ -2,6 +2,7 @@ package sdk
 
 import (
 	"context"
+	"errors"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/go-faster/jx"
@@ -159,6 +160,7 @@ func Test_GetRunResultsTagExists(t *testing.T) {
 
 func Test_AwaitRun(t *testing.T) {
 	f := newFixture(t)
+	tag := uuid.New()
 	runId, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
 		AlgorithmParameters: helloParams,
 		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
@@ -174,7 +176,7 @@ func Test_AwaitRun(t *testing.T) {
 			Set: false,
 		},
 		Tag: api.OptString{
-			Value: "abc",
+			Value: tag.String(),
 			Set:   true,
 		},
 	}, "hello-world")
@@ -187,5 +189,58 @@ func Test_AwaitRun(t *testing.T) {
 
 	if err != nil {
 		f.t.Error(err)
+	}
+}
+
+func Test_AwaitRuns(t *testing.T) {
+	f := newFixture(t)
+	tags := []string{}
+	for i := 0; i < 10; i++ {
+		tag := uuid.New()
+		tags = append(tags, tag.String())
+		_, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
+			AlgorithmParameters: helloParams,
+			CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+				Set: false,
+			},
+			ParentRequest: api.OptModelsAlgorithmRequestRef{
+				Set: false,
+			},
+			PayloadValidFor: api.OptString{
+				Set: false,
+			},
+			RequestApiVersion: api.OptString{
+				Set: false,
+			},
+			Tag: api.OptString{
+				Value: tag.String(),
+				Set:   true,
+			},
+		}, "hello-world")
+
+		if err != nil {
+			f.t.Error(err)
+		}
+	}
+
+	time.Sleep(1 * time.Second)
+
+	var counterRef *chan int32
+	counter := make(chan int32, 10)
+	counterRef = &counter
+	go func() {
+		print("Completed run")
+	}()
+
+	runs, err := f.client.AwaitTaggedRuns(tags, nil, nil, counterRef)
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	for run := range runs {
+		if run.Status.Value != "DEADLINE_EXCEEDED" {
+			f.t.Error(errors.New("this algorithm is expected to fail"))
+		}
 	}
 }
