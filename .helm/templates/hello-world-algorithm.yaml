@@ -4,7 +4,7 @@ metadata:
   name: hello-world
   namespace: nexus
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "0"
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
@@ -18,9 +18,9 @@ spec:
     memoryLimit: 1000Mi
   container:
     image: nexus-hello
-    registry: oci://ghcr.io/sneaksanddata
+    registry: ghcr.io/sneaksanddata
     serviceAccountName: nexus
-    versionTag: v0.1.0-2-gdaf24f0
+    versionTag: 0.1.0-2-gdaf24f0
   datadogIntegrationSettings:
     mountDatadogSocket: true
   errorHandlingBehaviour:
@@ -29,7 +29,7 @@ spec:
     transientExitCodes:
       - 139
   runtimeEnvironment:
-    deadlineSeconds: 300
+    deadlineSeconds: 15
     environmentVariables:
       - name: DD_AGENT_HOST
         valueFrom:
@@ -48,7 +48,7 @@ spec:
           fieldRef:
             fieldPath: metadata.uid
     mappedEnvironmentVariables: []
-    maximumRetries: 5
+    maximumRetries: 1
   workgroupRef:
     group: science.sneaksanddata.com
     kind: NexusAlgorithmWorkgroup

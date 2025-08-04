@@ -5,11 +5,13 @@ import (
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/go-faster/jx"
+	"github.com/google/uuid"
 	"github.com/ogen-go/ogen/json"
 	"k8s.io/klog/v2"
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 type fixture struct {
@@ -131,27 +133,45 @@ func Test_PostRun(t *testing.T) {
 	verifyExistingRun(f, params, "hello_test")
 }
 
-//
-//func Test_GetRunResultsTagExists(t *testing.T) {
-//	f := newFixture(t)
-//	expectedLength := 3
-//	actualLength := 0
-//	for _, err := range f.client.GetRunResults("abc", nil) {
-//		if err != nil {
-//			f.t.Error(err)
-//		}
-//		actualLength++
-//	}
-//
-//	if actualLength != expectedLength {
-//		f.t.Errorf("GetRunResults should have returned the expected %d submissions", expectedLength)
-//	}
-//}
+func Test_GetRunResultsTagExists(t *testing.T) {
+	f := newFixture(t)
+	expectedLength := 3
+	actualLength := 0
+	params := map[string]jx.Raw{
+		"hello_text":   jx.Raw("\"hello from SDK Go!\""),
+		"hello_author": jx.Raw("\"unit tests\""),
+	}
+
+	tag := uuid.New()
+
+	for i := 0; i < expectedLength; i++ {
+		verifyExistingRun(f, params, tag.String())
+	}
+
+	time.Sleep(1 * time.Second)
+
+	for _, err := range f.client.GetRunResults(tag.String(), nil) {
+		if err != nil {
+			f.t.Error(err)
+		}
+		actualLength++
+	}
+
+	if actualLength != expectedLength {
+		f.t.Errorf("GetRunResults should have returned the expected %d submissions", expectedLength)
+	}
+}
+
 //
 //func Test_AwaitRun(t *testing.T) {
 //	f := newFixture(t)
+//	params := map[string]jx.Raw{
+//		"hello_text":   jx.Raw("\"hello from SDK Go!\""),
+//		"hello_author": jx.Raw("\"unit tests\""),
+//	}
+//
 //	runId, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
-//		AlgorithmParameters: nil,
+//		AlgorithmParameters: params,
 //		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
 //			Set: false,
 //		},
@@ -168,13 +188,13 @@ func Test_PostRun(t *testing.T) {
 //			Value: "abc",
 //			Set:   true,
 //		},
-//	}, "omni-channel-solver")
+//	}, "hello-world")
 //
 //	if err != nil {
 //		f.t.Error(err)
 //	}
 //
-//	_, err = f.client.AwaitRun(runId, "omni-channel-solver", nil)
+//	_, err = f.client.AwaitRun(runId, "hello-world", nil)
 //
 //	if err != nil {
 //		f.t.Error(err)

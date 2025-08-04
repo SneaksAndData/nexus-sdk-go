@@ -39,7 +39,7 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-    image: ghcr.io/sneaksanddata/nexus:0.0.0-20-gfbbcdb3
+    image: ghcr.io/sneaksanddata/nexus:0.0.0-22-g67e57eb
     volumes:
       - ./test-resources/kubecfg/controller:/opt/kubecfg/controller
       - ./test-resources/kubecfg/shards:/opt/kubecfg/shards

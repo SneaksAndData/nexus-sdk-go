@@ -54,7 +54,7 @@ jobs:
           && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
           && helm upgrade nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace ./.helm
           
-          && helm install nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
+          helm install nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
           && helm upgrade nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace ./.helm
 
       - name: Launch Compose Stack
