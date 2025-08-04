@@ -5,6 +5,7 @@ import (
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/go-faster/jx"
+	"github.com/ogen-go/ogen/json"
 	"k8s.io/klog/v2"
 	"os"
 	"strings"
@@ -34,6 +35,37 @@ func newFixture(t *testing.T) *fixture {
 	return f
 }
 
+func verifyNonExistingRun(testFixture *fixture, params api.ModelsAlgorithmRequestAlgorithmParameters) {
+	request := &api.ModelsAlgorithmRequest{
+		AlgorithmParameters: params,
+		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: api.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: api.OptString{
+			Set: false,
+		},
+		RequestApiVersion: api.OptString{
+			Set: false,
+		},
+		Tag: api.OptString{
+			Set: false,
+		},
+	}
+
+	_, err := testFixture.client.CreateRun(request, "non-existing")
+
+	if err == nil {
+		testFixture.t.Error("CreateRun should have returned an error, since algorithm 'non-existing' is not deployed")
+	}
+
+	if err != nil && !strings.Contains(strings.ToLower(err.Error()), "no valid configuration found") {
+		testFixture.t.Errorf("Incorrect error '%s' returned, should contain: `no valid configuration found`", err.Error())
+	}
+}
+
 func Test_GetRunResultsTagDoesNotExist(t *testing.T) {
 	f := newFixture(t)
 	for _, err := range f.client.GetRunResults("aaa", nil) {
@@ -42,24 +74,23 @@ func Test_GetRunResultsTagDoesNotExist(t *testing.T) {
 		}
 	}
 }
-func Test_PostNonExistingAlgorithm(t *testing.T) {
+func Test_PostNonExistingAlgorithm_TextParams(t *testing.T) {
 	f := newFixture(t)
-	request := &api.ModelsAlgorithmRequest{
-		AlgorithmParameters: api.ModelsAlgorithmRequestAlgorithmParameters{
-			"algorithm": jx.Raw("smth"),
-			"settingA":  jx.Raw("a"),
-			"settingB":  jx.Raw("b"),
-		},
+	var params api.ModelsAlgorithmRequestAlgorithmParameters
+	_ = json.Unmarshal([]byte("{\"algorithm\": \"non-existing\", \"settingA\": \"a\", \"settingB\": \"b\"}"), &params)
+
+	verifyNonExistingRun(f, params)
+}
+
+func Test_PostNonExistingAlgorithm_CodeParams(t *testing.T) {
+	f := newFixture(t)
+	params := map[string]jx.Raw{
+		"algorithm": jx.Raw("\"some-algorithm\""),
+		"settingA":  jx.Raw("\"a\""),
+		"settingB":  jx.Raw("\"b\""),
 	}
 
-	_, err := f.client.CreateRun(request, "non-existing")
-	if err == nil {
-		f.t.Error("CreateRun should have returned an error, since algorithm 'non-existing' is not deployed")
-	}
-
-	if err != nil && !strings.Contains(strings.ToLower(err.Error()), "no valid configuration found") {
-		f.t.Errorf("Incorrect error %s returned, should contain: `no valid configuration found`", err.Error())
-	}
+	verifyNonExistingRun(f, params)
 }
 
 //
