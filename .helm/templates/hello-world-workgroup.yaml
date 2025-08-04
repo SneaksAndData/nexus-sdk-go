@@ -8,19 +8,7 @@ metadata:
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.sneaksanddata.com/service-node-group
-                operator: In
-                values:
-                  - default
+  affinity: {}
   cluster: kind-nexus-shard-0
   description: Default workgroup
-  tolerations:
-    - effect: NoSchedule
-      key: kubernetes.sneaksanddata.com/service-node-group
-      operator: Equal
-      value: default
+  tolerations: []

@@ -66,6 +66,34 @@ func verifyNonExistingRun(testFixture *fixture, params api.ModelsAlgorithmReques
 	}
 }
 
+func verifyExistingRun(testFixture *fixture, params api.ModelsAlgorithmRequestAlgorithmParameters, runTag string) {
+	request := &api.ModelsAlgorithmRequest{
+		AlgorithmParameters: params,
+		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: api.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: api.OptString{
+			Set: false,
+		},
+		RequestApiVersion: api.OptString{
+			Set: false,
+		},
+		Tag: api.OptString{
+			Value: runTag,
+			Set:   true,
+		},
+	}
+
+	_, err := testFixture.client.CreateRun(request, "hello-world")
+
+	if err != nil {
+		testFixture.t.Errorf("Error '%s' returned, no errors expected", err.Error())
+	}
+}
+
 func Test_GetRunResultsTagDoesNotExist(t *testing.T) {
 	f := newFixture(t)
 	for _, err := range f.client.GetRunResults("aaa", nil) {
@@ -91,6 +119,16 @@ func Test_PostNonExistingAlgorithm_CodeParams(t *testing.T) {
 	}
 
 	verifyNonExistingRun(f, params)
+}
+
+func Test_PostRun(t *testing.T) {
+	f := newFixture(t)
+	params := map[string]jx.Raw{
+		"hello_text":   jx.Raw("\"hello from SDK Go!\""),
+		"hello_author": jx.Raw("\"unit tests\""),
+	}
+
+	verifyExistingRun(f, params, "hello_test")
 }
 
 //
