@@ -20,7 +20,7 @@ spec:
     image: nexus-hello
     registry: ghcr.io/sneaksanddata
     serviceAccountName: nexus
-    versionTag: 0.1.0-2-gdaf24f0
+    versionTag: 0.1.1
   datadogIntegrationSettings:
     mountDatadogSocket: true
   errorHandlingBehaviour:
@@ -42,7 +42,7 @@ spec:
       - name: NEXUS__SCHEDULER_URL
         value: http://nexus.nexus.svc.cluster.local:8080
       - name: NEXUS__RECEIVER_URL
-        value: http://nexus-receiver.nexus.svc.cluster.local:8080
+        value: http://dockerhost.nexus.svc.cluster.local:8081
       - name: DD_ENTITY_ID
         valueFrom:
           fieldRef:
