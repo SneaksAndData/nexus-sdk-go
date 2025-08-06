@@ -185,6 +185,8 @@ func Test_AwaitRun(t *testing.T) {
 		f.t.Error(err)
 	}
 
+	time.Sleep(1 * time.Second)
+
 	_, err = f.client.AwaitRun(runId, "hello-world", nil)
 
 	if err != nil {
@@ -223,6 +225,7 @@ func Test_AwaitRuns(t *testing.T) {
 		}
 	}
 
+	// make sure runs have been committed
 	time.Sleep(1 * time.Second)
 
 	var counterRef *chan int32
