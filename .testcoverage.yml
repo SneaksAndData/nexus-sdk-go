@@ -5,7 +5,7 @@ local-prefix: "science.sneaksanddata.com/nexus"
 threshold:
   file: 70
   package: 70
-  total: 75
+  total: 70
       
 exclude:
   paths:
