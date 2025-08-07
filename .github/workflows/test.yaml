@@ -51,11 +51,11 @@ jobs:
       - name: Install Nexus Stack
         run: |
           helm dependency build ./.helm \
-          && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
-          && helm upgrade nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace ./.helm
+          && helm install nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --version 0.0.0 --set dockerServiceType=linux --no-hooks ./.helm \
+          && helm upgrade nexus-test-stack --kube-context kind-nexus-controller --namespace nexus --create-namespace --set dockerServiceType=linux ./.helm
           
-          helm install nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --version 0.0.0 --no-hooks ./.helm \
-          && helm upgrade nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace ./.helm
+          helm install nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --version 0.0.0 --set dockerServiceType=linux --no-hooks ./.helm \
+          && helm upgrade nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --set dockerServiceType=linux ./.helm
 
       - name: Launch Compose Stack
         run: |
@@ -75,6 +75,11 @@ jobs:
       - name: Test
         env:
           NEXUS_TEST_SCHEDULER_URL: "http://localhost:8080"
+          NEXUS_TEST_RECEIVER_URL: "http://localhost:8081"
+          # for debugging:
+          # nohup go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... &
+          # sleep 60
+          # kubectl --context kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
       - name: Visualise Coverage

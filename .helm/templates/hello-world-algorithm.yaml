@@ -20,7 +20,7 @@ spec:
     image: nexus-hello
     registry: ghcr.io/sneaksanddata
     serviceAccountName: nexus
-    versionTag: 0.1.1
+    versionTag: 0.1.1-9-g372300a
   datadogIntegrationSettings:
     mountDatadogSocket: true
   errorHandlingBehaviour:
@@ -29,7 +29,7 @@ spec:
     transientExitCodes:
       - 139
   runtimeEnvironment:
-    deadlineSeconds: 15
+    deadlineSeconds: 120
     environmentVariables:
       - name: DD_AGENT_HOST
         valueFrom:
@@ -43,10 +43,24 @@ spec:
         value: http://nexus.nexus.svc.cluster.local:8080
       - name: NEXUS__RECEIVER_URL
         value: http://dockerhost.nexus.svc.cluster.local:8081
-      - name: DD_ENTITY_ID
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.uid
+      - name: NEXUS__STORAGE_CLIENT_CLASS
+        value: adapta.storage.blob.s3_storage_client.S3StorageClient
+      - name: ALGORITHM_STORAGE__BASE_PATH
+        value: s3a://nexus/storage
+      - name: NEXUS__ALGORITHM_OUTPUT_PATH
+        value: s3a://nexus/result
+      - name: NEXUS__TELEMETRY_PATH
+        value: s3a://nexus/telemetry
+      - name: ALGORITHM_STORAGE_TYPE
+        value: S3
+      - name: PROTEUS__AWS_REGION
+        value: us-east-1
+      - name: PROTEUS__AWS_ENDPOINT
+        value: http://dockerhost.nexus.svc.cluster.local:9000
+      - name: PROTEUS__AWS_SECRET_ACCESS_KEY
+        value: minioadmin
+      - name: PROTEUS__AWS_ACCESS_KEY_ID
+        value: minioadmin
     mappedEnvironmentVariables: []
     maximumRetries: 1
   workgroupRef:

@@ -29,7 +29,7 @@ func NewNexusReceiverClient(receiverUrl string, logger *klog.Logger, options *[]
 		Logger:         logger,
 	}
 
-	if pinner != nil {
+	if pinner != nil { // coverage-ignore
 		pinner.Pin(client)
 		pinner.Pin(logger)
 		pinner.Pin(options)
@@ -39,7 +39,7 @@ func NewNexusReceiverClient(receiverUrl string, logger *klog.Logger, options *[]
 	return result
 }
 
-func (nc *NexusReceiverClient) RefreshAuth(token string) {
+func (nc *NexusReceiverClient) RefreshAuth(token string) { // coverage-ignore
 	nc.RequestOptions = &[]api.RequestOption{GetReceiverAuthOption(token)}
 }
 
@@ -57,7 +57,7 @@ func (nc *NexusReceiverClient) CompleteRequest(result *api.ModelsAlgorithmResult
 		RequestId:     requestId,
 	}, nc.getRequestOptions()...)
 
-	if err != nil {
+	if err != nil { // coverage-ignore
 		return models2.NewSdkErr(err)
 	}
 
@@ -66,11 +66,11 @@ func (nc *NexusReceiverClient) CompleteRequest(result *api.ModelsAlgorithmResult
 		return nil
 	case *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostBadRequestTextPlain:
 		return models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
-	case *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML:
+	case *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML: // coverage-ignore
 		return models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
-	case *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextPlain:
+	case *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON, *api.AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostNotFoundTextPlain: // coverage-ignore
 		return models2.NewNotFoundError(fmt.Errorf("unknown request: a combination of algorithm '%s'/'%s' does not exist", algorithm, requestId))
-	default:
+	default: // coverage-ignore
 		return models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	}
 }
