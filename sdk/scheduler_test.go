@@ -369,6 +369,10 @@ func Test_GetRunResults(t *testing.T) {
 		},
 	}, "hello-world")
 
+	if err != nil {
+		f.t.Error(err)
+	}
+
 	run2Id, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
 		AlgorithmParameters: helloParams,
 		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
