@@ -412,7 +412,7 @@ func Test_GetRunResults(t *testing.T) {
 	}
 
 	if resultCount != len(runs) {
-		f.t.Error(errors.New(fmt.Sprintf("expected to find %d runs, but found %d", len(runs), resultCount)))
+		f.t.Error(fmt.Errorf("expected to find %d runs, but found %d", len(runs), resultCount))
 	}
 }
 
