@@ -14,4 +14,5 @@ exclude:
     - ^pkg/signals        # exclude signal handlers from sample controller
     - hack/*.go           # exclude hack folder
     - main.go             # exclude main file
-    - sdk/auth.go
+    - sdk/auth.go         # exclude auth
+    - sdk/models/sdk_errors.go # exclude Python error wrappers
