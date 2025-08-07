@@ -81,7 +81,7 @@ jobs:
           
           go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... || true
           
-          kubectl kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
+          kubectl --context kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
 
       - name: Visualise Coverage
         if: ${{ github.ref != 'refs/heads/main' && always() }}
