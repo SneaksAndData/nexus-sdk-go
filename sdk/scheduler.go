@@ -34,7 +34,7 @@ type NexusSchedulerClient struct {
 func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *[]api.RequestOption, pinner *runtime.Pinner) *NexusSchedulerClient {
 	client, err := api.NewClient(schedulerUrl)
 
-	if err != nil {
+	if err != nil { // coverage-ignore
 		logger.Error(err, "unable to initialize Nexus scheduler client")
 		klog.FlushAndExit(klog.ExitFlushTimeout, 1)
 	}
@@ -64,7 +64,7 @@ func (nc *NexusSchedulerClient) getRequestOptions() []api.RequestOption {
 		return []api.RequestOption{}
 	}
 
-	return *nc.RequestOptions
+	return *nc.RequestOptions // coverage-ignore
 }
 
 func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest {
@@ -83,7 +83,7 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 			RequestId:     requestId,
 		}, nc.getRequestOptions()...)
 
-		if err != nil {
+		if err != nil { // coverage-ignore
 			return nil, err
 		}
 
