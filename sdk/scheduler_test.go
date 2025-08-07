@@ -191,8 +191,6 @@ func Test_AwaitRun(t *testing.T) {
 		f.t.Error(err)
 	}
 
-	time.Sleep(1 * time.Second)
-
 	_, err = f.client.AwaitRun(runId, "hello-world", nil)
 
 	if err != nil {
