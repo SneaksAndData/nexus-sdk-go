@@ -3,8 +3,10 @@ package sdk
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
-	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	receiverapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
+	schedulerapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
 	"github.com/ogen-go/ogen/json"
@@ -21,16 +23,19 @@ var helloParams = map[string]jx.Raw{
 }
 
 type fixture struct {
-	t      *testing.T
-	url    string
-	logger *klog.Logger
-	client *NexusSchedulerClient
+	t              *testing.T
+	url            string
+	receiverUrl    string
+	logger         *klog.Logger
+	client         *NexusSchedulerClient
+	receiverClient *NexusReceiverClient
 }
 
 func newFixture(t *testing.T) *fixture {
 	f := &fixture{
-		url: os.Getenv("NEXUS_TEST_SCHEDULER_URL"),
-		t:   t,
+		url:         os.Getenv("NEXUS_TEST_SCHEDULER_URL"),
+		receiverUrl: os.Getenv("NEXUS_TEST_RECEIVER_URL"),
+		t:           t,
 	}
 	appLogger, _ := telemetry.ConfigureLogger(context.TODO(), map[string]string{}, "info")
 	klog.SetSlogLogger(appLogger)
@@ -39,26 +44,27 @@ func newFixture(t *testing.T) *fixture {
 
 	f.logger = &logger
 	f.client = NewNexusSchedulerClient(f.url, f.logger, nil, nil)
+	f.receiverClient = NewNexusReceiverClient(f.receiverUrl, f.logger, nil, nil)
 
 	return f
 }
 
-func verifyNonExistingRun(testFixture *fixture, params api.ModelsAlgorithmRequestAlgorithmParameters) {
-	request := &api.ModelsAlgorithmRequest{
+func verifyNonExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgorithmRequestAlgorithmParameters) {
+	request := &schedulerapi.ModelsAlgorithmRequest{
 		AlgorithmParameters: params,
-		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
 			Set: false,
 		},
-		ParentRequest: api.OptModelsAlgorithmRequestRef{
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: api.OptString{
+		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
-		RequestApiVersion: api.OptString{
+		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
-		Tag: api.OptString{
+		Tag: schedulerapi.OptString{
 			Set: false,
 		},
 	}
@@ -74,22 +80,22 @@ func verifyNonExistingRun(testFixture *fixture, params api.ModelsAlgorithmReques
 	}
 }
 
-func verifyExistingRun(testFixture *fixture, params api.ModelsAlgorithmRequestAlgorithmParameters, runTag string) {
-	request := &api.ModelsAlgorithmRequest{
+func verifyExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgorithmRequestAlgorithmParameters, runTag string) {
+	request := &schedulerapi.ModelsAlgorithmRequest{
 		AlgorithmParameters: params,
-		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
 			Set: false,
 		},
-		ParentRequest: api.OptModelsAlgorithmRequestRef{
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: api.OptString{
+		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
-		RequestApiVersion: api.OptString{
+		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
-		Tag: api.OptString{
+		Tag: schedulerapi.OptString{
 			Value: runTag,
 			Set:   true,
 		},
@@ -112,7 +118,7 @@ func Test_GetRunResultsTagDoesNotExist(t *testing.T) {
 }
 func Test_PostNonExistingAlgorithm_TextParams(t *testing.T) {
 	f := newFixture(t)
-	var params api.ModelsAlgorithmRequestAlgorithmParameters
+	var params schedulerapi.ModelsAlgorithmRequestAlgorithmParameters
 	_ = json.Unmarshal([]byte("{\"algorithm\": \"non-existing\", \"settingA\": \"a\", \"settingB\": \"b\"}"), &params)
 
 	verifyNonExistingRun(f, params)
@@ -161,21 +167,21 @@ func Test_GetRunResultsTagExists(t *testing.T) {
 func Test_AwaitRun(t *testing.T) {
 	f := newFixture(t)
 	tag := uuid.New()
-	runId, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
 		AlgorithmParameters: helloParams,
-		CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
 			Set: false,
 		},
-		ParentRequest: api.OptModelsAlgorithmRequestRef{
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: api.OptString{
+		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
-		RequestApiVersion: api.OptString{
+		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
-		Tag: api.OptString{
+		Tag: schedulerapi.OptString{
 			Value: tag.String(),
 			Set:   true,
 		},
@@ -200,21 +206,21 @@ func Test_AwaitRuns(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		tag := uuid.New()
 		tags = append(tags, tag.String())
-		_, err := f.client.CreateRun(&api.ModelsAlgorithmRequest{
+		_, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
 			AlgorithmParameters: helloParams,
-			CustomConfiguration: api.OptV1NexusAlgorithmSpec{
+			CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
 				Set: false,
 			},
-			ParentRequest: api.OptModelsAlgorithmRequestRef{
+			ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 				Set: false,
 			},
-			PayloadValidFor: api.OptString{
+			PayloadValidFor: schedulerapi.OptString{
 				Set: false,
 			},
-			RequestApiVersion: api.OptString{
+			RequestApiVersion: schedulerapi.OptString{
 				Set: false,
 			},
-			Tag: api.OptString{
+			Tag: schedulerapi.OptString{
 				Value: tag.String(),
 				Set:   true,
 			},
@@ -245,5 +251,219 @@ func Test_AwaitRuns(t *testing.T) {
 		if run.Status.Value != "DEADLINE_EXCEEDED" {
 			f.t.Error(errors.New("this algorithm is expected to fail"))
 		}
+	}
+}
+
+func Test_GetRunMetadata(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	metadata, err := f.client.GetMetadata(runId, "hello-world")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	if metadata == nil {
+		f.t.Error(errors.New("run metadata should not be nil"))
+	}
+
+	if metadata != nil && metadata.PayloadURI.Set == false {
+		f.t.Error(errors.New("run metadata should not be nil"))
+	}
+}
+
+func Test_GetRun(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if _, err = f.client.AwaitRun(runId, "hello-world", nil); err != nil {
+		f.t.Error(err)
+	}
+
+	result, err := f.client.GetRun(runId, "hello-world")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	if result == nil {
+		f.t.Error(errors.New("run result should not be nil"))
+	}
+
+	if result != nil && result.Status.Value != "FAILED" {
+		f.t.Error(errors.New("run result should have status FAILED"))
+	}
+}
+
+func Test_GetRunResults(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	run1Id, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world")
+
+	run2Id, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world")
+
+	algorithmName := "hello-world"
+	runs := []string{run1Id, run2Id}
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if _, err = f.client.AwaitTaggedRuns([]string{tag.String()}, &algorithmName, nil, nil); err != nil {
+		f.t.Error(err)
+	}
+
+	resultCount := 0
+
+	for runResult := range f.client.GetRunResults(tag.String(), &algorithmName) {
+		if runResult.Status.Value != "FAILED" {
+			f.t.Error(errors.New("run result should have status FAILED"))
+		}
+		resultCount++
+	}
+
+	if resultCount != len(runs) {
+		f.t.Error(errors.New(fmt.Sprintf("expected to find %d runs, but found %d", len(runs), resultCount)))
+	}
+}
+
+func Test_CompleteRun(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world")
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if _, err = f.client.AwaitRun(runId, "hello-world", nil); err != nil {
+		f.t.Error(err)
+	}
+
+	result := &receiverapi.ModelsAlgorithmResult{
+		ErrorCause: receiverapi.OptString{
+			Value: "Fail cause overridden",
+			Set:   true,
+		},
+		ErrorDetails: receiverapi.OptString{
+			Value: "Algorithm had its cause updated",
+			Set:   true,
+		},
+		ResultUri: receiverapi.OptString{
+			Set: false,
+		},
+	}
+
+	if err := f.receiverClient.CompleteRequest(result, "hello-world", runId); err != nil {
+		f.t.Error(err)
 	}
 }
