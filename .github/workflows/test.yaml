@@ -81,7 +81,7 @@ jobs:
           
           nohup go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... &
           
-          sleep 20
+          sleep 60
           
           kubectl --context kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
 
