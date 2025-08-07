@@ -79,9 +79,9 @@ jobs:
         run: |
           set -e
           
-          nohup go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... & || true
+          nohup go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... &
           
-          sleep 10
+          sleep 20
           
           kubectl --context kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
 
