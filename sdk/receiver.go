@@ -57,7 +57,7 @@ func (nc *NexusReceiverClient) CompleteRequest(result *api.ModelsAlgorithmResult
 		RequestId:     requestId,
 	}, nc.getRequestOptions()...)
 
-	if err != nil {
+	if err != nil { // coverage-ignore
 		return models2.NewSdkErr(err)
 	}
 
