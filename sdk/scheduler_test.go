@@ -248,7 +248,7 @@ func Test_AwaitRuns(t *testing.T) {
 	}
 
 	for run := range runs {
-		if run.Status.Value != "DEADLINE_EXCEEDED" {
+		if run.Status.Value != "FAILED" {
 			f.t.Error(errors.New("this algorithm is expected to fail"))
 		}
 	}
