@@ -84,6 +84,7 @@ import (
 var pinner = runtime.Pinner{}
 var client *sdk.NexusSchedulerClient
 var receiver *sdk.NexusReceiverClient
+var ctx = signals.SetupSignalHandler()
 
 //export CreateSchedulerClient
 func CreateSchedulerClient(url *C.char, token *C.char) {
@@ -91,7 +92,6 @@ func CreateSchedulerClient(url *C.char, token *C.char) {
 	if logLevelString == "" {
 		logLevelString = telemetry.LoggingDisabled
 	}
-	ctx := signals.SetupSignalHandler()
 	appLogger, err := telemetry.ConfigureLogger(ctx, map[string]string{}, logLevelString)
 	klog.SetSlogLogger(appLogger)
 
@@ -114,7 +114,6 @@ func CreateReceiverClient(url *C.char, token *C.char) {
 	if logLevelString == "" {
 		logLevelString = telemetry.LoggingDisabled
 	}
-	ctx := signals.SetupSignalHandler()
 	appLogger, err := telemetry.ConfigureLogger(ctx, map[string]string{}, logLevelString)
 	klog.SetSlogLogger(appLogger)
 
