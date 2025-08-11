@@ -1,0 +1,24 @@
+# sets generator options.
+generator:
+  # sets generator features.
+  features:
+    enable:
+      # Enables paths client generation
+      - "paths/client"
+      # Enables validation of client requests
+      - "client/request/validation"
+      # Enables webhooks client generation
+      - 'webhooks/client'
+      # Enables client usage in security source implementations
+      - 'client/security/reentrant'
+      # Enables customizing client requests
+      - 'client/request/options'
+    disable:
+      # Disables OpenTelemetry integration
+      - "ogen/otel"
+      # Disables paths server generation
+      - 'paths/server'
+      # Disables webhooks server generation
+      - 'webhooks/server'
+      # Disables validation of server responses
+      - 'server/response/validation'
