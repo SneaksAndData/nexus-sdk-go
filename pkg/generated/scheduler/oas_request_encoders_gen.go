@@ -11,7 +11,7 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 )
 
-func encodeAlgorithmV12RunAlgorithmNamePostRequest(
+func encodeAlgorithmV1RunAlgorithmNamePostRequest(
 	req *ModelsAlgorithmRequest,
 	r *http.Request,
 ) error {

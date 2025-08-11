@@ -15,7 +15,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetRes, _ error) {
+func decodeAlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -75,7 +75,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON
+			var response AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -100,7 +100,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 
-			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -109,7 +109,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 
-			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -128,7 +128,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON
+			var response AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -153,7 +153,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 
-			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -162,7 +162,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 
-			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -181,7 +181,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON
+			var response AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -206,7 +206,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 
-			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -215,7 +215,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 				return res, err
 			}
 
-			response := AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -224,7 +224,7 @@ func decodeAlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *h
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetRes, _ error) {
+func decodeAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes, _ error) {
 	switch resp.StatusCode {
 	case 302:
 		// Code 302.
@@ -240,7 +240,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -249,7 +249,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -268,7 +268,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -277,7 +277,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -296,7 +296,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -305,7 +305,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -324,7 +324,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -333,7 +333,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -342,7 +342,7 @@ func decodeAlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetRes, _ error) {
+func decodeAlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetRes, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -393,7 +393,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON
+			var response AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -418,7 +418,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -427,7 +427,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -446,7 +446,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON
+			var response AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -471,7 +471,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -480,7 +480,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -499,7 +499,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON
+			var response AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -524,7 +524,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -533,7 +533,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -542,7 +542,7 @@ func decodeAlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (res AlgorithmV12ResultsTagsRequestTagGetRes, _ error) {
+func decodeAlgorithmV1ResultsTagsRequestTagGetResponse(resp *http.Response) (res AlgorithmV1ResultsTagsRequestTagGetRes, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -558,7 +558,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12ResultsTagsRequestTagGetOKApplicationJSON
+			var response AlgorithmV1ResultsTagsRequestTagGetOKApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -602,7 +602,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12ResultsTagsRequestTagGetBadRequestApplicationJSON
+			var response AlgorithmV1ResultsTagsRequestTagGetBadRequestApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -627,7 +627,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsTagsRequestTagGetBadRequestTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsTagsRequestTagGetBadRequestTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -636,7 +636,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsTagsRequestTagGetBadRequestTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsTagsRequestTagGetBadRequestTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -655,7 +655,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12ResultsTagsRequestTagGetUnauthorizedApplicationJSON
+			var response AlgorithmV1ResultsTagsRequestTagGetUnauthorizedApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -680,7 +680,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsTagsRequestTagGetUnauthorizedTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -689,7 +689,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 				return res, err
 			}
 
-			response := AlgorithmV12ResultsTagsRequestTagGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1ResultsTagsRequestTagGetUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -698,7 +698,7 @@ func decodeAlgorithmV12ResultsTagsRequestTagGetResponse(resp *http.Response) (re
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res AlgorithmV12RunAlgorithmNamePostRes, _ error) {
+func decodeAlgorithmV1RunAlgorithmNamePostResponse(resp *http.Response) (res AlgorithmV1RunAlgorithmNamePostRes, _ error) {
 	switch resp.StatusCode {
 	case 202:
 		// Code 202.
@@ -714,7 +714,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12RunAlgorithmNamePostAcceptedApplicationJSON
+			var response AlgorithmV1RunAlgorithmNamePostAcceptedApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -749,7 +749,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12RunAlgorithmNamePostBadRequestApplicationJSON
+			var response AlgorithmV1RunAlgorithmNamePostBadRequestApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -774,7 +774,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 
-			response := AlgorithmV12RunAlgorithmNamePostBadRequestTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1RunAlgorithmNamePostBadRequestTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -783,7 +783,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 
-			response := AlgorithmV12RunAlgorithmNamePostBadRequestTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1RunAlgorithmNamePostBadRequestTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -802,7 +802,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12RunAlgorithmNamePostUnauthorizedApplicationJSON
+			var response AlgorithmV1RunAlgorithmNamePostUnauthorizedApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -827,7 +827,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 
-			response := AlgorithmV12RunAlgorithmNamePostUnauthorizedTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1RunAlgorithmNamePostUnauthorizedTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -836,7 +836,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 
-			response := AlgorithmV12RunAlgorithmNamePostUnauthorizedTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1RunAlgorithmNamePostUnauthorizedTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
@@ -855,7 +855,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AlgorithmV12RunAlgorithmNamePostInternalServerErrorApplicationJSON
+			var response AlgorithmV1RunAlgorithmNamePostInternalServerErrorApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -880,7 +880,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 
-			response := AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextHTML{Data: bytes.NewReader(b)}
+			response := AlgorithmV1RunAlgorithmNamePostInternalServerErrorTextHTML{Data: bytes.NewReader(b)}
 			return &response, nil
 		case ct == "text/plain":
 			reader := resp.Body
@@ -889,7 +889,7 @@ func decodeAlgorithmV12RunAlgorithmNamePostResponse(resp *http.Response) (res Al
 				return res, err
 			}
 
-			response := AlgorithmV12RunAlgorithmNamePostInternalServerErrorTextPlain{Data: bytes.NewReader(b)}
+			response := AlgorithmV1RunAlgorithmNamePostInternalServerErrorTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)

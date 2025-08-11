@@ -2,38 +2,38 @@
 
 package api
 
-// AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1.2/metadata/{algorithmName}/requests/{requestId} operation.
-type AlgorithmV12MetadataAlgorithmNameRequestsRequestIdGetParams struct {
+// AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1/metadata/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams struct {
 	// Algorithm name.
 	AlgorithmName string
 	// Request identifier.
 	RequestId string
 }
 
-// AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1.2/payload/{algorithmName}/requests/{requestId} operation.
-type AlgorithmV12PayloadAlgorithmNameRequestsRequestIdGetParams struct {
+// AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1/payload/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams struct {
 	// Algorithm name.
 	AlgorithmName string
 	// Request identifier.
 	RequestId string
 }
 
-// AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1.2/results/{algorithmName}/requests/{requestId} operation.
-type AlgorithmV12ResultsAlgorithmNameRequestsRequestIdGetParams struct {
+// AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1/results/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams struct {
 	// Algorithm name.
 	AlgorithmName string
 	// Request identifier.
 	RequestId string
 }
 
-// AlgorithmV12ResultsTagsRequestTagGetParams is parameters of GET /algorithm/v1.2/results/tags/{requestTag} operation.
-type AlgorithmV12ResultsTagsRequestTagGetParams struct {
+// AlgorithmV1ResultsTagsRequestTagGetParams is parameters of GET /algorithm/v1/results/tags/{requestTag} operation.
+type AlgorithmV1ResultsTagsRequestTagGetParams struct {
 	// Request tag assigned by a client.
 	RequestTag string
 }
 
-// AlgorithmV12RunAlgorithmNamePostParams is parameters of POST /algorithm/v1.2/run/{algorithmName} operation.
-type AlgorithmV12RunAlgorithmNamePostParams struct {
+// AlgorithmV1RunAlgorithmNamePostParams is parameters of POST /algorithm/v1/run/{algorithmName} operation.
+type AlgorithmV1RunAlgorithmNamePostParams struct {
 	// Algorithm name.
 	AlgorithmName string
 }
