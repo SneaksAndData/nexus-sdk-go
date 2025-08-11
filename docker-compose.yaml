@@ -39,7 +39,7 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-    image: ghcr.io/sneaksanddata/nexus:0.0.0-22-g67e57eb
+    image: ghcr.io/sneaksanddata/nexus:1.0.0
     volumes:
       - ./test-resources/kubecfg/controller:/opt/kubecfg/controller
       - ./test-resources/kubecfg/shards:/opt/kubecfg/shards
@@ -90,7 +90,7 @@ services:
     depends_on:
       scylla:
         condition: service_healthy
-    image: ghcr.io/sneaksanddata/nexus-receiver:0.0.0-12-gd37a1a9
+    image: ghcr.io/sneaksanddata/nexus-receiver:1.0.0
     volumes:
       - ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig:/opt/kubecfg/cluster
     environment:

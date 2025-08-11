@@ -2,8 +2,8 @@
 
 package api
 
-// AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostParams is parameters of POST /algorithm/v1.2/complete/{algorithmName}/requests/{requestId} operation.
-type AlgorithmV12CompleteAlgorithmNameRequestsRequestIdPostParams struct {
+// AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostParams is parameters of POST /algorithm/v1/complete/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostParams struct {
 	// Request id of the run to complete.
 	AlgorithmName string
 	// Request id of the run to complete.
