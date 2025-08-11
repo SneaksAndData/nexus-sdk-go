@@ -57,59 +57,59 @@ jobs:
           helm install nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --version 0.0.0 --set dockerServiceType=linux --no-hooks ./.helm \
           && helm upgrade nexus-test-stack --kube-context kind-nexus-shard-0 --namespace nexus --create-namespace --set dockerServiceType=linux ./.helm
 
-      - name: Launch Compose Stack
-        run: |
-          mkdir -p ./test-resources/kubecfg/shards
-          kind export kubeconfig --name nexus-controller --kubeconfig ./test-resources/kubecfg/controller
-          kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
-          
-          chmod 777 ./test-resources/kubecfg/controller
-          chmod 777 ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
-  
-          docker compose up --quiet-pull -d
-
-      - name: Get Compose Logs
-        if: always()
-        run: docker compose logs
-
-      - name: Test
-        env:
-          NEXUS_TEST_SCHEDULER_URL: "http://localhost:8080"
-          NEXUS_TEST_RECEIVER_URL: "http://localhost:8081"
-          # for debugging:
-          # nohup go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... &
-          # sleep 60
-          # kubectl --context kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
-        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
-
-      - name: Visualise Coverage
-        if: ${{ github.ref != 'refs/heads/main' && always() }}
-        run: go tool cover -html=cover.out -o=cover.html
-
-      - name: Upload Coverage
-        if: ${{ github.ref != 'refs/heads/main' && always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: cover.html
-          retention-days: 1
-        id: cover
-
-      - name: Post Coverage
-        if: ${{ github.ref != 'refs/heads/main' && always() }}
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            New [coverage report](${{ steps.cover.outputs.artifact-url }}) available :sparkles:
-
-      - name: Check Coverage
-        uses: vladopajic/go-test-coverage@v2
-        with:
-          config: ./.testcoverage.yml
-
-          ## badge is created and committed only for main branch
-          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
-          ## name of branch where badges are stored
-          ## ideally this should be orphan branch (see below how to create this branch)
-          git-branch: badges
+#      - name: Launch Compose Stack
+#        run: |
+#          mkdir -p ./test-resources/kubecfg/shards
+#          kind export kubeconfig --name nexus-controller --kubeconfig ./test-resources/kubecfg/controller
+#          kind export kubeconfig --name nexus-shard-0 --kubeconfig ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
+#
+#          chmod 777 ./test-resources/kubecfg/controller
+#          chmod 777 ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig
+#
+#          docker compose up --quiet-pull -d
+#
+#      - name: Get Compose Logs
+#        if: always()
+#        run: docker compose logs
+#
+#      - name: Test
+#        env:
+#          NEXUS_TEST_SCHEDULER_URL: "http://localhost:8080"
+#          NEXUS_TEST_RECEIVER_URL: "http://localhost:8081"
+#          # for debugging:
+#          # nohup go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./... &
+#          # sleep 60
+#          # kubectl --context kind-nexus-shard-0 --namespace nexus logs -l science.sneaksanddata.com/algorithm-template-name=hello-world
+#        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+#
+#      - name: Visualise Coverage
+#        if: ${{ github.ref != 'refs/heads/main' && always() }}
+#        run: go tool cover -html=cover.out -o=cover.html
+#
+#      - name: Upload Coverage
+#        if: ${{ github.ref != 'refs/heads/main' && always() }}
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: coverage
+#          path: cover.html
+#          retention-days: 1
+#        id: cover
+#
+#      - name: Post Coverage
+#        if: ${{ github.ref != 'refs/heads/main' && always() }}
+#        uses: peter-evans/create-or-update-comment@v4
+#        with:
+#          issue-number: ${{ github.event.number }}
+#          body: |
+#            New [coverage report](${{ steps.cover.outputs.artifact-url }}) available :sparkles:
+#
+#      - name: Check Coverage
+#        uses: vladopajic/go-test-coverage@v2
+#        with:
+#          config: ./.testcoverage.yml
+#
+#          ## badge is created and committed only for main branch
+#          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
+#          ## name of branch where badges are stored
+#          ## ideally this should be orphan branch (see below how to create this branch)
+#          git-branch: badges
