@@ -1,3 +1,5 @@
+![coverage](https://raw.githubusercontent.com/SneaksAndData/nexus-sdk-go/badges/.badges/main/coverage.svg)
+
 # Introduction
 Nexus SDK Go is a Golang development kit for Nexus client applications. Base client code is generated using `ogen` from OpenAPI v3 specification of the Nexus API.
 
@@ -40,7 +42,7 @@ docker compose up --quiet-pull -d
 
 Now, try to access the scheduler API:
 ```shell
-> curl -vvv http://localhost:8080/algorithm/v1.2/results/tags/aaa
+> curl -vvv http://localhost:8080/algorithm/v1/results/tags/aaa
 ```
 
 and check for a response like below:
@@ -50,7 +52,7 @@ and check for a response like below:
 * IPv4: 127.0.0.1
 *   Trying [::1]:8080...
 * Connected to localhost (::1) port 8080
-> GET /algorithm/v1.2/results/tags/aaa HTTP/1.1
+> GET /algorithm/v1/results/tags/aaa HTTP/1.1
 > Host: localhost:8080
 > User-Agent: curl/8.7.1
 > Accept: */*
