@@ -69,7 +69,7 @@ services:
     depends_on:
       scylla:
         condition: service_healthy
-    image: ghcr.io/sneaksanddata/nexus-supervisor:0.0.0-11-gfa243d6
+    image: ghcr.io/sneaksanddata/nexus-supervisor:0.1.0
     volumes:
       - ./test-resources/kubecfg/shards/kind-nexus-shard-0.kubeconfig:/opt/kubecfg/cluster
     environment:
