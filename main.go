@@ -177,6 +177,33 @@ func GetRunResults(tag *C.char, algorithm *C.char) *C.RunResult {
 	return (*C.RunResult)(cResults)
 }
 
+//export GetRunResult
+func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
+	result, err := client.GetRun(C.GoString(requestId), C.GoString(algorithm))
+
+	if err != nil {
+		return C.RunResult{
+			algorithm:            nil,
+			request_id:           nil,
+			result_uri:           nil,
+			run_error_message:    nil,
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+			status:               nil,
+		}
+	}
+
+	return C.RunResult{
+		algorithm:            C.CString(algorithm),
+		request_id:           C.CString(requestId),
+		result_uri:           C.CString(result.ResultUri.Value),
+		run_error_message:    C.CString(result.RunErrorMessage.Value),
+		client_error_type:    nil,
+		client_error_message: nil,
+		status:               C.CString(result.Status.Value),
+	}
+}
+
 //export CreateRun
 func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, payloadValidFor *C.char, tag *C.char) C.AlgorithmRun {
 	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
