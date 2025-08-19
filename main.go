@@ -194,8 +194,8 @@ func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
 	}
 
 	return C.RunResult{
-		algorithm:            C.CString(algorithm),
-		request_id:           C.CString(requestId),
+		algorithm:            C.CString(C.GoString(algorithm)),
+		request_id:           C.CString(C.GoString(requestId)),
 		result_uri:           C.CString(result.ResultUri.Value),
 		run_error_message:    C.CString(result.RunErrorMessage.Value),
 		client_error_type:    nil,
