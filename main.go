@@ -414,7 +414,7 @@ func GetBufferedRun(requestId *C.char, algorithmName *C.char) C.StringResult {
 }
 
 //export CancelRun
-func CancelRun(requestId *C.char, algorithmName *C.char, policy *C.char, initiator *C.char, reason *C.char) C.CStringResult {
+func CancelRun(requestId *C.char, algorithmName *C.char, policy *C.char, initiator *C.char, reason *C.char) C.StringResult {
 	err := client.CancelRun(&api.ModelsCancellationRequest{
 		CancellationPolicy: api.OptString{
 			Set:   true,
