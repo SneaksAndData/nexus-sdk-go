@@ -62,6 +62,10 @@ package main
 //char* error_cause;
 //char* error_details;
 //} CompletedRunResult;
+//typedef struct StringResult {
+//char* result;
+//char* error_text;
+//} StringResult;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
@@ -205,9 +209,10 @@ func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
 }
 
 //export CreateRun
-func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, payloadValidFor *C.char, tag *C.char) C.AlgorithmRun {
+func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, payloadValidFor *C.char, tag *C.char, dryRun *C.char) C.AlgorithmRun {
 	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
 	var decodeErr *models2.InputDecodeError
+	isDryRun := C.GoString(dryRun) == "true"
 	parentRequestParam := api.OptModelsAlgorithmRequestRef{
 		Value: api.ModelsAlgorithmRequestRef{},
 		Set:   false,
@@ -347,7 +352,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 			Set:   true,
 		},
 		Tag: requestTag,
-	}, C.GoString(algorithmName))
+	}, C.GoString(algorithmName), &isDryRun)
 
 	if err != nil {
 		return C.AlgorithmRun{
@@ -388,6 +393,53 @@ func GetRun(requestId *C.char, algorithmName *C.char) C.RunResult {
 		client_error_type:    nil,
 		client_error_message: nil,
 		status:               C.CString(result.Status.Value),
+	}
+}
+
+//export GetBufferedRun
+func GetBufferedRun(requestId *C.char, algorithmName *C.char) C.StringResult {
+	result, err := client.GetBufferedRequest(C.GoString(requestId), C.GoString(algorithmName))
+
+	if err != nil {
+		return C.StringResult{
+			result:     nil,
+			error_text: C.CString(err.Error()),
+		}
+	}
+
+	return C.StringResult{
+		result:     C.CString(result),
+		error_text: nil,
+	}
+}
+
+//export CancelRun
+func CancelRun(requestId *C.char, algorithmName *C.char, policy *C.char, initiator *C.char, reason *C.char) C.CStringResult {
+	err := client.CancelRun(&api.ModelsCancellationRequest{
+		CancellationPolicy: api.OptString{
+			Set:   true,
+			Value: C.GoString(policy),
+		},
+		Initiator: api.OptString{
+			Set:   true,
+			Value: C.GoString(initiator),
+		},
+		Reason: api.OptString{
+			Set:   true,
+			Value: C.GoString(reason),
+		},
+	}, C.GoString(requestId), C.GoString(algorithmName))
+
+	if err != nil {
+		return C.StringResult{
+			result:     nil,
+			error_text: C.CString(err.Error()),
+		}
+	}
+
+	return C.StringResult{
+		result:     nil,
+		error_text: nil,
 	}
 }
 

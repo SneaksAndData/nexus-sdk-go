@@ -80,6 +80,18 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
+	// AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/buffer/{algorithmName}/requests/{requestId} operation.
+	//
+	// Retrieves a buffered metadata for a run.
+	//
+	// GET /algorithm/v1/buffer/{algorithmName}/requests/{requestId}
+	AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetRes, error)
+	// AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1/cancel/{algorithmName}/requests/{requestId} operation.
+	//
+	// Interrupts the provided run id and cancels the execution tree if it exists.
+	//
+	// POST /algorithm/v1/cancel/{algorithmName}/requests/{requestId}
+	AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *ModelsCancellationRequest, params AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostRes, error)
 	// AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/metadata/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves checkpointed metadata for a run.
@@ -134,6 +146,191 @@ func NewClient(serverURL string, opts ...ClientOption) (*Client, error) {
 		serverURL:  u,
 		baseClient: c,
 	}, nil
+}
+
+// AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/buffer/{algorithmName}/requests/{requestId} operation.
+//
+// Retrieves a buffered metadata for a run.
+//
+// GET /algorithm/v1/buffer/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendAlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+	return res, err
+}
+
+func (c *Client) sendAlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetRes, err error) {
+
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
+	var pathParts [4]string
+	pathParts[0] = "/algorithm/v1/buffer/"
+	{
+		// Encode "algorithmName" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "algorithmName",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.AlgorithmName))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/requests/"
+	{
+		// Encode "requestId" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "requestId",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.RequestId))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
+
+	result, err := decodeAlgorithmV1BufferAlgorithmNameRequestsRequestIdGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1/cancel/{algorithmName}/requests/{requestId} operation.
+//
+// Interrupts the provided run id and cancels the execution tree if it exists.
+//
+// POST /algorithm/v1/cancel/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *ModelsCancellationRequest, params AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostRes, error) {
+	res, err := c.sendAlgorithmV1CancelAlgorithmNameRequestsRequestIdPost(ctx, request, params, options...)
+	return res, err
+}
+
+func (c *Client) sendAlgorithmV1CancelAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *ModelsCancellationRequest, params AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostParams, requestOptions ...RequestOption) (res AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostRes, err error) {
+
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
+	var pathParts [4]string
+	pathParts[0] = "/algorithm/v1/cancel/"
+	{
+		// Encode "algorithmName" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "algorithmName",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.AlgorithmName))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/requests/"
+	{
+		// Encode "requestId" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "requestId",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.RequestId))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeAlgorithmV1CancelAlgorithmNameRequestsRequestIdPostRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
+
+	result, err := decodeAlgorithmV1CancelAlgorithmNameRequestsRequestIdPostResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
 }
 
 // AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/metadata/{algorithmName}/requests/{requestId} operation.
@@ -534,6 +731,26 @@ func (c *Client) sendAlgorithmV1RunAlgorithmNamePost(ctx context.Context, reques
 		pathParts[1] = encoded
 	}
 	uri.AddPathParts(u, pathParts[:]...)
+
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "dryRun" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "dryRun",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.DryRun.Get(); ok {
+				return e.EncodeValue(conv.StringToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
 
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {

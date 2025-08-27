@@ -11,6 +11,7 @@ import (
 	"iter"
 	"k8s.io/klog/v2"
 	"runtime"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -297,8 +298,16 @@ func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *st
 	}, nil
 }
 
-func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, algorithmName string) (string, error) {
-	createdRunResponse, err := nc.ApiClient.AlgorithmV1RunAlgorithmNamePost(context.TODO(), request, api.AlgorithmV1RunAlgorithmNamePostParams{AlgorithmName: algorithmName}, nc.getRequestOptions()...)
+func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, algorithmName string, dryRun *bool) (string, error) {
+	dryRunValue := ""
+	if dryRun != nil {
+		dryRunValue = strconv.FormatBool(*dryRun)
+	}
+
+	createdRunResponse, err := nc.ApiClient.AlgorithmV1RunAlgorithmNamePost(context.TODO(), request, api.AlgorithmV1RunAlgorithmNamePostParams{AlgorithmName: algorithmName, DryRun: api.OptString{
+		Value: dryRunValue,
+		Set:   dryRun != nil,
+	}}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
 		return "", models2.NewSdkErr(err)
@@ -360,5 +369,48 @@ func (nc *NexusSchedulerClient) GetMetadata(requestId string, algorithm string) 
 		return getMetadataResponseType, nil
 	default: // coverage-ignore
 		return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	}
+}
+
+func (nc *NexusSchedulerClient) GetBufferedRequest(requestId string, algorithm string) (string, error) {
+	getBufferedResponse, err := nc.ApiClient.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
+
+	if err != nil { // coverage-ignore
+		return "", models2.NewSdkErr(err)
+	}
+
+	switch getBufferedResponseType := getBufferedResponse.(type) {
+	case *api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextHTML:
+		return "", models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML:
+		return "", models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	case *api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextPlain:
+		responseBytes, _ := io.ReadAll(getBufferedResponseType.Data)
+		return string(responseBytes), nil
+	default: // coverage-ignore
+		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	}
+}
+
+func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRequest, requestId string, algorithm string) error {
+	cancelledResponse, err := nc.ApiClient.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost(context.TODO(), cancellation, api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostParams{
+		AlgorithmName: algorithm,
+		RequestId:     requestId,
+	}, nc.getRequestOptions()...)
+
+	if err != nil { // coverage-ignore
+		return models2.NewSdkErr(err)
+	}
+
+	switch cancelledResponse.(type) {
+	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML:
+		return models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML:
+		return models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKApplicationJSON, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML:
+		return nil
+	default: // coverage-ignore
+		return models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+
 	}
 }
