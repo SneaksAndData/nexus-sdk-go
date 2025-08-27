@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	receiverapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
 	schedulerapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	"github.com/aws/smithy-go/ptr"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
 	"github.com/ogen-go/ogen/json"
@@ -557,5 +559,52 @@ func Test_CancelRun(t *testing.T) {
 		},
 	}, runId, "hello-world"); err != nil {
 		f.t.Errorf("error cancelling run: %v", err)
+	}
+}
+
+func Test_CreateDryRun(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", ptr.Bool(true))
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(3 * time.Second)
+
+	result, err := f.client.GetRun(runId, "hello-world")
+
+	if err != nil {
+		f.t.Errorf("error getting run: %v", err)
+		t.FailNow()
+	}
+
+	if result == nil {
+		f.t.Errorf("dry run result should not be nil")
+		t.FailNow()
+	}
+
+	if result.Status.Value != models.LifecycleStageCompleted {
+		f.t.Errorf("dry run status should be completed, but is %s", result.Status.Value)
+		t.FailNow()
 	}
 }
