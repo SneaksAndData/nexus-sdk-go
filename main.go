@@ -64,7 +64,8 @@ package main
 //} CompletedRunResult;
 //typedef struct StringResult {
 //char* result;
-//char* error_text;
+//char* client_error_type;
+//char* client_error_message;
 //} StringResult;
 import "C"
 import (
@@ -402,14 +403,16 @@ func GetBufferedRun(requestId *C.char, algorithmName *C.char) C.StringResult {
 
 	if err != nil {
 		return C.StringResult{
-			result:     nil,
-			error_text: C.CString(err.Error()),
+			result:               nil,
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
 		}
 	}
 
 	return C.StringResult{
-		result:     C.CString(result),
-		error_text: nil,
+		result:               C.CString(result),
+		client_error_type:    nil,
+		client_error_message: nil,
 	}
 }
 
@@ -432,14 +435,16 @@ func CancelRun(requestId *C.char, algorithmName *C.char, policy *C.char, initiat
 
 	if err != nil {
 		return C.StringResult{
-			result:     nil,
-			error_text: C.CString(err.Error()),
+			result:               nil,
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
 		}
 	}
 
 	return C.StringResult{
-		result:     nil,
-		error_text: nil,
+		result:               nil,
+		client_error_type:    nil,
+		client_error_message: nil,
 	}
 }
 
@@ -707,7 +712,8 @@ func FreeAlgorithmRun(algRun C.AlgorithmRun) {
 //export FreeStringResult
 func FreeStringResult(stringResult C.StringResult) {
 	C.free(unsafe.Pointer(stringResult.result))
-	C.free(unsafe.Pointer(stringResult.error_text))
+	C.free(unsafe.Pointer(stringResult.client_error_type))
+	C.free(unsafe.Pointer(stringResult.client_error_message))
 }
 
 //export FreeRunResultsPointer
