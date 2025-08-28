@@ -704,6 +704,12 @@ func FreeAlgorithmRun(algRun C.AlgorithmRun) {
 	C.free(unsafe.Pointer(algRun.request_id))
 }
 
+//export FreeStringResult
+func FreeStringResult(stringResult C.StringResult) {
+	C.free(unsafe.Pointer(stringResult.result))
+	C.free(unsafe.Pointer(stringResult.error_text))
+}
+
 //export FreeRunResultsPointer
 func FreeRunResultsPointer(results *C.RunResult) {
 	C.free(unsafe.Pointer(results))
