@@ -4,12 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	receiverapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
 	schedulerapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	"github.com/aws/smithy-go/ptr"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
 	"github.com/ogen-go/ogen/json"
+	v1 "k8s.io/api/batch/v1"
 	"k8s.io/klog/v2"
 	"os"
 	"strings"
@@ -69,7 +72,7 @@ func verifyNonExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgori
 		},
 	}
 
-	_, err := testFixture.client.CreateRun(request, "non-existing")
+	_, err := testFixture.client.CreateRun(request, "non-existing", nil)
 
 	if err == nil {
 		testFixture.t.Error("CreateRun should have returned an error, since algorithm 'non-existing' is not deployed")
@@ -101,7 +104,7 @@ func verifyExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgorithm
 		},
 	}
 
-	_, err := testFixture.client.CreateRun(request, "hello-world")
+	_, err := testFixture.client.CreateRun(request, "hello-world", nil)
 
 	if err != nil {
 		testFixture.t.Errorf("Error '%s' returned, no errors expected", err.Error())
@@ -185,7 +188,7 @@ func Test_AwaitRun(t *testing.T) {
 			Value: tag.String(),
 			Set:   true,
 		},
-	}, "hello-world")
+	}, "hello-world", nil)
 
 	if err != nil {
 		f.t.Error(err)
@@ -222,7 +225,7 @@ func Test_AwaitRuns(t *testing.T) {
 				Value: tag.String(),
 				Set:   true,
 			},
-		}, "hello-world")
+		}, "hello-world", nil)
 
 		if err != nil {
 			f.t.Error(err)
@@ -273,7 +276,7 @@ func Test_GetRunMetadata(t *testing.T) {
 			Value: tag.String(),
 			Set:   true,
 		},
-	}, "hello-world")
+	}, "hello-world", nil)
 
 	if err != nil {
 		f.t.Error(err)
@@ -317,7 +320,7 @@ func Test_GetRun(t *testing.T) {
 			Value: tag.String(),
 			Set:   true,
 		},
-	}, "hello-world")
+	}, "hello-world", nil)
 
 	if err != nil {
 		f.t.Error(err)
@@ -365,7 +368,7 @@ func Test_GetRunResults(t *testing.T) {
 			Value: tag.String(),
 			Set:   true,
 		},
-	}, "hello-world")
+	}, "hello-world", nil)
 
 	if err != nil {
 		f.t.Error(err)
@@ -389,7 +392,7 @@ func Test_GetRunResults(t *testing.T) {
 			Value: tag.String(),
 			Set:   true,
 		},
-	}, "hello-world")
+	}, "hello-world", nil)
 
 	algorithmName := "hello-world"
 	runs := []string{run1Id, run2Id}
@@ -439,7 +442,7 @@ func Test_CompleteRun(t *testing.T) {
 			Value: tag.String(),
 			Set:   true,
 		},
-	}, "hello-world")
+	}, "hello-world", nil)
 
 	if err != nil {
 		f.t.Error(err)
@@ -467,5 +470,215 @@ func Test_CompleteRun(t *testing.T) {
 
 	if err := f.receiverClient.CompleteRequest(result, "hello-world", runId); err != nil {
 		f.t.Error(err)
+	}
+}
+
+func Test_GetBufferedRun(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if result, err := f.client.GetBufferedRequest(runId, "hello-world"); err != nil {
+		f.t.Errorf("error getting buffered run metadata: %v", err)
+		f.t.FailNow()
+	} else {
+		job := v1.Job{}
+		marshalErr := json.Unmarshal([]byte(result), &job)
+		if marshalErr != nil {
+			f.t.Errorf("failed to unmarshal result as v1.Job: %s", marshalErr)
+		}
+	}
+}
+
+func Test_CancelRun(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Errorf("error creating run: %v", err)
+		t.FailNow()
+	}
+
+	time.Sleep(3 * time.Second)
+
+	if err = f.client.CancelRun(&schedulerapi.ModelsCancellationRequest{
+		CancellationPolicy: schedulerapi.OptString{
+			Set:   true,
+			Value: "Foreground",
+		},
+		Initiator: schedulerapi.OptString{
+			Set:   true,
+			Value: "Tester",
+		},
+		Reason: schedulerapi.OptString{
+			Set:   true,
+			Value: "Cancelled",
+		},
+	}, runId, "hello-world"); err != nil {
+		f.t.Errorf("error cancelling run: %v", err)
+	}
+}
+
+func Test_CreateDryRun(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", ptr.Bool(true))
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(3 * time.Second)
+
+	result, err := f.client.GetRun(runId, "hello-world")
+
+	if err != nil {
+		f.t.Errorf("error getting run: %v", err)
+		t.FailNow()
+	}
+
+	if result == nil {
+		f.t.Errorf("dry run result should not be nil")
+		t.FailNow()
+	}
+
+	if result.Status.Value != models.LifecycleStageCompleted {
+		f.t.Errorf("dry run status should be completed, but is %s", result.Status.Value)
+		t.FailNow()
+	}
+}
+
+func Test_CreateWithParent(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	parentId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Errorf("error creating a parent run: %v", err)
+		t.FailNow()
+	}
+
+	time.Sleep(3 * time.Second)
+
+	childId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: true,
+			Value: schedulerapi.ModelsAlgorithmRequestRef{
+				AlgorithmName: "hello-world",
+				RequestId:     parentId,
+			},
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Errorf("error creating a child run: %v", err)
+		t.FailNow()
+	}
+
+	time.Sleep(3 * time.Second)
+
+	result, err := f.client.GetMetadata(childId, "hello-world")
+
+	if err != nil {
+		f.t.Errorf("error getting run: %v", err)
+		t.FailNow()
+	}
+
+	if result == nil || !result.Parent.Set {
+		f.t.Errorf("dry run result should not be nil")
+		t.FailNow()
 	}
 }

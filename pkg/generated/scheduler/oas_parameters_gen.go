@@ -2,6 +2,22 @@
 
 package api
 
+// AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1/buffer/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams struct {
+	// Algorithm name.
+	AlgorithmName string
+	// Request identifier.
+	RequestId string
+}
+
+// AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostParams is parameters of POST /algorithm/v1/cancel/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostParams struct {
+	// Algorithm name.
+	AlgorithmName string
+	// Request identifier.
+	RequestId string
+}
+
 // AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1/metadata/{algorithmName}/requests/{requestId} operation.
 type AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams struct {
 	// Algorithm name.
@@ -36,4 +52,6 @@ type AlgorithmV1ResultsTagsRequestTagGetParams struct {
 type AlgorithmV1RunAlgorithmNamePostParams struct {
 	// Algorithm name.
 	AlgorithmName string
+	// If false, will buffer but not submit to the target cluster.
+	DryRun OptString
 }

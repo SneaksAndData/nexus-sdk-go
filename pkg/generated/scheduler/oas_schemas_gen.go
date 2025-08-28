@@ -9,6 +9,357 @@ import (
 	"github.com/go-faster/jx"
 )
 
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKApplicationJSON string
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKApplicationJSON) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextHTML) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOKTextPlain) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON string
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON string
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorApplicationJSON string
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextHTML) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON string
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextHTML) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKApplicationJSON string
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON string
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
+}
+
 type AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
 
 func (*AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes() {
@@ -695,27 +1046,64 @@ func (s *ModelsAlgorithmRequestRef) SetRequestId(val string) {
 	s.RequestId = val
 }
 
+// Ref: #/components/schemas/models.CancellationRequest
+type ModelsCancellationRequest struct {
+	CancellationPolicy OptString `json:"cancellationPolicy"`
+	Initiator          OptString `json:"initiator"`
+	Reason             OptString `json:"reason"`
+}
+
+// GetCancellationPolicy returns the value of CancellationPolicy.
+func (s *ModelsCancellationRequest) GetCancellationPolicy() OptString {
+	return s.CancellationPolicy
+}
+
+// GetInitiator returns the value of Initiator.
+func (s *ModelsCancellationRequest) GetInitiator() OptString {
+	return s.Initiator
+}
+
+// GetReason returns the value of Reason.
+func (s *ModelsCancellationRequest) GetReason() OptString {
+	return s.Reason
+}
+
+// SetCancellationPolicy sets the value of CancellationPolicy.
+func (s *ModelsCancellationRequest) SetCancellationPolicy(val OptString) {
+	s.CancellationPolicy = val
+}
+
+// SetInitiator sets the value of Initiator.
+func (s *ModelsCancellationRequest) SetInitiator(val OptString) {
+	s.Initiator = val
+}
+
+// SetReason sets the value of Reason.
+func (s *ModelsCancellationRequest) SetReason(val OptString) {
+	s.Reason = val
+}
+
 // Ref: #/components/schemas/models.CheckpointedRequest
 type ModelsCheckpointedRequest struct {
-	Algorithm               OptString                 `json:"algorithm"`
-	AlgorithmFailureCause   OptString                 `json:"algorithm_failure_cause"`
-	AlgorithmFailureDetails OptString                 `json:"algorithm_failure_details"`
-	APIVersion              OptString                 `json:"api_version"`
-	AppliedConfiguration    OptV1NexusAlgorithmSpec   `json:"applied_configuration"`
-	ConfigurationOverrides  OptV1NexusAlgorithmSpec   `json:"configuration_overrides"`
-	ContentHash             OptString                 `json:"content_hash"`
-	ID                      OptString                 `json:"id"`
-	JobUID                  OptString                 `json:"job_uid"`
-	LastModified            OptString                 `json:"last_modified"`
-	LifecycleStage          OptString                 `json:"lifecycle_stage"`
-	ParentJob               *ModelsParentJobReference `json:"parent_job"`
-	PayloadURI              OptString                 `json:"payload_uri"`
-	PayloadValidFor         OptString                 `json:"payload_valid_for"`
-	ReceivedAt              OptString                 `json:"received_at"`
-	ReceivedByHost          OptString                 `json:"received_by_host"`
-	ResultURI               OptString                 `json:"result_uri"`
-	SentAt                  OptString                 `json:"sent_at"`
-	Tag                     OptString                 `json:"tag"`
+	Algorithm               OptString                    `json:"algorithm"`
+	AlgorithmFailureCause   OptString                    `json:"algorithm_failure_cause"`
+	AlgorithmFailureDetails OptString                    `json:"algorithm_failure_details"`
+	APIVersion              OptString                    `json:"api_version"`
+	AppliedConfiguration    OptV1NexusAlgorithmSpec      `json:"applied_configuration"`
+	ConfigurationOverrides  OptV1NexusAlgorithmSpec      `json:"configuration_overrides"`
+	ContentHash             OptString                    `json:"content_hash"`
+	ID                      OptString                    `json:"id"`
+	JobUID                  OptString                    `json:"job_uid"`
+	LastModified            OptString                    `json:"last_modified"`
+	LifecycleStage          OptString                    `json:"lifecycle_stage"`
+	Parent                  OptModelsAlgorithmRequestRef `json:"parent"`
+	PayloadURI              OptString                    `json:"payload_uri"`
+	PayloadValidFor         OptString                    `json:"payload_valid_for"`
+	ReceivedAt              OptString                    `json:"received_at"`
+	ReceivedByHost          OptString                    `json:"received_by_host"`
+	ResultURI               OptString                    `json:"result_uri"`
+	SentAt                  OptString                    `json:"sent_at"`
+	Tag                     OptString                    `json:"tag"`
 }
 
 // GetAlgorithm returns the value of Algorithm.
@@ -773,9 +1161,9 @@ func (s *ModelsCheckpointedRequest) GetLifecycleStage() OptString {
 	return s.LifecycleStage
 }
 
-// GetParentJob returns the value of ParentJob.
-func (s *ModelsCheckpointedRequest) GetParentJob() *ModelsParentJobReference {
-	return s.ParentJob
+// GetParent returns the value of Parent.
+func (s *ModelsCheckpointedRequest) GetParent() OptModelsAlgorithmRequestRef {
+	return s.Parent
 }
 
 // GetPayloadURI returns the value of PayloadURI.
@@ -868,9 +1256,9 @@ func (s *ModelsCheckpointedRequest) SetLifecycleStage(val OptString) {
 	s.LifecycleStage = val
 }
 
-// SetParentJob sets the value of ParentJob.
-func (s *ModelsCheckpointedRequest) SetParentJob(val *ModelsParentJobReference) {
-	s.ParentJob = val
+// SetParent sets the value of Parent.
+func (s *ModelsCheckpointedRequest) SetParent(val OptModelsAlgorithmRequestRef) {
+	s.Parent = val
 }
 
 // SetPayloadURI sets the value of PayloadURI.
@@ -909,9 +1297,6 @@ func (s *ModelsCheckpointedRequest) SetTag(val OptString) {
 }
 
 func (*ModelsCheckpointedRequest) algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes() {}
-
-// Ref: #/components/schemas/models.ParentJobReference
-type ModelsParentJobReference struct{}
 
 // Ref: #/components/schemas/models.RequestResult
 type ModelsRequestResult struct {

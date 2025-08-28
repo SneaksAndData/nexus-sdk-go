@@ -6,6 +6,8 @@ package api
 type OperationName = string
 
 const (
+	AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOperation   OperationName = "AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOperation  OperationName = "AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost"
 	AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetOperation OperationName = "AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet"
 	AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOperation  OperationName = "AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet"
 	AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetOperation  OperationName = "AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet"
