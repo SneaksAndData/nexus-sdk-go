@@ -40,6 +40,8 @@ helm --kube-context kind-nexus-shard-0 install nexus-test-stack . --create-names
 docker compose up --quiet-pull -d
 ```
 
+**Important** If running Docker Desktop on MacOS, make sure to enable host networking under `Settings` -> `Resources` -> `Enable host networking`
+
 Now, try to access the scheduler API:
 ```shell
 > curl -vvv http://localhost:8080/algorithm/v1/results/tags/aaa
