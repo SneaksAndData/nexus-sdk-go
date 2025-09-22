@@ -715,6 +715,43 @@ func decodeAlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetResponse(resp *ht
 
 func decodeAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *http.Response) (res AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes, _ error) {
 	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "application/octet-stream":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream{Data: bytes.NewReader(b)}
+			return &response, nil
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML{Data: bytes.NewReader(b)}
+			return &response, nil
+		case ct == "text/plain":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain{Data: bytes.NewReader(b)}
+			return &response, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
 	case 302:
 		// Code 302.
 		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
@@ -722,6 +759,15 @@ func decodeAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *htt
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "application/octet-stream":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundApplicationOctetStream{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/html":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -750,6 +796,15 @@ func decodeAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *htt
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "application/octet-stream":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationOctetStream{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/html":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -778,6 +833,15 @@ func decodeAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *htt
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "application/octet-stream":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationOctetStream{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/html":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
@@ -806,6 +870,15 @@ func decodeAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetResponse(resp *htt
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
+		case ct == "application/octet-stream":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundApplicationOctetStream{Data: bytes.NewReader(b)}
+			return &response, nil
 		case ct == "text/html":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)

@@ -682,3 +682,42 @@ func Test_CreateWithParent(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func Test_GetRunPayload(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	expectedPayload := "{\"hello_author\":\"unit tests\",\"hello_text\":\"hello from SDK Go!\"}"
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Error(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if payload, err := f.client.GetRunPayload(runId, "hello-world"); err != nil {
+		f.t.Error(err)
+	} else {
+		if payload != expectedPayload {
+			f.t.Errorf("recorded payload should be %s but is %s", expectedPayload, payload)
+		}
+	}
+}
