@@ -414,3 +414,40 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 
 	}
 }
+
+func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string) (string, error) {
+	payloadResponse, err := nc.ApiClient.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams{
+		AlgorithmName: algorithm,
+		RequestId:     requestId,
+	}, nc.getRequestOptions()...)
+
+	responseSerializer := func(reader io.Reader) string {
+		responseBytes, _ := io.ReadAll(reader)
+		return string(responseBytes)
+	}
+
+	if err != nil { // coverage-ignore
+		return "", models2.NewSdkErr(err)
+	}
+
+	switch payloadResponseType := payloadResponse.(type) {
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML: // coverage-ignore
+		return responseSerializer(payloadResponseType.Data), nil
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain: // coverage-ignore
+		return responseSerializer(payloadResponseType.Data), nil
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain: // coverage-ignore
+		return responseSerializer(payloadResponseType.Data), nil
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML: // coverage-ignore
+		return responseSerializer(payloadResponseType.Data), nil
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream:
+		return responseSerializer(payloadResponseType.Data), nil
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML: // coverage-ignore
+		return "", models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain: // coverage-ignore
+		return "", nil
+	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain: // coverage-ignore
+		return "", models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	default: // coverage-ignore
+		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	}
+}

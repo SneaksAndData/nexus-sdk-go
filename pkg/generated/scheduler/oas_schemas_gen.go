@@ -477,6 +477,23 @@ func (s AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlai
 func (*AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes() {
 }
 
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationOctetStream struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationOctetStream) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationOctetStream) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML struct {
 	Data io.Reader
 }
@@ -509,6 +526,23 @@ func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) 
 }
 
 func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundApplicationOctetStream struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundApplicationOctetStream) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundApplicationOctetStream) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
 }
 
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML struct {
@@ -545,6 +579,23 @@ func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain) Read(
 func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
 }
 
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundApplicationOctetStream struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundApplicationOctetStream) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundApplicationOctetStream) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML struct {
 	Data io.Reader
 }
@@ -577,6 +628,74 @@ func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Re
 }
 
 func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationOctetStream struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationOctetStream) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationOctetStream) algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes() {
 }
 
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML struct {
