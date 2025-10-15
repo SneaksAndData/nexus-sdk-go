@@ -1,43 +1,30 @@
 package sdk
 
 import (
-	"fmt"
 	coremodels "github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
-	sapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
-	"github.com/SneaksAndData/nexus-sdk-go/sdk/models"
-	"github.com/aws/smithy-go/ptr"
 )
 
-func IsFinished(runResult sapi.ModelsRequestResult) (bool, error) {
-	if !runResult.Status.Set {
-		return false, models.NewSdkErr(fmt.Errorf("status not set for the run %s", runResult.RequestId.Value))
-	}
-
-	switch runResult.Status.Value {
+func IsFinished(resultStatus string) bool {
+	switch resultStatus {
 	case coremodels.LifecycleStageFailed, coremodels.LifecycleStageCompleted, coremodels.LifecycleStageDeadlineExceeded, coremodels.LifecycleStageSchedulingFailed, coremodels.LifecycleStageCancelled:
-		return true, nil
+		return true
 	case coremodels.LifecycleStageRunning:
-		return false, nil
+		return false
 	default:
-		return false, nil
+		return false
 	}
 }
 
-func IsSuccess(runResult sapi.ModelsRequestResult) (*bool, error) {
-	if !runResult.Status.Set {
-		return ptr.Bool(false), models.NewSdkErr(fmt.Errorf("status not set for the run %s", runResult.RequestId.Value))
-	}
-
-	finished, err := IsFinished(runResult)
-	if err != nil {
-		return ptr.Bool(false), err
-	}
+func IsSuccess(resultStatus string) int {
+	finished := IsFinished(resultStatus)
 
 	if !finished {
-		return nil, nil
+		return -1
 	}
 
-	result := runResult.Status.Value == coremodels.LifecycleStageCompleted
+	if resultStatus == coremodels.LifecycleStageCompleted {
+		return 1
+	}
 
-	return ptr.Bool(result), nil
+	return 0
 }

@@ -660,6 +660,22 @@ func UpdateReceiverToken(token *C.char) {
 	receiver.RefreshAuth(C.GoString(token))
 }
 
+//export IsRunFinished
+func IsRunFinished(status *C.char) C.int {
+	finished := sdk.IsFinished(C.GoString(status))
+
+	if finished {
+		return 1
+	}
+
+	return 0
+}
+
+//export HasRunSucceeded
+func HasRunSucceeded(status *C.char) C.int {
+	return (C.int)(sdk.IsSuccess(C.GoString(status)))
+}
+
 //export FreeErrorResponse
 func FreeErrorResponse(errorResponse C.ErrorResponse) {
 	C.free(unsafe.Pointer(errorResponse.client_error_type))
