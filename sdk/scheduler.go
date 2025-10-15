@@ -331,6 +331,10 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 }
 
 func (nc *NexusSchedulerClient) GetRun(requestId string, algorithm string) (*api.ModelsRequestResult, error) {
+	if requestId == "" || algorithm == "" {
+		return nil, models2.NewSdkErr(fmt.Errorf("request identifier and/or algorithm template name must not be an empty string"))
+	}
+
 	getRunResponse, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
