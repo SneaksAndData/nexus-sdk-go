@@ -3,7 +3,8 @@ module github.com/SneaksAndData/nexus-sdk-go
 go 1.24.4
 
 require (
-	github.com/SneaksAndData/nexus-core v1.4.0
+	github.com/SneaksAndData/nexus-core v1.4.3
+	github.com/aws/smithy-go v1.23.0
 	github.com/go-faster/errors v0.7.1
 	github.com/go-faster/jx v1.1.0
 	github.com/google/uuid v1.6.0
@@ -17,7 +18,6 @@ require (
 	github.com/DataDog/datadog-go/v5 v5.6.0 // indirect
 	github.com/DataDog/zstd v1.5.7 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/aws/smithy-go v1.22.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.2 // indirect
