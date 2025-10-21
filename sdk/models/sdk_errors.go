@@ -24,6 +24,10 @@ type InputDecodeError struct {
 	underlying error
 }
 
+type NetworkError struct {
+	underlying error
+}
+
 func (ue *UnauthorizedError) Error() string {
 	return ue.underlying.Error()
 }
@@ -48,6 +52,10 @@ func (ide *InputDecodeError) Error() string {
 	return ide.underlying.Error()
 }
 
+func (nete *NetworkError) Error() string {
+	return nete.underlying.Error()
+}
+
 func NewSdkErr(underlying error) *SdkErr {
 	return &SdkErr{underlying: underlying}
 }
@@ -70,4 +78,8 @@ func NewInternalServerError(underlying error) *InternalServerErr {
 
 func NewInputDecodeError(underlying error) *InputDecodeError {
 	return &InputDecodeError{underlying: underlying}
+}
+
+func NewNetworkError(underlying error) *NetworkError {
+	return &NetworkError{underlying: underlying}
 }

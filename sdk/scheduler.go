@@ -10,6 +10,7 @@ import (
 	"io"
 	"iter"
 	"k8s.io/klog/v2"
+	"net"
 	"runtime"
 	"strconv"
 	"sync"
@@ -310,7 +311,13 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 	}}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
-		return "", models2.NewSdkErr(err)
+		var netError *net.OpError
+		switch {
+		case errors.As(err, &netError):
+			return "", models2.NewNetworkError(err)
+		default:
+			return "", models2.NewSdkErr(err)
+		}
 	}
 
 	switch createdRunResponseType := createdRunResponse.(type) {
