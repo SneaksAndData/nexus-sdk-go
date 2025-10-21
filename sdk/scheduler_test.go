@@ -8,6 +8,7 @@ import (
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	receiverapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
 	schedulerapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
 	"github.com/aws/smithy-go/ptr"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
@@ -107,7 +108,7 @@ func verifyExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgorithm
 	_, err := testFixture.client.CreateRun(request, "hello-world", nil)
 
 	if err != nil {
-		testFixture.t.Errorf("Error '%s' returned, no errors expected", err.Error())
+		testFixture.t.Fatalf("Error '%s' returned, no errors expected", err.Error())
 	}
 }
 
@@ -141,6 +142,45 @@ func Test_PostNonExistingAlgorithm_CodeParams(t *testing.T) {
 func Test_PostRun(t *testing.T) {
 	f := newFixture(t)
 	verifyExistingRun(f, helloParams, "hello_test")
+}
+
+func Test_PostRun_ConnectionRefused(t *testing.T) {
+	f := newFixture(t)
+	f.url = "http://localhost:1234"
+	f.client = NewNexusSchedulerClient(f.url, f.logger, nil, nil)
+
+	request := &schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		PayloadValidFor: schedulerapi.OptString{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: "hello_connection_refused",
+			Set:   true,
+		},
+	}
+
+	_, err := f.client.CreateRun(request, "hello-world", nil)
+	if err == nil {
+		t.Fatalf("CreateRun against %s should have returned a NetworkError", f.url)
+	}
+
+	var networkError *models2.NetworkError
+	switch {
+	case errors.As(err, &networkError):
+		return
+	default:
+		t.Fatalf("CreateRun should have returned a NetworkError, instead returned %s", err.Error())
+	}
 }
 
 func Test_GetRunResultsTagExists(t *testing.T) {
