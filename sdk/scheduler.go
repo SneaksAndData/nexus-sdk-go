@@ -76,6 +76,16 @@ func getRequestStub(result *api.ModelsRequestResult) *models.CheckpointedRequest
 	}
 }
 
+func mapApiError(err error) error {
+	var netError *net.OpError
+	switch {
+	case errors.As(err, &netError):
+		return models2.NewNetworkError(err)
+	default:
+		return models2.NewSdkErr(err)
+	}
+}
+
 func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
 	invalidRequestResponseDuration := 0 * time.Second
 	for {
@@ -86,7 +96,7 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 		}, nc.getRequestOptions()...)
 
 		if err != nil { // coverage-ignore
-			return nil, err
+			return nil, mapApiError(err)
 		}
 
 		switch result := response.(type) {
@@ -215,7 +225,7 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 		for _, tag := range tags {
 			taggedRunsResponse, err := nc.ApiClient.AlgorithmV1ResultsTagsRequestTagGet(context.TODO(), api.AlgorithmV1ResultsTagsRequestTagGetParams{RequestTag: tag}, nc.getRequestOptions()...)
 			if err != nil {
-				yield(nil, models2.NewSdkErr(err))
+				yield(nil, mapApiError(err))
 				return
 			}
 
@@ -228,11 +238,6 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 						if !yield(&modelRequestResult, nil) {
 							return
 						}
-					}
-				}
-				if err != nil {
-					if !yield(nil, models2.NewSdkErr(err)) {
-						return
 					}
 				}
 			case *api.AlgorithmV1ResultsTagsRequestTagGetBadRequestApplicationJSON, *api.AlgorithmV1ResultsTagsRequestTagGetBadRequestTextPlain:
@@ -311,13 +316,7 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 	}}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
-		var netError *net.OpError
-		switch {
-		case errors.As(err, &netError):
-			return "", models2.NewNetworkError(err)
-		default:
-			return "", models2.NewSdkErr(err)
-		}
+		return "", mapApiError(err)
 	}
 
 	switch createdRunResponseType := createdRunResponse.(type) {
@@ -345,7 +344,7 @@ func (nc *NexusSchedulerClient) GetRun(requestId string, algorithm string) (*api
 	getRunResponse, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
-		return nil, models2.NewSdkErr(err)
+		return nil, mapApiError(err)
 	}
 
 	switch getRunResponseType := getRunResponse.(type) {
@@ -366,7 +365,7 @@ func (nc *NexusSchedulerClient) GetMetadata(requestId string, algorithm string) 
 	getMetadataResponse, err := nc.ApiClient.AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
-		return nil, models2.NewSdkErr(err)
+		return nil, mapApiError(err)
 	}
 
 	switch getMetadataResponseType := getMetadataResponse.(type) {
@@ -387,7 +386,7 @@ func (nc *NexusSchedulerClient) GetBufferedRequest(requestId string, algorithm s
 	getBufferedResponse, err := nc.ApiClient.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
-		return "", models2.NewSdkErr(err)
+		return "", mapApiError(err)
 	}
 
 	switch getBufferedResponseType := getBufferedResponse.(type) {
@@ -410,7 +409,7 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 	}, nc.getRequestOptions()...)
 
 	if err != nil { // coverage-ignore
-		return models2.NewSdkErr(err)
+		return mapApiError(err)
 	}
 
 	switch cancelledResponse.(type) {
@@ -438,7 +437,7 @@ func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string
 	}
 
 	if err != nil { // coverage-ignore
-		return "", models2.NewSdkErr(err)
+		return "", mapApiError(err)
 	}
 
 	switch payloadResponseType := payloadResponse.(type) {
