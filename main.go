@@ -517,10 +517,11 @@ func GetRequestMetadata(requestId *C.char, algorithmName *C.char) C.RequestMetad
 }
 
 //export AwaitRun
-func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int32) C.RunResult {
+func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int32, waitTimeoutSeconds int32) C.RunResult {
 	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
+	waitTimeout := time.Duration(waitTimeoutSeconds) * time.Second
 
-	result, err := client.AwaitRun(C.GoString(requestId), C.GoString(algorithmName), &pollInterval)
+	result, err := client.AwaitRun(C.GoString(requestId), C.GoString(algorithmName), &pollInterval, &waitTimeout)
 
 	if err != nil {
 		return C.RunResult{
@@ -546,8 +547,10 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 }
 
 //export AwaitRuns
-func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, completed *int32) *C.RunResult {
+func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, completed *int32, waitTimeoutSeconds int32) *C.RunResult {
 	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
+	waitTimeout := time.Duration(waitTimeoutSeconds) * time.Second
+
 	var algName *string
 	if C.GoString(algorithm) != "" {
 		value := C.GoString(algorithm)
@@ -572,7 +575,7 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 		}()
 	}
 
-	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counterRef)
+	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counterRef, &waitTimeout)
 
 	if counterRef != nil {
 		close(*counterRef)

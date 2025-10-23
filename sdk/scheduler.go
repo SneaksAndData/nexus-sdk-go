@@ -86,8 +86,9 @@ func mapApiError(err error) error {
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
 	invalidRequestResponseDuration := 0 * time.Second
+	waitTime := time.Second
 	for {
 		nc.Logger.V(0).Info(fmt.Sprintf("Checking status of a request %s/%s", algorithmName, requestId))
 		response, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{
@@ -107,11 +108,15 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 			if getRequestStub(result).IsFinished() {
 				nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s finished", algorithmName, requestId))
 				return result, nil
+			} else if waitTimeout != nil && waitTime >= *waitTimeout {
+				return nil, models2.NewSdkErr(fmt.Errorf("timed out while waiting for '%s'/'%s' to complete. Last status was %s. You can avoid this error by setting waitTimeout to nil", algorithmName, requestId, result.Status.Value))
 			}
 
 			if pollInterval != nil {
+				waitTime += *pollInterval
 				time.Sleep(*pollInterval)
 			} else {
+				waitTime += 5 * time.Second
 				time.Sleep(5 * time.Second)
 			}
 		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
@@ -123,9 +128,11 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 
 			if pollInterval != nil {
 				invalidRequestResponseDuration += *pollInterval
+				waitTime += *pollInterval
 				time.Sleep(*pollInterval)
 			} else {
 				invalidRequestResponseDuration += 5 * time.Second
+				waitTime += 5 * time.Second
 				time.Sleep(5 * time.Second)
 			}
 
@@ -139,7 +146,7 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed *chan int32) ([]*api.ModelsTaggedRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
 	resultChannel := make(chan *AwaitTaggedResult, 10)
 	var wg sync.WaitGroup
 
@@ -165,7 +172,7 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 				return
 			}
 
-			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval)
+			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
 			if err != nil {
 				resultChannel <- &AwaitTaggedResult{
 					Error:  err,
@@ -263,10 +270,10 @@ func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string)
 }
 
 // AwaitRun awaits results for a submission identified by a request id and an algorithm name
-func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string, pollInterval *time.Duration) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
 	resultChannel := make(chan *AwaitResult, 1)
 	go func() {
-		result, err := nc.awaitRun(requestId, algorithmName, pollInterval)
+		result, err := nc.awaitRun(requestId, algorithmName, pollInterval, waitTimeout)
 		if err != nil {
 			resultChannel <- &AwaitResult{
 				Error:  err,
@@ -289,8 +296,8 @@ func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string,
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
-	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval, completed)
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval, completed, waitTimeout)
 	if err != nil { // coverage-ignore
 		return nil, err
 	}
