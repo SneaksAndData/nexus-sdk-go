@@ -88,7 +88,7 @@ func mapApiError(err error) error {
 
 func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
 	invalidRequestResponseDuration := 0 * time.Second
-	waitTime := time.Second
+	waitTime := 0 * time.Second
 	for {
 		nc.Logger.V(0).Info(fmt.Sprintf("Checking status of a request %s/%s", algorithmName, requestId))
 		response, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{
