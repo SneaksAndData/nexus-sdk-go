@@ -67,6 +67,11 @@ package main
 //char* client_error_type;
 //char* client_error_message;
 //} StringResult;
+//typedef struct BoolResult {
+//int result;
+//char* client_error_type;
+//char* client_error_message;
+//} BoolResult;
 import "C"
 import (
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
@@ -667,6 +672,34 @@ func CompleteRun(runResult *C.CompletedRunResult, algorithm *C.char, requestId *
 	}
 }
 
+//export CheckRun
+func CheckRun(algorithm *C.char, requestId *C.char) C.BoolResult {
+	outcome := -1
+	done, err := receiver.CheckRequest(C.GoString(algorithm), C.GoString(requestId))
+
+	if err != nil {
+		return C.BoolResult{
+			result:               (C.int)(outcome),
+			client_error_type:    C.CString(reflect.TypeOf(err).String()),
+			client_error_message: C.CString(err.Error()),
+		}
+	}
+
+	if done != nil {
+		if *done {
+			outcome = 1
+		} else {
+			outcome = 0
+		}
+	}
+
+	return C.BoolResult{
+		result:               (C.int)(outcome),
+		client_error_type:    nil,
+		client_error_message: nil,
+	}
+}
+
 //export UpdateToken
 func UpdateToken(token *C.char) {
 	client.RefreshAuth(C.GoString(token))
@@ -691,6 +724,12 @@ func IsRunFinished(status *C.char) C.int {
 //export HasRunSucceeded
 func HasRunSucceeded(status *C.char) C.int {
 	return (C.int)(sdk.IsSuccess(C.GoString(status)))
+}
+
+//export FreeBoolResult
+func FreeBoolResult(boolResult C.BoolResult) {
+	C.free(unsafe.Pointer(boolResult.client_error_type))
+	C.free(unsafe.Pointer(boolResult.client_error_message))
 }
 
 //export FreeErrorResponse
