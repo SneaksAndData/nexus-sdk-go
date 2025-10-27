@@ -6,5 +6,6 @@ package api
 type OperationName = string
 
 const (
+	AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetOperation     OperationName = "AlgorithmV1CheckAlgorithmNameRequestsRequestIdGet"
 	AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostOperation OperationName = "AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPost"
 )

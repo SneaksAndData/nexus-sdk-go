@@ -6,6 +6,123 @@ import (
 	"io"
 )
 
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON string
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {
+}
+
 type AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON map[string]string
 
 func (s *AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON) init() AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostAcceptedApplicationJSON {
@@ -175,6 +292,69 @@ func (s *ModelsAlgorithmResult) SetErrorDetails(val OptString) {
 // SetResultUri sets the value of ResultUri.
 func (s *ModelsAlgorithmResult) SetResultUri(val OptString) {
 	s.ResultUri = val
+}
+
+// Ref: #/components/schemas/models.CheckRunResponse
+type ModelsCheckRunResponse struct {
+	IsProcessed OptBool `json:"is_processed"`
+}
+
+// GetIsProcessed returns the value of IsProcessed.
+func (s *ModelsCheckRunResponse) GetIsProcessed() OptBool {
+	return s.IsProcessed
+}
+
+// SetIsProcessed sets the value of IsProcessed.
+func (s *ModelsCheckRunResponse) SetIsProcessed(val OptBool) {
+	s.IsProcessed = val
+}
+
+func (*ModelsCheckRunResponse) algorithmV1CheckAlgorithmNameRequestsRequestIdGetRes() {}
+
+// NewOptBool returns new OptBool with value set to v.
+func NewOptBool(v bool) OptBool {
+	return OptBool{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptBool is optional bool.
+type OptBool struct {
+	Value bool
+	Set   bool
+}
+
+// IsSet returns true if OptBool was set.
+func (o OptBool) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptBool) Reset() {
+	var v bool
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptBool) SetTo(v bool) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptBool) Get() (v bool, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptBool) Or(d bool) bool {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptString returns new OptString with value set to v.
