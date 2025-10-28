@@ -80,6 +80,12 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
+	// AlgorithmV1CheckAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/check/{algorithmName}/requests/{requestId} operation.
+	//
+	// Checks if one of the completion statuses has been assigned by receiver.
+	//
+	// GET /algorithm/v1/check/{algorithmName}/requests/{requestId}
+	AlgorithmV1CheckAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetRes, error)
 	// AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1/complete/{algorithmName}/requests/{requestId} operation.
 	//
 	// Commits the run result to the checkpoint store and transitions the state to COMPLETED.
@@ -110,6 +116,97 @@ func NewClient(serverURL string, opts ...ClientOption) (*Client, error) {
 		serverURL:  u,
 		baseClient: c,
 	}, nil
+}
+
+// AlgorithmV1CheckAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/check/{algorithmName}/requests/{requestId} operation.
+//
+// Checks if one of the completion statuses has been assigned by receiver.
+//
+// GET /algorithm/v1/check/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV1CheckAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendAlgorithmV1CheckAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+	return res, err
+}
+
+func (c *Client) sendAlgorithmV1CheckAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res AlgorithmV1CheckAlgorithmNameRequestsRequestIdGetRes, err error) {
+
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
+	var pathParts [4]string
+	pathParts[0] = "/algorithm/v1/check/"
+	{
+		// Encode "algorithmName" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "algorithmName",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.AlgorithmName))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/requests/"
+	{
+		// Encode "requestId" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "requestId",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.RequestId))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
+
+	result, err := decodeAlgorithmV1CheckAlgorithmNameRequestsRequestIdGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
 }
 
 // AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1/complete/{algorithmName}/requests/{requestId} operation.
