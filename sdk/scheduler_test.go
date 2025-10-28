@@ -522,13 +522,13 @@ func Test_CompleteRun(t *testing.T) {
 	}, "hello-world", nil)
 
 	if err != nil {
-		f.t.Error(err)
+		f.t.Fatal(err)
 	}
 
 	time.Sleep(1 * time.Second)
 
 	if _, err = f.client.AwaitRun(runId, "hello-world", nil, nil); err != nil {
-		f.t.Error(err)
+		f.t.Fatal(err)
 	}
 
 	result := &receiverapi.ModelsAlgorithmResult{
@@ -546,7 +546,15 @@ func Test_CompleteRun(t *testing.T) {
 	}
 
 	if err := f.receiverClient.CompleteRequest(result, "hello-world", runId); err != nil {
-		f.t.Error(err)
+		f.t.Fatal(err)
+	}
+
+	if done, err := f.receiverClient.CheckRequest("hello-world", runId); err != nil {
+		f.t.Fatal(err)
+	} else {
+		if done != nil && !*done {
+			f.t.Errorf("Expected CheckRun to return true but got false")
+		}
 	}
 }
 
