@@ -25,8 +25,8 @@ package main
 //char* workgroup_kind;
 //char* cpu_limit;
 //char* memory_limit;
-//char* deadline_seconds;
-//char* maximum_retries;
+//int deadline_seconds;
+//int maximum_retries;
 //} CustomRunConfiguration;
 //typedef struct ParentRequest {
 //char* algorithm_name;
@@ -312,21 +312,21 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 			}
 		}
 
-		if customConfiguration.deadline_seconds != nil || customConfiguration.maximum_retries != nil {
+		if customConfiguration.deadline_seconds > 0 || customConfiguration.maximum_retries >= 0 {
 			runtimeSpec.Set = true
 			runtimeSpec.Value = api.V1NexusAlgorithmRuntimeEnvironment{}
 		}
 
-		if customConfiguration.deadline_seconds != nil {
+		if customConfiguration.deadline_seconds > 0 {
 			runtimeSpec.Value.DeadlineSeconds = api.OptInt{
-				Value: int(C.GoString(customConfiguration.deadline_seconds)),
+				Value: int(customConfiguration.deadline_seconds),
 				Set:   true,
 			}
 		}
 
-		if customConfiguration.maximum_retries != nil {
+		if customConfiguration.maximum_retries >= 0 {
 			runtimeSpec.Value.MaximumRetries = api.OptInt{
-				Value: int(C.GoString(customConfiguration.maximum_retries)),
+				Value: int(customConfiguration.maximum_retries),
 				Set:   true,
 			}
 		}
