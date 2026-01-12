@@ -25,6 +25,8 @@ package main
 //char* workgroup_kind;
 //char* cpu_limit;
 //char* memory_limit;
+//char* deadline_seconds;
+//char* maximum_retries;
 //} CustomRunConfiguration;
 //typedef struct ParentRequest {
 //char* algorithm_name;
@@ -231,6 +233,9 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		Value: api.V1NexusAlgorithmSpec{},
 		Set:   false,
 	}
+	runtimeSpec := api.OptV1NexusAlgorithmRuntimeEnvironment{
+		Set: false,
+	}
 
 	reportDecodeErr := func(err error) C.AlgorithmRun {
 		decodeErr = models2.NewInputDecodeError(err)
@@ -307,6 +312,25 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 			}
 		}
 
+		if customConfiguration.deadline_seconds != nil || customConfiguration.maximum_retries != nil {
+			runtimeSpec.Set = true
+			runtimeSpec.Value = api.V1NexusAlgorithmRuntimeEnvironment{}
+		}
+
+		if customConfiguration.deadline_seconds != nil {
+			runtimeSpec.Value.DeadlineSeconds = api.OptInt{
+				Value: int(C.GoString(customConfiguration.deadline_seconds)),
+				Set:   true,
+			}
+		}
+
+		if customConfiguration.maximum_retries != nil {
+			runtimeSpec.Value.MaximumRetries = api.OptInt{
+				Value: int(C.GoString(customConfiguration.maximum_retries)),
+				Set:   true,
+			}
+		}
+
 		customSpec = api.OptV1NexusAlgorithmSpec{
 			Value: api.V1NexusAlgorithmSpec{
 				Args: nil,
@@ -329,10 +353,8 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 				ErrorHandlingBehaviour: api.OptV1NexusErrorHandlingBehaviour{
 					Set: false,
 				},
-				RuntimeEnvironment: api.OptV1NexusAlgorithmRuntimeEnvironment{
-					Set: false,
-				},
-				WorkgroupRef: workgroup,
+				RuntimeEnvironment: runtimeSpec,
+				WorkgroupRef:       workgroup,
 			},
 			Set: true,
 		}
