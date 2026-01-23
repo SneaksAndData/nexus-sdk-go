@@ -319,7 +319,7 @@ func Test_AwaitRuns(t *testing.T) {
 		print("Completed run")
 	}()
 
-	runs, err := f.client.AwaitTaggedRuns(tags, nil, nil, counterRef, nil)
+	runs, err := f.client.AwaitTaggedRuns(tags, nil, nil, counterRef, nil, true)
 
 	if err != nil {
 		f.t.Error(err)
@@ -480,7 +480,7 @@ func Test_GetRunResults(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	if _, err = f.client.AwaitTaggedRuns([]string{tag.String()}, &algorithmName, nil, nil, nil); err != nil {
+	if _, err = f.client.AwaitTaggedRuns([]string{tag.String()}, &algorithmName, nil, nil, nil, false); err != nil {
 		f.t.Error(err)
 	}
 
