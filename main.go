@@ -616,7 +616,8 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 		}()
 	}
 
-	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counterRef, waitTimeout)
+	// Python API can only retrieve recent runs for each tag
+	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counterRef, waitTimeout, true)
 
 	if counterRef != nil {
 		close(*counterRef)

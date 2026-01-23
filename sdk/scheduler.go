@@ -153,9 +153,13 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 	for run, runErr := range runs {
 		wg.Add(1)
 		go func() {
+			isSuccess := true
 			defer func() {
 				nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
-				if completed != nil {
+				// prevent panic in case completed channel was closed
+				// in case one of the waiters returns error, the result channel iterator will return, but this goroutine will keep going
+				// thus shutdown clean w/o reporting anything outside
+				if completed != nil && isSuccess {
 					*completed <- 1
 				}
 				wg.Done()
@@ -164,6 +168,7 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
 			if runErr != nil {
+				isSuccess = false
 				resultChannel <- &AwaitTaggedResult{
 					Error:  runErr,
 					Result: nil,
@@ -174,6 +179,7 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 
 			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
 			if err != nil {
+				isSuccess = false
 				resultChannel <- &AwaitTaggedResult{
 					Error:  err,
 					Result: nil,
@@ -264,6 +270,47 @@ func (nc *NexusSchedulerClient) getRuns(tags []string, algorithmName *string) it
 	}
 }
 
+// getRecentRuns reads runs matching provided tags, but only returns latest ones
+func (nc *NexusSchedulerClient) getRecentRuns(tags []string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
+	return func(yield func(requestResult *api.ModelsTaggedRequestResult, err error) bool) {
+		latestRunByTag := make(map[string]*api.ModelsCheckpointedRequest)
+		for run, runErr := range nc.getRuns(tags, algorithmName) {
+			if runErr != nil {
+				nc.Logger.V(0).Error(runErr, fmt.Sprintf("Failed to retrieve result of the run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
+				yield(nil, runErr)
+				return
+			}
+			runMeta, metaErr := nc.GetMetadata(run.RequestId.Value, run.AlgorithmName.Value)
+			if metaErr != nil {
+				nc.Logger.V(0).Error(runErr, fmt.Sprintf("Failed to retrieve metadata for the run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
+				yield(nil, metaErr)
+				return
+			}
+
+			if currentResult, ok := latestRunByTag[runMeta.Tag.Value]; ok {
+				if runMeta.ReceivedAt.Value > currentResult.ReceivedAt.Value {
+					latestRunByTag[runMeta.Tag.Value] = runMeta
+				}
+			} else {
+				latestRunByTag[runMeta.Tag.Value] = runMeta
+			}
+		}
+
+		for _, runByTag := range latestRunByTag {
+			if !yield(&api.ModelsTaggedRequestResult{
+				AlgorithmName:   runByTag.Algorithm,
+				RequestId:       runByTag.ID,
+				ResultUri:       runByTag.ResultURI,
+				RunErrorMessage: runByTag.AlgorithmFailureCause,
+				Status:          runByTag.LifecycleStage,
+			}, nil) {
+				return
+			}
+		}
+	}
+
+}
+
 // GetRunResults retrieves run results for all runs with a matching tag, and optionally, an algorithm name
 func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string) iter.Seq2[*api.ModelsTaggedRequestResult, error] {
 	return nc.getRuns([]string{tag}, algorithmName)
@@ -296,8 +343,16 @@ func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string,
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
-	runResults, err := nc.awaitRuns(nc.getRuns(tags, algorithmName), pollInterval, completed, waitTimeout)
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration, onlyRecentRuns bool) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+	var matchingRuns iter.Seq2[*api.ModelsTaggedRequestResult, error]
+
+	if onlyRecentRuns {
+		matchingRuns = nc.getRecentRuns(tags, algorithmName)
+	} else {
+		matchingRuns = nc.getRuns(tags, algorithmName)
+	}
+
+	runResults, err := nc.awaitRuns(matchingRuns, pollInterval, completed, waitTimeout)
 	if err != nil { // coverage-ignore
 		return nil, err
 	}
