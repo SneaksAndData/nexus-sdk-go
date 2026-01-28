@@ -345,6 +345,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 							Set: false,
 						},
 					},
+					Set: true,
 				},
 				Container: container,
 				DatadogIntegrationSettings: api.OptV1NexusDatadogIntegrationSettings{
@@ -358,6 +359,8 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 			},
 			Set: true,
 		}
+
+		client.Logger.V(0).Info("Running algorithm run spec", "value", customSpec)
 	}
 
 	if tag != nil {
