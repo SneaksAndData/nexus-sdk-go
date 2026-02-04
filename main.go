@@ -263,7 +263,14 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 	if customConfiguration != nil {
 		var cpuLimit api.OptString
 		var memoryLimit api.OptString
-		var container api.OptV1NexusAlgorithmContainer
+		container := api.OptV1NexusAlgorithmContainer{
+			Value: api.V1NexusAlgorithmContainer{
+				VersionTag: api.OptString{
+					Set: false,
+				},
+			},
+			Set: true,
+		}
 		var workgroup api.OptV1NexusAlgorithmWorkgroupRef
 
 		if customConfiguration.cpu_limit != nil {
