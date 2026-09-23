@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-
 	"github.com/ogen-go/ogen/validate"
 )
 
@@ -492,6 +491,138 @@ func (s *AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedApplica
 	return s.Decode(d)
 }
 
+// Encode encodes AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON as json.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := string(s)
+
+	e.Str(unwrapped)
+}
+
+// Decode decodes AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON from json.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON to nil")
+	}
+	var unwrapped string
+	if err := func() error {
+		v, err := d.Str()
+		unwrapped = string(v)
+		if err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON as json.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := []string(s)
+
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		e.Str(elem)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON from json.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON to nil")
+	}
+	var unwrapped []string
+	if err := func() error {
+		unwrapped = make([]string, 0)
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem string
+			v, err := d.Str()
+			elem = string(v)
+			if err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON as json.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := string(s)
+
+	e.Str(unwrapped)
+}
+
+// Decode decodes AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON from json.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON to nil")
+	}
+	var unwrapped string
+	if err := func() error {
+		v, err := d.Str()
+		unwrapped = string(v)
+		if err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON as json.
 func (s AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := string(s)
@@ -944,12 +1075,6 @@ func (s *ModelsAlgorithmRequest) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.PayloadValidFor.Set {
-			e.FieldStart("payloadValidFor")
-			s.PayloadValidFor.Encode(e)
-		}
-	}
-	{
 		if s.RequestApiVersion.Set {
 			e.FieldStart("requestApiVersion")
 			s.RequestApiVersion.Encode(e)
@@ -963,13 +1088,12 @@ func (s *ModelsAlgorithmRequest) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfModelsAlgorithmRequest = [6]string{
+var jsonFieldsNameOfModelsAlgorithmRequest = [5]string{
 	0: "algorithmParameters",
 	1: "customConfiguration",
 	2: "parentRequest",
-	3: "payloadValidFor",
-	4: "requestApiVersion",
-	5: "tag",
+	3: "requestApiVersion",
+	4: "tag",
 }
 
 // Decode decodes ModelsAlgorithmRequest from json.
@@ -1010,16 +1134,6 @@ func (s *ModelsAlgorithmRequest) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"parentRequest\"")
-			}
-		case "payloadValidFor":
-			if err := func() error {
-				s.PayloadValidFor.Reset()
-				if err := s.PayloadValidFor.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"payloadValidFor\"")
 			}
 		case "requestApiVersion":
 			if err := func() error {
@@ -1453,12 +1567,6 @@ func (s *ModelsCheckpointedRequest) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.PayloadValidFor.Set {
-			e.FieldStart("payload_valid_for")
-			s.PayloadValidFor.Encode(e)
-		}
-	}
-	{
 		if s.ReceivedAt.Set {
 			e.FieldStart("received_at")
 			s.ReceivedAt.Encode(e)
@@ -1490,7 +1598,7 @@ func (s *ModelsCheckpointedRequest) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfModelsCheckpointedRequest = [19]string{
+var jsonFieldsNameOfModelsCheckpointedRequest = [18]string{
 	0:  "algorithm",
 	1:  "algorithm_failure_cause",
 	2:  "algorithm_failure_details",
@@ -1504,12 +1612,11 @@ var jsonFieldsNameOfModelsCheckpointedRequest = [19]string{
 	10: "lifecycle_stage",
 	11: "parent",
 	12: "payload_uri",
-	13: "payload_valid_for",
-	14: "received_at",
-	15: "received_by_host",
-	16: "result_uri",
-	17: "sent_at",
-	18: "tag",
+	13: "received_at",
+	14: "received_by_host",
+	15: "result_uri",
+	16: "sent_at",
+	17: "tag",
 }
 
 // Decode decodes ModelsCheckpointedRequest from json.
@@ -1649,16 +1756,6 @@ func (s *ModelsCheckpointedRequest) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"payload_uri\"")
-			}
-		case "payload_valid_for":
-			if err := func() error {
-				s.PayloadValidFor.Reset()
-				if err := s.PayloadValidFor.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"payload_valid_for\"")
 			}
 		case "received_at":
 			if err := func() error {
@@ -2282,6 +2379,72 @@ func (s *OptV1EnvVarSource) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes V1FileKeySelector as json.
+func (o OptV1FileKeySelector) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes V1FileKeySelector from json.
+func (o *OptV1FileKeySelector) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1FileKeySelector to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1FileKeySelector) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1FileKeySelector) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1MountPropagationMode as json.
+func (o OptV1MountPropagationMode) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes V1MountPropagationMode from json.
+func (o *OptV1MountPropagationMode) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1MountPropagationMode to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1MountPropagationMode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1MountPropagationMode) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes V1NexusAlgorithmContainer as json.
 func (o OptV1NexusAlgorithmContainer) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -2311,6 +2474,39 @@ func (s OptV1NexusAlgorithmContainer) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptV1NexusAlgorithmContainer) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1NexusAlgorithmPayloadConfiguration as json.
+func (o OptV1NexusAlgorithmPayloadConfiguration) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes V1NexusAlgorithmPayloadConfiguration from json.
+func (o *OptV1NexusAlgorithmPayloadConfiguration) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1NexusAlgorithmPayloadConfiguration to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1NexusAlgorithmPayloadConfiguration) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1NexusAlgorithmPayloadConfiguration) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2445,6 +2641,108 @@ func (s OptV1NexusAlgorithmRuntimeEnvironmentAnnotations) MarshalJSON() ([]byte,
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptV1NexusAlgorithmRuntimeEnvironmentAnnotations) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts as json.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts from json.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts to nil")
+	}
+	o.Set = true
+	o.Value = make(V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts)
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts as json.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts from json.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts to nil")
+	}
+	o.Set = true
+	o.Value = make(V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts)
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1NexusAlgorithmRuntimeEnvironmentStorageMounts as json.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes V1NexusAlgorithmRuntimeEnvironmentStorageMounts from json.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts to nil")
+	}
+	o.Set = true
+	o.Value = make(V1NexusAlgorithmRuntimeEnvironmentStorageMounts)
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2614,6 +2912,72 @@ func (s *OptV1ObjectFieldSelector) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes V1PayloadSerializationMode as json.
+func (o OptV1PayloadSerializationMode) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes V1PayloadSerializationMode from json.
+func (o *OptV1PayloadSerializationMode) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1PayloadSerializationMode to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1PayloadSerializationMode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1PayloadSerializationMode) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1RecursiveReadOnlyMode as json.
+func (o OptV1RecursiveReadOnlyMode) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes V1RecursiveReadOnlyMode from json.
+func (o *OptV1RecursiveReadOnlyMode) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1RecursiveReadOnlyMode to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1RecursiveReadOnlyMode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1RecursiveReadOnlyMode) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes V1ResourceFieldSelector as json.
 func (o OptV1ResourceFieldSelector) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -2643,6 +3007,40 @@ func (s OptV1ResourceFieldSelector) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptV1ResourceFieldSelector) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1ResourceList as json.
+func (o OptV1ResourceList) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes V1ResourceList from json.
+func (o *OptV1ResourceList) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptV1ResourceList to nil")
+	}
+	o.Set = true
+	o.Value = make(V1ResourceList)
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptV1ResourceList) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptV1ResourceList) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -3211,6 +3609,12 @@ func (s *V1EnvVarSource) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.FileKeyRef.Set {
+			e.FieldStart("fileKeyRef")
+			s.FileKeyRef.Encode(e)
+		}
+	}
+	{
 		if s.ResourceFieldRef.Set {
 			e.FieldStart("resourceFieldRef")
 			s.ResourceFieldRef.Encode(e)
@@ -3224,11 +3628,12 @@ func (s *V1EnvVarSource) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfV1EnvVarSource = [4]string{
+var jsonFieldsNameOfV1EnvVarSource = [5]string{
 	0: "configMapKeyRef",
 	1: "fieldRef",
-	2: "resourceFieldRef",
-	3: "secretKeyRef",
+	2: "fileKeyRef",
+	3: "resourceFieldRef",
+	4: "secretKeyRef",
 }
 
 // Decode decodes V1EnvVarSource from json.
@@ -3258,6 +3663,16 @@ func (s *V1EnvVarSource) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"fieldRef\"")
+			}
+		case "fileKeyRef":
+			if err := func() error {
+				s.FileKeyRef.Reset()
+				if err := s.FileKeyRef.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"fileKeyRef\"")
 			}
 		case "resourceFieldRef":
 			if err := func() error {
@@ -3299,6 +3714,162 @@ func (s *V1EnvVarSource) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *V1EnvVarSource) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *V1FileKeySelector) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *V1FileKeySelector) encodeFields(e *jx.Encoder) {
+	{
+		if s.Key.Set {
+			e.FieldStart("key")
+			s.Key.Encode(e)
+		}
+	}
+	{
+		if s.Optional.Set {
+			e.FieldStart("optional")
+			s.Optional.Encode(e)
+		}
+	}
+	{
+		if s.Path.Set {
+			e.FieldStart("path")
+			s.Path.Encode(e)
+		}
+	}
+	{
+		if s.VolumeName.Set {
+			e.FieldStart("volumeName")
+			s.VolumeName.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfV1FileKeySelector = [4]string{
+	0: "key",
+	1: "optional",
+	2: "path",
+	3: "volumeName",
+}
+
+// Decode decodes V1FileKeySelector from json.
+func (s *V1FileKeySelector) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1FileKeySelector to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "key":
+			if err := func() error {
+				s.Key.Reset()
+				if err := s.Key.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"key\"")
+			}
+		case "optional":
+			if err := func() error {
+				s.Optional.Reset()
+				if err := s.Optional.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"optional\"")
+			}
+		case "path":
+			if err := func() error {
+				s.Path.Reset()
+				if err := s.Path.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"path\"")
+			}
+		case "volumeName":
+			if err := func() error {
+				s.VolumeName.Reset()
+				if err := s.VolumeName.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"volumeName\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1FileKeySelector")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1FileKeySelector) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1FileKeySelector) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1MountPropagationMode as json.
+func (s V1MountPropagationMode) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes V1MountPropagationMode from json.
+func (s *V1MountPropagationMode) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1MountPropagationMode to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch V1MountPropagationMode(v) {
+	case V1MountPropagationModeNone:
+		*s = V1MountPropagationModeNone
+	case V1MountPropagationModeHostToContainer:
+		*s = V1MountPropagationModeHostToContainer
+	case V1MountPropagationModeBidirectional:
+		*s = V1MountPropagationModeBidirectional
+	default:
+		*s = V1MountPropagationMode(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1MountPropagationMode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1MountPropagationMode) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -3418,6 +3989,86 @@ func (s *V1NexusAlgorithmContainer) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
+func (s *V1NexusAlgorithmPayloadConfiguration) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *V1NexusAlgorithmPayloadConfiguration) encodeFields(e *jx.Encoder) {
+	{
+		if s.PayloadSerializationMode.Set {
+			e.FieldStart("payloadSerializationMode")
+			s.PayloadSerializationMode.Encode(e)
+		}
+	}
+	{
+		if s.PayloadValidFor.Set {
+			e.FieldStart("payloadValidFor")
+			s.PayloadValidFor.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfV1NexusAlgorithmPayloadConfiguration = [2]string{
+	0: "payloadSerializationMode",
+	1: "payloadValidFor",
+}
+
+// Decode decodes V1NexusAlgorithmPayloadConfiguration from json.
+func (s *V1NexusAlgorithmPayloadConfiguration) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1NexusAlgorithmPayloadConfiguration to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "payloadSerializationMode":
+			if err := func() error {
+				s.PayloadSerializationMode.Reset()
+				if err := s.PayloadSerializationMode.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"payloadSerializationMode\"")
+			}
+		case "payloadValidFor":
+			if err := func() error {
+				s.PayloadValidFor.Reset()
+				if err := s.PayloadValidFor.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"payloadValidFor\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1NexusAlgorithmPayloadConfiguration")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1NexusAlgorithmPayloadConfiguration) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1NexusAlgorithmPayloadConfiguration) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *V1NexusAlgorithmResources) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -3439,17 +4090,38 @@ func (s *V1NexusAlgorithmResources) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.DefaultResourceQuota.Set {
+			e.FieldStart("defaultResourceQuota")
+			s.DefaultResourceQuota.Encode(e)
+		}
+	}
+	{
+		if s.Limits.Set {
+			e.FieldStart("limits")
+			s.Limits.Encode(e)
+		}
+	}
+	{
 		if s.MemoryLimit.Set {
 			e.FieldStart("memoryLimit")
 			s.MemoryLimit.Encode(e)
 		}
 	}
+	{
+		if s.Requests.Set {
+			e.FieldStart("requests")
+			s.Requests.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfV1NexusAlgorithmResources = [3]string{
+var jsonFieldsNameOfV1NexusAlgorithmResources = [6]string{
 	0: "cpuLimit",
 	1: "customResources",
-	2: "memoryLimit",
+	2: "defaultResourceQuota",
+	3: "limits",
+	4: "memoryLimit",
+	5: "requests",
 }
 
 // Decode decodes V1NexusAlgorithmResources from json.
@@ -3480,6 +4152,26 @@ func (s *V1NexusAlgorithmResources) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"customResources\"")
 			}
+		case "defaultResourceQuota":
+			if err := func() error {
+				s.DefaultResourceQuota.Reset()
+				if err := s.DefaultResourceQuota.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"defaultResourceQuota\"")
+			}
+		case "limits":
+			if err := func() error {
+				s.Limits.Reset()
+				if err := s.Limits.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"limits\"")
+			}
 		case "memoryLimit":
 			if err := func() error {
 				s.MemoryLimit.Reset()
@@ -3489,6 +4181,16 @@ func (s *V1NexusAlgorithmResources) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"memoryLimit\"")
+			}
+		case "requests":
+			if err := func() error {
+				s.Requests.Reset()
+				if err := s.Requests.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"requests\"")
 			}
 		default:
 			return d.Skip()
@@ -3586,6 +4288,12 @@ func (s *V1NexusAlgorithmRuntimeEnvironment) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.ConfigurationFileMounts.Set {
+			e.FieldStart("configurationFileMounts")
+			s.ConfigurationFileMounts.Encode(e)
+		}
+	}
+	{
 		if s.DeadlineSeconds.Set {
 			e.FieldStart("deadlineSeconds")
 			s.DeadlineSeconds.Encode(e)
@@ -3617,14 +4325,29 @@ func (s *V1NexusAlgorithmRuntimeEnvironment) encodeFields(e *jx.Encoder) {
 			s.MaximumRetries.Encode(e)
 		}
 	}
+	{
+		if s.SecretFileMounts.Set {
+			e.FieldStart("secretFileMounts")
+			s.SecretFileMounts.Encode(e)
+		}
+	}
+	{
+		if s.StorageMounts.Set {
+			e.FieldStart("storageMounts")
+			s.StorageMounts.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfV1NexusAlgorithmRuntimeEnvironment = [5]string{
+var jsonFieldsNameOfV1NexusAlgorithmRuntimeEnvironment = [8]string{
 	0: "annotations",
-	1: "deadlineSeconds",
-	2: "environmentVariables",
-	3: "mappedEnvironmentVariables",
-	4: "maximumRetries",
+	1: "configurationFileMounts",
+	2: "deadlineSeconds",
+	3: "environmentVariables",
+	4: "mappedEnvironmentVariables",
+	5: "maximumRetries",
+	6: "secretFileMounts",
+	7: "storageMounts",
 }
 
 // Decode decodes V1NexusAlgorithmRuntimeEnvironment from json.
@@ -3644,6 +4367,16 @@ func (s *V1NexusAlgorithmRuntimeEnvironment) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"annotations\"")
+			}
+		case "configurationFileMounts":
+			if err := func() error {
+				s.ConfigurationFileMounts.Reset()
+				if err := s.ConfigurationFileMounts.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"configurationFileMounts\"")
 			}
 		case "deadlineSeconds":
 			if err := func() error {
@@ -3698,6 +4431,26 @@ func (s *V1NexusAlgorithmRuntimeEnvironment) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"maximumRetries\"")
+			}
+		case "secretFileMounts":
+			if err := func() error {
+				s.SecretFileMounts.Reset()
+				if err := s.SecretFileMounts.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"secretFileMounts\"")
+			}
+		case "storageMounts":
+			if err := func() error {
+				s.StorageMounts.Reset()
+				if err := s.StorageMounts.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"storageMounts\"")
 			}
 		default:
 			return d.Skip()
@@ -3780,6 +4533,168 @@ func (s *V1NexusAlgorithmRuntimeEnvironmentAnnotations) UnmarshalJSON(data []byt
 }
 
 // Encode implements json.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields implements json.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
+
+		elem.Encode(e)
+	}
+}
+
+// Decode decodes V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts from json.
+func (s *V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts to nil")
+	}
+	m := s.init()
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		var elem V1VolumeMount
+		if err := func() error {
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
+		}
+		m[string(k)] = elem
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields implements json.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
+
+		elem.Encode(e)
+	}
+}
+
+// Decode decodes V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts from json.
+func (s *V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts to nil")
+	}
+	m := s.init()
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		var elem V1VolumeMount
+		if err := func() error {
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
+		}
+		m[string(k)] = elem
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentStorageMounts) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields implements json.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentStorageMounts) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
+
+		elem.Encode(e)
+	}
+}
+
+// Decode decodes V1NexusAlgorithmRuntimeEnvironmentStorageMounts from json.
+func (s *V1NexusAlgorithmRuntimeEnvironmentStorageMounts) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1NexusAlgorithmRuntimeEnvironmentStorageMounts to nil")
+	}
+	m := s.init()
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		var elem V1VolumeMount
+		if err := func() error {
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
+		}
+		m[string(k)] = elem
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1NexusAlgorithmRuntimeEnvironmentStorageMounts")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1NexusAlgorithmRuntimeEnvironmentStorageMounts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1NexusAlgorithmRuntimeEnvironmentStorageMounts) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *V1NexusAlgorithmSpec) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -3829,6 +4744,12 @@ func (s *V1NexusAlgorithmSpec) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.PayloadConfiguration.Set {
+			e.FieldStart("payloadConfiguration")
+			s.PayloadConfiguration.Encode(e)
+		}
+	}
+	{
 		if s.RuntimeEnvironment.Set {
 			e.FieldStart("runtimeEnvironment")
 			s.RuntimeEnvironment.Encode(e)
@@ -3842,15 +4763,16 @@ func (s *V1NexusAlgorithmSpec) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfV1NexusAlgorithmSpec = [8]string{
+var jsonFieldsNameOfV1NexusAlgorithmSpec = [9]string{
 	0: "args",
 	1: "command",
 	2: "computeResources",
 	3: "container",
 	4: "datadogIntegrationSettings",
 	5: "errorHandlingBehaviour",
-	6: "runtimeEnvironment",
-	7: "workgroupRef",
+	6: "payloadConfiguration",
+	7: "runtimeEnvironment",
+	8: "workgroupRef",
 }
 
 // Decode decodes V1NexusAlgorithmSpec from json.
@@ -3929,6 +4851,16 @@ func (s *V1NexusAlgorithmSpec) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"errorHandlingBehaviour\"")
+			}
+		case "payloadConfiguration":
+			if err := func() error {
+				s.PayloadConfiguration.Reset()
+				if err := s.PayloadConfiguration.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"payloadConfiguration\"")
 			}
 		case "runtimeEnvironment":
 			if err := func() error {
@@ -4320,6 +5252,88 @@ func (s *V1ObjectFieldSelector) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes V1PayloadSerializationMode as json.
+func (s V1PayloadSerializationMode) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes V1PayloadSerializationMode from json.
+func (s *V1PayloadSerializationMode) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1PayloadSerializationMode to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch V1PayloadSerializationMode(v) {
+	case V1PayloadSerializationModeBackend:
+		*s = V1PayloadSerializationModeBackend
+	case V1PayloadSerializationModeS3:
+		*s = V1PayloadSerializationModeS3
+	default:
+		*s = V1PayloadSerializationMode(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1PayloadSerializationMode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1PayloadSerializationMode) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1RecursiveReadOnlyMode as json.
+func (s V1RecursiveReadOnlyMode) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes V1RecursiveReadOnlyMode from json.
+func (s *V1RecursiveReadOnlyMode) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1RecursiveReadOnlyMode to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch V1RecursiveReadOnlyMode(v) {
+	case V1RecursiveReadOnlyModeDisabled:
+		*s = V1RecursiveReadOnlyModeDisabled
+	case V1RecursiveReadOnlyModeIfPossible:
+		*s = V1RecursiveReadOnlyModeIfPossible
+	case V1RecursiveReadOnlyModeEnabled:
+		*s = V1RecursiveReadOnlyModeEnabled
+	default:
+		*s = V1RecursiveReadOnlyMode(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1RecursiveReadOnlyMode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1RecursiveReadOnlyMode) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode implements json.Marshaler.
 func (s *V1ResourceFieldSelector) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -4413,6 +5427,60 @@ func (s *V1ResourceFieldSelector) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *V1ResourceFieldSelector) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s V1ResourceList) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields implements json.Marshaler.
+func (s V1ResourceList) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
+
+		elem.Encode(e)
+	}
+}
+
+// Decode decodes V1ResourceList from json.
+func (s *V1ResourceList) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1ResourceList to nil")
+	}
+	m := s.init()
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		var elem ResourceQuantity
+		if err := func() error {
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
+		}
+		m[string(k)] = elem
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1ResourceList")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s V1ResourceList) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1ResourceList) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -4590,6 +5658,171 @@ func (s *V1SecretKeySelector) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *V1SecretKeySelector) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *V1VolumeMount) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *V1VolumeMount) encodeFields(e *jx.Encoder) {
+	{
+		if s.MountPath.Set {
+			e.FieldStart("mountPath")
+			s.MountPath.Encode(e)
+		}
+	}
+	{
+		if s.MountPropagation.Set {
+			e.FieldStart("mountPropagation")
+			s.MountPropagation.Encode(e)
+		}
+	}
+	{
+		if s.Name.Set {
+			e.FieldStart("name")
+			s.Name.Encode(e)
+		}
+	}
+	{
+		if s.ReadOnly.Set {
+			e.FieldStart("readOnly")
+			s.ReadOnly.Encode(e)
+		}
+	}
+	{
+		if s.RecursiveReadOnly.Set {
+			e.FieldStart("recursiveReadOnly")
+			s.RecursiveReadOnly.Encode(e)
+		}
+	}
+	{
+		if s.SubPath.Set {
+			e.FieldStart("subPath")
+			s.SubPath.Encode(e)
+		}
+	}
+	{
+		if s.SubPathExpr.Set {
+			e.FieldStart("subPathExpr")
+			s.SubPathExpr.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfV1VolumeMount = [7]string{
+	0: "mountPath",
+	1: "mountPropagation",
+	2: "name",
+	3: "readOnly",
+	4: "recursiveReadOnly",
+	5: "subPath",
+	6: "subPathExpr",
+}
+
+// Decode decodes V1VolumeMount from json.
+func (s *V1VolumeMount) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1VolumeMount to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "mountPath":
+			if err := func() error {
+				s.MountPath.Reset()
+				if err := s.MountPath.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"mountPath\"")
+			}
+		case "mountPropagation":
+			if err := func() error {
+				s.MountPropagation.Reset()
+				if err := s.MountPropagation.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"mountPropagation\"")
+			}
+		case "name":
+			if err := func() error {
+				s.Name.Reset()
+				if err := s.Name.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "readOnly":
+			if err := func() error {
+				s.ReadOnly.Reset()
+				if err := s.ReadOnly.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"readOnly\"")
+			}
+		case "recursiveReadOnly":
+			if err := func() error {
+				s.RecursiveReadOnly.Reset()
+				if err := s.RecursiveReadOnly.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"recursiveReadOnly\"")
+			}
+		case "subPath":
+			if err := func() error {
+				s.SubPath.Reset()
+				if err := s.SubPath.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"subPath\"")
+			}
+		case "subPathExpr":
+			if err := func() error {
+				s.SubPathExpr.Reset()
+				if err := s.SubPathExpr.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"subPathExpr\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode V1VolumeMount")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1VolumeMount) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1VolumeMount) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

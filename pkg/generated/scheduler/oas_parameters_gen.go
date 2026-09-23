@@ -26,6 +26,14 @@ type AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams struct {
 	RequestId string
 }
 
+// AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams is parameters of POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId} operation.
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams struct {
+	// Algorithm name.
+	AlgorithmName string
+	// Request identifier.
+	RequestId string
+}
+
 // AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams is parameters of GET /algorithm/v1/payload/{algorithmName}/requests/{requestId} operation.
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams struct {
 	// Algorithm name.
@@ -53,5 +61,5 @@ type AlgorithmV1RunAlgorithmNamePostParams struct {
 	// Algorithm name.
 	AlgorithmName string
 	// If false, will buffer but not submit to the target cluster.
-	DryRun OptString
+	DryRun OptString `json:",omitempty,omitzero"`
 }

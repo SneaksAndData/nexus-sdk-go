@@ -6,8 +6,8 @@ import (
 	"bytes"
 	"net/http"
 
+	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-
 	ht "github.com/ogen-go/ogen/http"
 )
 
@@ -23,6 +23,22 @@ func encodeAlgorithmV1CancelAlgorithmNameRequestsRequestIdPostRequest(
 	encoded := e.Bytes()
 	ht.SetBody(r, bytes.NewReader(encoded), contentType)
 	return nil
+}
+
+func encodeAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRequest(
+	req *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType,
+	r *http.Request,
+) error {
+	contentType := req.ContentType
+	if contentType != "" && !ht.MatchContentType("*/*", contentType) {
+		return errors.Errorf("%q does not match mask %q", contentType, "*/*")
+	}
+	{
+		req := req.Content
+		body := req
+		ht.SetBody(r, body, contentType)
+		return nil
+	}
 }
 
 func encodeAlgorithmV1RunAlgorithmNamePostRequest(

@@ -4,12 +4,12 @@ package api
 
 import (
 	"context"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/go-faster/errors"
-
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/uri"
@@ -195,7 +195,14 @@ func (c *Client) sendAlgorithmV1CheckAlgorithmNameRequestsRequestIdGet(ctx conte
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -289,7 +296,14 @@ func (c *Client) sendAlgorithmV1CompleteAlgorithmNameRequestsRequestIdPost(ctx c
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")

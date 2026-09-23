@@ -4,6 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
+	"testing"
+	"time"
+
 	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	receiverapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
@@ -15,10 +20,6 @@ import (
 	"github.com/ogen-go/ogen/json"
 	v1 "k8s.io/api/batch/v1"
 	"k8s.io/klog/v2"
-	"os"
-	"strings"
-	"testing"
-	"time"
 )
 
 var helloParams = map[string]jx.Raw{
@@ -44,9 +45,7 @@ func newFixture(t *testing.T) *fixture {
 	appLogger, _ := telemetry.ConfigureLogger(context.TODO(), map[string]string{}, "info")
 	klog.SetSlogLogger(appLogger)
 
-	logger := klog.FromContext(context.TODO())
-
-	f.logger = &logger
+	f.logger = new(klog.FromContext(context.TODO()))
 	f.client = NewNexusSchedulerClient(f.url, f.logger, nil, nil)
 	f.receiverClient = NewNexusReceiverClient(f.receiverUrl, f.logger, nil, nil)
 
@@ -60,9 +59,6 @@ func verifyNonExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgori
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -91,9 +87,6 @@ func verifyExistingRun(testFixture *fixture, params schedulerapi.ModelsAlgorithm
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -157,9 +150,6 @@ func Test_PostRun_ConnectionRefused(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -218,9 +208,6 @@ func Test_AwaitRun(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -250,9 +237,6 @@ func Test_AwaitRun_Timeout(t *testing.T) {
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -290,9 +274,6 @@ func Test_AwaitRuns(t *testing.T) {
 				Set: false,
 			},
 			ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-				Set: false,
-			},
-			PayloadValidFor: schedulerapi.OptString{
 				Set: false,
 			},
 			RequestApiVersion: schedulerapi.OptString{
@@ -343,9 +324,6 @@ func Test_GetRunMetadata(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -385,9 +363,6 @@ func Test_GetRun(t *testing.T) {
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -435,9 +410,6 @@ func Test_GetRunResults(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -457,9 +429,6 @@ func Test_GetRunResults(t *testing.T) {
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -507,9 +476,6 @@ func Test_CompleteRun(t *testing.T) {
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -569,9 +535,6 @@ func Test_GetBufferedRun(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -608,9 +571,6 @@ func Test_CancelRun(t *testing.T) {
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
@@ -658,9 +618,6 @@ func Test_CreateDryRun(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -705,9 +662,6 @@ func Test_CreateWithParent(t *testing.T) {
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
 			Set: false,
 		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
-		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
 		},
@@ -735,9 +689,6 @@ func Test_CreateWithParent(t *testing.T) {
 				AlgorithmName: "hello-world",
 				RequestId:     parentId,
 			},
-		},
-		PayloadValidFor: schedulerapi.OptString{
-			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{
 			Set: false,
@@ -778,9 +729,6 @@ func Test_GetRunPayload(t *testing.T) {
 			Set: false,
 		},
 		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
-			Set: false,
-		},
-		PayloadValidFor: schedulerapi.OptString{
 			Set: false,
 		},
 		RequestApiVersion: schedulerapi.OptString{

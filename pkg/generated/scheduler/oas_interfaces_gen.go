@@ -13,6 +13,10 @@ type AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes interface {
 	algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes()
 }
 
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes interface {
+	algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes()
+}
+
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes interface {
 	algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes()
 }

@@ -4,12 +4,12 @@ package api
 
 import (
 	"context"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/go-faster/errors"
-
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/uri"
@@ -98,9 +98,16 @@ type Invoker interface {
 	//
 	// GET /algorithm/v1/metadata/{algorithmName}/requests/{requestId}
 	AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes, error)
+	// AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId} operation.
+	//
+	// Updates the specified run with a new client tag. Useful for performing a status reset on client
+	// side.
+	//
+	// POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId}
+	AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, error)
 	// AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/payload/{algorithmName}/requests/{requestId} operation.
 	//
-	// Retrieves payload sent by the client for the provided run.
+	// Retrieves payload sent by the client for the provided run (legacy).
 	//
 	// GET /algorithm/v1/payload/{algorithmName}/requests/{requestId}
 	AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes, error)
@@ -225,7 +232,14 @@ func (c *Client) sendAlgorithmV1BufferAlgorithmNameRequestsRequestIdGet(ctx cont
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -319,7 +333,14 @@ func (c *Client) sendAlgorithmV1CancelAlgorithmNameRequestsRequestIdPost(ctx con
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -410,7 +431,14 @@ func (c *Client) sendAlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet(ctx co
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -424,9 +452,111 @@ func (c *Client) sendAlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet(ctx co
 	return result, nil
 }
 
+// AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost invokes POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId} operation.
+//
+// Updates the specified run with a new client tag. Useful for performing a status reset on client
+// side.
+//
+// POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId}
+func (c *Client) AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, error) {
+	res, err := c.sendAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx, request, params, options...)
+	return res, err
+}
+
+func (c *Client) sendAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, requestOptions ...RequestOption) (res AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, err error) {
+
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
+	var pathParts [4]string
+	pathParts[0] = "/algorithm/v1/metadata/tags/"
+	{
+		// Encode "algorithmName" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "algorithmName",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.AlgorithmName))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/requests/"
+	{
+		// Encode "requestId" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "requestId",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.RequestId))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
+
+	result, err := decodeAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/payload/{algorithmName}/requests/{requestId} operation.
 //
-// Retrieves payload sent by the client for the provided run.
+// Retrieves payload sent by the client for the provided run (legacy).
 //
 // GET /algorithm/v1/payload/{algorithmName}/requests/{requestId}
 func (c *Client) AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet(ctx context.Context, params AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes, error) {
@@ -501,7 +631,14 @@ func (c *Client) sendAlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet(ctx con
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -592,7 +729,14 @@ func (c *Client) sendAlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(ctx con
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -664,7 +808,14 @@ func (c *Client) sendAlgorithmV1ResultsTagsRequestTagGet(ctx context.Context, pa
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")
@@ -768,7 +919,14 @@ func (c *Client) sendAlgorithmV1RunAlgorithmNamePost(ctx context.Context, reques
 	if err != nil {
 		return res, errors.Wrap(err, "do request")
 	}
-	defer resp.Body.Close()
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
 
 	if err := reqCfg.onResponse(resp); err != nil {
 		return res, errors.Wrap(err, "edit response")

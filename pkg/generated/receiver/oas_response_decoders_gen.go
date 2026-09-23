@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/validate"
 )
@@ -212,7 +211,7 @@ func decodeAlgorithmV1CheckAlgorithmNameRequestsRequestIdGetResponse(resp *http.
 			return res, validate.InvalidContentType(ct)
 		}
 	}
-	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+	return res, validate.UnexpectedStatusCodeWithResponse(resp)
 }
 
 func decodeAlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostResponse(resp *http.Response) (res AlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostRes, _ error) {
@@ -412,5 +411,5 @@ func decodeAlgorithmV1CompleteAlgorithmNameRequestsRequestIdPostResponse(resp *h
 			return res, validate.InvalidContentType(ct)
 		}
 	}
-	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+	return res, validate.UnexpectedStatusCodeWithResponse(resp)
 }
