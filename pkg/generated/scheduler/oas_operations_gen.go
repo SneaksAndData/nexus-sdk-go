@@ -14,4 +14,5 @@ const (
 	AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetOperation       OperationName = "AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet"
 	AlgorithmV1ResultsTagsRequestTagGetOperation                       OperationName = "AlgorithmV1ResultsTagsRequestTagGet"
 	AlgorithmV1RunAlgorithmNamePostOperation                           OperationName = "AlgorithmV1RunAlgorithmNamePost"
+	DataV1PayloadsAlgorithmNameRequestsRequestIdGetOperation           OperationName = "DataV1PayloadsAlgorithmNameRequestsRequestIdGet"
 )

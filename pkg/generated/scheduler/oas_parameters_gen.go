@@ -63,3 +63,11 @@ type AlgorithmV1RunAlgorithmNamePostParams struct {
 	// If false, will buffer but not submit to the target cluster.
 	DryRun OptString `json:",omitempty,omitzero"`
 }
+
+// DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams is parameters of GET /data/v1/payloads/{algorithmName}/requests/{requestId} operation.
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams struct {
+	// Algorithm name.
+	AlgorithmName string
+	// Request identifier.
+	RequestId string
+}

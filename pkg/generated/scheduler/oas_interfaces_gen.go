@@ -32,3 +32,7 @@ type AlgorithmV1ResultsTagsRequestTagGetRes interface {
 type AlgorithmV1RunAlgorithmNamePostRes interface {
 	algorithmV1RunAlgorithmNamePostRes()
 }
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetRes interface {
+	dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes()
+}

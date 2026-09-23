@@ -1181,6 +1181,167 @@ func (s AlgorithmV1RunAlgorithmNamePostUnauthorizedTextPlain) Read(p []byte) (n 
 
 func (*AlgorithmV1RunAlgorithmNamePostUnauthorizedTextPlain) algorithmV1RunAlgorithmNamePostRes() {}
 
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON struct{}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
 // Ref: #/components/schemas/models.AlgorithmRequest
 type ModelsAlgorithmRequest struct {
 	AlgorithmParameters ModelsAlgorithmRequestAlgorithmParameters `json:"algorithmParameters"`

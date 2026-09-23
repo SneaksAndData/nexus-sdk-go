@@ -129,6 +129,12 @@ type Invoker interface {
 	//
 	// POST /algorithm/v1/run/{algorithmName}
 	AlgorithmV1RunAlgorithmNamePost(ctx context.Context, request *ModelsAlgorithmRequest, params AlgorithmV1RunAlgorithmNamePostParams, options ...RequestOption) (AlgorithmV1RunAlgorithmNamePostRes, error)
+	// DataV1PayloadsAlgorithmNameRequestsRequestIdGet invokes GET /data/v1/payloads/{algorithmName}/requests/{requestId} operation.
+	//
+	// Retrieves payload sent by the client for the provided run.
+	//
+	// GET /data/v1/payloads/{algorithmName}/requests/{requestId}
+	DataV1PayloadsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (DataV1PayloadsAlgorithmNameRequestsRequestIdGetRes, error)
 }
 
 // Client implements OAS client.
@@ -933,6 +939,104 @@ func (c *Client) sendAlgorithmV1RunAlgorithmNamePost(ctx context.Context, reques
 	}
 
 	result, err := decodeAlgorithmV1RunAlgorithmNamePostResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// DataV1PayloadsAlgorithmNameRequestsRequestIdGet invokes GET /data/v1/payloads/{algorithmName}/requests/{requestId} operation.
+//
+// Retrieves payload sent by the client for the provided run.
+//
+// GET /data/v1/payloads/{algorithmName}/requests/{requestId}
+func (c *Client) DataV1PayloadsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams, options ...RequestOption) (DataV1PayloadsAlgorithmNameRequestsRequestIdGetRes, error) {
+	res, err := c.sendDataV1PayloadsAlgorithmNameRequestsRequestIdGet(ctx, params, options...)
+	return res, err
+}
+
+func (c *Client) sendDataV1PayloadsAlgorithmNameRequestsRequestIdGet(ctx context.Context, params DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams, requestOptions ...RequestOption) (res DataV1PayloadsAlgorithmNameRequestsRequestIdGetRes, err error) {
+
+	var reqCfg requestConfig
+	reqCfg.setDefaults(c.baseClient)
+	for _, o := range requestOptions {
+		o(&reqCfg)
+	}
+
+	u := c.serverURL
+	if override := reqCfg.ServerURL; override != nil {
+		u = override
+	}
+	u = uri.Clone(u)
+	var pathParts [4]string
+	pathParts[0] = "/data/v1/payloads/"
+	{
+		// Encode "algorithmName" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "algorithmName",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.AlgorithmName))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/requests/"
+	{
+		// Encode "requestId" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "requestId",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.RequestId))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	if err := reqCfg.onRequest(r); err != nil {
+		return res, errors.Wrap(err, "edit request")
+	}
+
+	resp, err := reqCfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer func() {
+		// Drain the body to EOF before closing, so the underlying
+		// connection can be reused by the Transport regardless of the
+		// response status code. See https://github.com/ogen-go/ogen/issues/1670.
+		_, _ = io.Copy(io.Discard, body)
+		_ = body.Close()
+	}()
+
+	if err := reqCfg.onResponse(resp); err != nil {
+		return res, errors.Wrap(err, "edit response")
+	}
+
+	result, err := decodeDataV1PayloadsAlgorithmNameRequestsRequestIdGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

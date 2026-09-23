@@ -4,17 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
-	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
-	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
 	"io"
 	"iter"
-	"k8s.io/klog/v2"
 	"net"
 	"runtime"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
+	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
+	"k8s.io/klog/v2"
 )
 
 type AwaitTaggedResult struct {
@@ -488,36 +489,27 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 }
 
 func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string) (string, error) {
-	payloadResponse, err := nc.ApiClient.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams{
+	payloadResponse, err := nc.ApiClient.DataV1PayloadsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams{
 		AlgorithmName: algorithm,
 		RequestId:     requestId,
 	}, nc.getRequestOptions()...)
-
-	responseSerializer := func(reader io.Reader) string {
-		responseBytes, _ := io.ReadAll(reader)
-		return string(responseBytes)
-	}
 
 	if err != nil { // coverage-ignore
 		return "", mapApiError(err)
 	}
 
 	switch payloadResponseType := payloadResponse.(type) {
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream:
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML: // coverage-ignore
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON:
+		payloadContent, err := payloadResponseType.MarshalJSON()
+		if err != nil {
+			return "", mapApiError(err)
+		}
+		return string(payloadContent), nil
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML: // coverage-ignore
 		return "", models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain: // coverage-ignore
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain: // coverage-ignore
 		return "", nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain: // coverage-ignore
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain: // coverage-ignore
 		return "", models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	default: // coverage-ignore
 		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
