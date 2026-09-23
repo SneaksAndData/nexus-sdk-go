@@ -40,12 +40,10 @@ spec:
             fieldPath: status.hostIP
       - name: PROTEUS__DD_SITE
         value: datadoghq.eu
-      - name: NEXUS__ALGORITHM_NAME
-        value: nexus-hello
-      - name: NEXUS__SCHEDULER_URL
+      - name: NEXUS__CLIENT__SCHEDULER
         value: http://nexus.nexus.svc.cluster.local:8080
-      - name: NEXUS__RECEIVER_URL
-        value: http://nexus.nexus.svc.cluster.local:8081
+      - name: NEXUS__CLIENT__RECEIVER
+        value: http://nexus-receiver.nexus.svc.cluster.local:8080
       - name: NEXUS__STORAGE_CLIENT_CLASS
         value: adapta.storage.blob.s3_storage_client.S3StorageClient
       - name: ALGORITHM_STORAGE__BASE_PATH

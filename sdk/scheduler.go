@@ -120,12 +120,12 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 				waitTime += 5 * time.Second
 				time.Sleep(5 * time.Second)
 			}
-		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
+		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
 			if invalidRequestResponseDuration > 5*time.Minute {
 				return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithmName, requestId))
 			}
 
-			nc.Logger.V(0).Info("received bad request when trying to read a result - possible lag in submission accounting, will try again")
+			nc.Logger.V(0).Info("received http 404 when trying to read a result - possible lag in submission accounting, will try again")
 
 			if pollInterval != nil {
 				invalidRequestResponseDuration += *pollInterval
@@ -139,8 +139,6 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 
 		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML: // coverage-ignore
 			return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
-		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
-			return nil, nil
 		default: // coverage-ignore
 			return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
 		}
@@ -156,17 +154,15 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 		go func() {
 			isSuccess := true
 			defer func() {
-				nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 				// prevent panic in case completed channel was closed
 				// in case one of the waiters returns error, the result channel iterator will return, but this goroutine will keep going
 				// thus shutdown clean w/o reporting anything outside
 				if completed != nil && isSuccess {
+					nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 					*completed <- 1
 				}
 				wg.Done()
 			}()
-
-			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
 			if runErr != nil {
 				isSuccess = false
@@ -174,9 +170,15 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					Error:  runErr,
 					Result: nil,
 				}
-				nc.Logger.V(0).Error(runErr, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
+				if run != nil {
+					nc.Logger.V(0).Error(runErr, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
+				} else {
+					nc.Logger.V(0).Error(runErr, "Unable to initialize await loop for the provided run metadata")
+				}
 				return
 			}
+
+			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
 			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
 			if err != nil {

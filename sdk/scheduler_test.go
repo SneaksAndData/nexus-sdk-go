@@ -221,10 +221,15 @@ func Test_AwaitRun(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	_, err = f.client.AwaitRun(runId, "hello-world", nil, nil)
+	runResult, err := f.client.AwaitRun(runId, "hello-world", nil, nil)
 
 	if err != nil {
 		f.t.Fatal(err)
+	}
+
+	status := runResult.GetStatus().Value
+	if !IsFinished(status) {
+		t.Fatalf("Awaiting without a time limit should result in run being completed")
 	}
 }
 
@@ -252,10 +257,7 @@ func Test_AwaitRun_Timeout(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	waitTimeout := time.Second * 1
-	pollInterval := time.Second * 1
-
-	_, err = f.client.AwaitRun(runId, "hello-world", &pollInterval, &waitTimeout)
+	_, err = f.client.AwaitRun(runId, "hello-world", new(time.Second*1), new(time.Second*1))
 
 	if err == nil {
 		f.t.Fatalf("AwaitRun should have failed with timeout error, but it did not")
@@ -303,7 +305,7 @@ func Test_AwaitRuns(t *testing.T) {
 	runs, err := f.client.AwaitTaggedRuns(tags, nil, nil, counterRef, nil, true)
 
 	if err != nil {
-		f.t.Error(err)
+		f.t.Fatalf("failed to await a tagged run: %s", err)
 	}
 
 	for run := range runs {

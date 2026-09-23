@@ -16,27 +16,27 @@ NEXUS_CHART_NAME := "oci://ghcr.io/sneaksanddata/helm/nexus"
 NEXUS_RECEIVER_CHART_NAME := "oci://ghcr.io/sneaksanddata/helm/nexus-receiver"
 NEXUS_VERSION := "1.2.3"
 NEXUS_RECEIVER_VERSION := "1.2.0"
+NEXUS_CRD_VERSION := "1.1.0"
 
 # cluster
-NEXUS_CLUSTER_NAME := "nexus-controller-0"
+NEXUS_CLUSTER_NAME := "nexus-sdk-tests"
 
 # Default recipe
 fresh: stop up
 
 # Start CI environment
-up: start-kind-cluster install-ingress-controller create-namespace create-ingress scylla-kind minio-kind crd apply-manifests dbschema scheduler
+up: start-kind-cluster install-ingress-controller create-namespace create-ingress scylla-kind minio-kind crd apply-manifests dbschema scheduler receiver
 
 start-kind-cluster:
     kind create cluster --config=test-resources/kind.yaml --name {{NEXUS_CLUSTER_NAME}}
 
 # Run all tests with coverage
 test-all:
-    APPLICATION_ENVIRONMENT=units go test -v ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+    APPLICATION_ENVIRONMENT=units NEXUS_TEST_SCHEDULER_URL=http://localhost:5555/scheduler NEXUS_TEST_RECEIVER_URL=http://localhost:5555/receiver go test -v ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
 
 # Cleanup CI environment
 stop:
     @echo "🧹 Cleaning up..."
-    docker rm -f scylla minio 2>/dev/null || true
     kind delete cluster --name {{NEXUS_CLUSTER_NAME}}
     rm -f cover-indexed.out cover-bare.out cover.out
 
@@ -75,14 +75,16 @@ scheduler:
         --set scheduler.config.checkpointStore.secretName="cassandra-credentials" \
         --set scheduler.config.s3Buffer.s3Credentials.secretName="nexus-s3" \
         --set scheduler.config.s3Buffer.processing.payloadProxy.externalName="nexus.nexus.svc.cluster.local:8080" \
-        --set scheduler.config.s3Buffer.processing.payloadProxy.insecure="true"
+        --set scheduler.config.s3Buffer.processing.payloadProxy.insecure="true" \
+        --set scheduler.config.logLevel="DEBUG"
 
 receiver:
     helm upgrade nexus-receiver {{NEXUS_RECEIVER_CHART_NAME}} --install --create-namespace --namespace nexus --version v{{NEXUS_RECEIVER_VERSION}} \
         --set image.repository={{RECEIVER_IMAGE_REPO}} \
         --set image.tag={{NEXUS_RECEIVER_VERSION}} \
         --set receiver.config.checkpointStore.type=cassandra-scylla \
-        --set receiver.config.checkpointStore.secretName="cassandra-credentials"
+        --set receiver.config.checkpointStore.secretName="cassandra-credentials" \
+        --set receiver.config.logLevel="DEBUG"
 
 # cleanup
 remove-chart:
@@ -112,7 +114,7 @@ minio-kind:
     kubectl -n nexus rollout status deployment/minio --timeout=180s
 
 crd:
-    helm upgrade --install --namespace nexus nexus-crd  oci://ghcr.io/sneaksanddata/helm/nexus-crd --version v1.0.0-5-gdec1dd3
+    helm upgrade --install --namespace nexus nexus-crd  oci://ghcr.io/sneaksanddata/helm/nexus-crd --version v{{NEXUS_CRD_VERSION}}
 
 apply-manifests:
     kubectl apply -n nexus -f {{MANIFESTS}}/nexus-algorithm-sa.yaml
@@ -121,4 +123,3 @@ apply-manifests:
 
 dbschema:
   docker run --rm -v {{DBSCHEMA}}:/opt/storage --network=host --entrypoint /opt/storage/prepare-db.sh {{SCYLLA_IMAGE}}
-# /data/v1/payloads/hello-world/requests/5a3c4f9b-fd94-48d4-99cd-d9d7cbf6cfd1?chk=ZTM5YjVkOTg%3D&from=1788351261&sig=oq4NaMfFWZHlvN7il99AZRzt9ssbaWATKSONvvi05Qw&tid=00000000-0000-0000-0000-000000000000&to=1788437661

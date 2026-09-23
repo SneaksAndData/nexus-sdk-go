@@ -218,7 +218,7 @@ func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
 }
 
 //export CreateRun
-func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, payloadValidFor *C.char, tag *C.char, dryRun *C.char) C.AlgorithmRun {
+func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, tag *C.char, dryRun *C.char) C.AlgorithmRun {
 	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
 	var decodeErr *models2.InputDecodeError
 	parentRequestParam := api.OptModelsAlgorithmRequestRef{
