@@ -1170,29 +1170,43 @@ func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON)
 }
 
 // Encode implements json.Marshaler.
-func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) Encode(e *jx.Encoder) {
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
-// encodeFields encodes fields.
-func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) encodeFields(e *jx.Encoder) {
-}
+// encodeFields implements json.Marshaler.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
 
-var jsonFieldsNameOfDataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON = [0]string{}
+		if len(elem) != 0 {
+			e.Raw(elem)
+		}
+	}
+}
 
 // Decode decodes DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON from json.
 func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON to nil")
 	}
-
+	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		default:
-			return d.Skip()
+		var elem jx.Raw
+		if err := func() error {
+			v, err := d.RawAppend(nil)
+			elem = jx.Raw(v)
+			if err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
 		}
+		m[string(k)] = elem
+		return nil
 	}); err != nil {
 		return errors.Wrap(err, "decode DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON")
 	}
@@ -1201,7 +1215,7 @@ func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) Decod
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil

@@ -1298,7 +1298,16 @@ func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p
 func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
 }
 
-type DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON struct{}
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON map[string]jx.Raw
+
+func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) init() DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON {
+	m := *s
+	if m == nil {
+		m = map[string]jx.Raw{}
+		*s = m
+	}
+	return m
+}
 
 func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
 }

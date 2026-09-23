@@ -7,7 +7,10 @@ import (
 	"io"
 	"iter"
 	"net"
+	"net/http"
+	"net/url"
 	"runtime"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
@@ -491,10 +494,37 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 }
 
 func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string) (string, error) {
+	runMeta, err := nc.GetMetadata(requestId, algorithm)
+
+	if err != nil {
+		return "", mapApiError(err)
+	}
+
+	extraOptions := []api.RequestOption{
+		api.WithEditRequest(func(req *http.Request) error {
+			payloadUrl, err := url.Parse(runMeta.PayloadURI.Value)
+			if err == nil {
+				sigQuery := payloadUrl.Query()
+				baseQuery := req.URL.Query()
+
+				for key, values := range sigQuery {
+					for _, val := range values {
+						baseQuery.Add(key, val)
+					}
+				}
+
+				req.URL.RawQuery = baseQuery.Encode()
+				return nil
+			}
+
+			return nil
+		}),
+	}
+
 	payloadResponse, err := nc.ApiClient.DataV1PayloadsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams{
 		AlgorithmName: algorithm,
 		RequestId:     requestId,
-	}, nc.getRequestOptions()...)
+	}, slices.Concat(nc.getRequestOptions(), extraOptions)...)
 
 	if err != nil { // coverage-ignore
 		return "", mapApiError(err)
@@ -507,6 +537,8 @@ func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string
 			return "", mapApiError(err)
 		}
 		return string(payloadContent), nil
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenApplicationJSON, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain:
+		return "", models2.NewUnauthorizedError(fmt.Errorf("forbidden request for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML: // coverage-ignore
 		return "", models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
 	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain: // coverage-ignore
