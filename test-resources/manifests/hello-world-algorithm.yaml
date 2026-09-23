@@ -3,24 +3,27 @@ kind: NexusAlgorithmTemplate
 metadata:
   name: hello-world
   namespace: nexus
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "0"
-    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   args:
     - main.py
     - '--sas-uri=%s'
     - '--request-id=%s'
   command: python
+  payloadConfiguration:
+    payloadValidFor: 24h
+    payloadSerializationMode: backend
   computeResources:
     cpuLimit: 1000m
     memoryLimit: 1000Mi
+    defaultResourceQuota: "0.1"
+    limits:
+      cpu: 1000m
+      memory: 1Gi
   container:
     image: nexus-hello
     registry: ghcr.io/sneaksanddata
     serviceAccountName: nexus
-    versionTag: 0.1.2
+    versionTag: 1.0.0
   datadogIntegrationSettings:
     mountDatadogSocket: true
   errorHandlingBehaviour:
@@ -42,7 +45,7 @@ spec:
       - name: NEXUS__SCHEDULER_URL
         value: http://nexus.nexus.svc.cluster.local:8080
       - name: NEXUS__RECEIVER_URL
-        value: http://dockerhost.nexus.svc.cluster.local:8081
+        value: http://nexus.nexus.svc.cluster.local:8081
       - name: NEXUS__STORAGE_CLIENT_CLASS
         value: adapta.storage.blob.s3_storage_client.S3StorageClient
       - name: ALGORITHM_STORAGE__BASE_PATH
@@ -56,7 +59,7 @@ spec:
       - name: PROTEUS__AWS_REGION
         value: us-east-1
       - name: PROTEUS__AWS_ENDPOINT
-        value: http://dockerhost.nexus.svc.cluster.local:9000
+        value: http://minio.nexus.svc.cluster.local:9000
       - name: PROTEUS__AWS_SECRET_ACCESS_KEY
         value: minioadmin
       - name: PROTEUS__AWS_ACCESS_KEY_ID
