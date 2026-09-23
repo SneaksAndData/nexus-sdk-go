@@ -296,8 +296,7 @@ func Test_AwaitRuns(t *testing.T) {
 	time.Sleep(1 * time.Second)
 
 	var counterRef *chan int32
-	counter := make(chan int32, 10)
-	counterRef = &counter
+	counterRef = new(make(chan int32, 10))
 	go func() {
 		print("Completed run")
 	}()

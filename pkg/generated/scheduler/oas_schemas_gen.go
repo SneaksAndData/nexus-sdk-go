@@ -1926,98 +1926,6 @@ func (o OptModelsAlgorithmRequestRef) Or(d ModelsAlgorithmRequestRef) ModelsAlgo
 	return d
 }
 
-// NewOptResourceQuantity returns new OptResourceQuantity with value set to v.
-func NewOptResourceQuantity(v ResourceQuantity) OptResourceQuantity {
-	return OptResourceQuantity{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptResourceQuantity is optional ResourceQuantity.
-type OptResourceQuantity struct {
-	Value ResourceQuantity
-	Set   bool
-}
-
-// IsSet returns true if OptResourceQuantity was set.
-func (o OptResourceQuantity) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptResourceQuantity) Reset() {
-	var v ResourceQuantity
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptResourceQuantity) SetTo(v ResourceQuantity) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptResourceQuantity) Get() (v ResourceQuantity, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptResourceQuantity) Or(d ResourceQuantity) ResourceQuantity {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptResourceQuantityFormat returns new OptResourceQuantityFormat with value set to v.
-func NewOptResourceQuantityFormat(v ResourceQuantityFormat) OptResourceQuantityFormat {
-	return OptResourceQuantityFormat{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptResourceQuantityFormat is optional ResourceQuantityFormat.
-type OptResourceQuantityFormat struct {
-	Value ResourceQuantityFormat
-	Set   bool
-}
-
-// IsSet returns true if OptResourceQuantityFormat was set.
-func (o OptResourceQuantityFormat) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptResourceQuantityFormat) Reset() {
-	var v ResourceQuantityFormat
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptResourceQuantityFormat) SetTo(v ResourceQuantityFormat) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptResourceQuantityFormat) Get() (v ResourceQuantityFormat, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptResourceQuantityFormat) Or(d ResourceQuantityFormat) ResourceQuantityFormat {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -3214,69 +3122,6 @@ func (o OptV1SecretKeySelector) Or(d V1SecretKeySelector) V1SecretKeySelector {
 	return d
 }
 
-// Ref: #/components/schemas/resource.Quantity
-type ResourceQuantity struct {
-	Format OptResourceQuantityFormat `json:"Format"`
-}
-
-// GetFormat returns the value of Format.
-func (s *ResourceQuantity) GetFormat() OptResourceQuantityFormat {
-	return s.Format
-}
-
-// SetFormat sets the value of Format.
-func (s *ResourceQuantity) SetFormat(val OptResourceQuantityFormat) {
-	s.Format = val
-}
-
-type ResourceQuantityFormat string
-
-const (
-	ResourceQuantityFormatDecimalExponent ResourceQuantityFormat = "DecimalExponent"
-	ResourceQuantityFormatBinarySI        ResourceQuantityFormat = "BinarySI"
-	ResourceQuantityFormatDecimalSI       ResourceQuantityFormat = "DecimalSI"
-)
-
-// AllValues returns all ResourceQuantityFormat values.
-func (ResourceQuantityFormat) AllValues() []ResourceQuantityFormat {
-	return []ResourceQuantityFormat{
-		ResourceQuantityFormatDecimalExponent,
-		ResourceQuantityFormatBinarySI,
-		ResourceQuantityFormatDecimalSI,
-	}
-}
-
-// MarshalText implements encoding.TextMarshaler.
-func (s ResourceQuantityFormat) MarshalText() ([]byte, error) {
-	switch s {
-	case ResourceQuantityFormatDecimalExponent:
-		return []byte(s), nil
-	case ResourceQuantityFormatBinarySI:
-		return []byte(s), nil
-	case ResourceQuantityFormatDecimalSI:
-		return []byte(s), nil
-	default:
-		return nil, errors.Errorf("invalid value: %q", s)
-	}
-}
-
-// UnmarshalText implements encoding.TextUnmarshaler.
-func (s *ResourceQuantityFormat) UnmarshalText(data []byte) error {
-	switch ResourceQuantityFormat(data) {
-	case ResourceQuantityFormatDecimalExponent:
-		*s = ResourceQuantityFormatDecimalExponent
-		return nil
-	case ResourceQuantityFormatBinarySI:
-		*s = ResourceQuantityFormatBinarySI
-		return nil
-	case ResourceQuantityFormatDecimalSI:
-		*s = ResourceQuantityFormatDecimalSI
-		return nil
-	default:
-		return errors.Errorf("invalid value: %q", data)
-	}
-}
-
 // Ref: #/components/schemas/v1.ConfigMapEnvSource
 type V1ConfigMapEnvSource struct {
 	// Name of the referent. This field is effectively required, but due to backwards compatibility is
@@ -4230,7 +4075,7 @@ type V1ResourceFieldSelector struct {
 	// Container name: required for volumes, optional for env vars +optional.
 	ContainerName OptString `json:"containerName"`
 	// Specifies the output format of the exposed resources, defaults to "1" +optional.
-	Divisor OptResourceQuantity `json:"divisor"`
+	Divisor OptString `json:"divisor"`
 	// Required: resource to select.
 	Resource OptString `json:"resource"`
 }
@@ -4241,7 +4086,7 @@ func (s *V1ResourceFieldSelector) GetContainerName() OptString {
 }
 
 // GetDivisor returns the value of Divisor.
-func (s *V1ResourceFieldSelector) GetDivisor() OptResourceQuantity {
+func (s *V1ResourceFieldSelector) GetDivisor() OptString {
 	return s.Divisor
 }
 
@@ -4256,7 +4101,7 @@ func (s *V1ResourceFieldSelector) SetContainerName(val OptString) {
 }
 
 // SetDivisor sets the value of Divisor.
-func (s *V1ResourceFieldSelector) SetDivisor(val OptResourceQuantity) {
+func (s *V1ResourceFieldSelector) SetDivisor(val OptString) {
 	s.Divisor = val
 }
 
@@ -4266,12 +4111,12 @@ func (s *V1ResourceFieldSelector) SetResource(val OptString) {
 }
 
 // Ref: #/components/schemas/v1.ResourceList
-type V1ResourceList map[string]ResourceQuantity
+type V1ResourceList map[string]string
 
 func (s *V1ResourceList) init() V1ResourceList {
 	m := *s
 	if m == nil {
-		m = map[string]ResourceQuantity{}
+		m = map[string]string{}
 		*s = m
 	}
 	return m

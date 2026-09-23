@@ -2383,72 +2383,6 @@ func (s *OptModelsAlgorithmRequestRef) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes ResourceQuantity as json.
-func (o OptResourceQuantity) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes ResourceQuantity from json.
-func (o *OptResourceQuantity) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptResourceQuantity to nil")
-	}
-	o.Set = true
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptResourceQuantity) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptResourceQuantity) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes ResourceQuantityFormat as json.
-func (o OptResourceQuantityFormat) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	e.Str(string(o.Value))
-}
-
-// Decode decodes ResourceQuantityFormat from json.
-func (o *OptResourceQuantityFormat) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptResourceQuantityFormat to nil")
-	}
-	o.Set = true
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptResourceQuantityFormat) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptResourceQuantityFormat) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes string as json.
 func (o OptString) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -3311,111 +3245,6 @@ func (s OptV1SecretKeySelector) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptV1SecretKeySelector) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *ResourceQuantity) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *ResourceQuantity) encodeFields(e *jx.Encoder) {
-	{
-		if s.Format.Set {
-			e.FieldStart("Format")
-			s.Format.Encode(e)
-		}
-	}
-}
-
-var jsonFieldsNameOfResourceQuantity = [1]string{
-	0: "Format",
-}
-
-// Decode decodes ResourceQuantity from json.
-func (s *ResourceQuantity) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode ResourceQuantity to nil")
-	}
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "Format":
-			if err := func() error {
-				s.Format.Reset()
-				if err := s.Format.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"Format\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode ResourceQuantity")
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *ResourceQuantity) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *ResourceQuantity) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes ResourceQuantityFormat as json.
-func (s ResourceQuantityFormat) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes ResourceQuantityFormat from json.
-func (s *ResourceQuantityFormat) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode ResourceQuantityFormat to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch ResourceQuantityFormat(v) {
-	case ResourceQuantityFormatDecimalExponent:
-		*s = ResourceQuantityFormatDecimalExponent
-	case ResourceQuantityFormatBinarySI:
-		*s = ResourceQuantityFormatBinarySI
-	case ResourceQuantityFormatDecimalSI:
-		*s = ResourceQuantityFormatDecimalSI
-	default:
-		*s = ResourceQuantityFormat(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s ResourceQuantityFormat) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *ResourceQuantityFormat) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -5647,7 +5476,7 @@ func (s V1ResourceList) encodeFields(e *jx.Encoder) {
 	for k, elem := range s {
 		e.FieldStart(k)
 
-		elem.Encode(e)
+		e.Str(elem)
 	}
 }
 
@@ -5658,9 +5487,11 @@ func (s *V1ResourceList) Decode(d *jx.Decoder) error {
 	}
 	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem ResourceQuantity
+		var elem string
 		if err := func() error {
-			if err := elem.Decode(d); err != nil {
+			v, err := d.Str()
+			elem = string(v)
+			if err != nil {
 				return err
 			}
 			return nil
