@@ -19,13 +19,13 @@ NEXUS_RECEIVER_VERSION := "1.2.0"
 NEXUS_CRD_VERSION := "1.1.0"
 
 # cluster
-NEXUS_CLUSTER_NAME := "nexus-sdk-tests"
+NEXUS_CLUSTER_NAME := "nexus-sdk-go-tests"
 
 # Default recipe
 fresh: stop up
 
 # Start CI environment
-up: start-kind-cluster install-ingress-controller create-namespace create-ingress scylla-kind minio-kind crd apply-manifests dbschema scheduler receiver
+up: start-kind-cluster install-ingress-controller create-namespace create-ingress scylla-kind s2 crd apply-manifests dbschema scheduler receiver
 
 start-kind-cluster:
     kind create cluster --config=test-resources/kind.yaml --name {{NEXUS_CLUSTER_NAME}}
@@ -111,8 +111,8 @@ scylla-kind:
     kubectl apply -f {{MANIFESTS}}/scylladb.yaml
     kubectl -n nexus rollout status deployment/scylla --timeout=180s
 
-minio-kind:
-    kubectl apply -f {{MANIFESTS}}/minio.yaml
+s2:
+    kubectl apply -f {{MANIFESTS}}/s2.yaml
     kubectl -n nexus rollout status deployment/minio --timeout=180s
 
 crd:
