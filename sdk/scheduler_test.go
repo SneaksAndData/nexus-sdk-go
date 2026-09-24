@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -745,5 +746,42 @@ func Test_GetRunPayload(t *testing.T) {
 		if payload != expectedPayload {
 			f.t.Errorf("recorded payload should be %s but is %s", expectedPayload, payload)
 		}
+	}
+}
+
+func Test_UpdateRunTag(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Fatal(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	newTag := "updated-" + uuid.New().String()
+	tags, err := f.client.UpdateRunTag(newTag, runId, "hello-world")
+	if err != nil {
+		f.t.Fatalf("error updating run tag: %v", err)
+	}
+
+	if !slices.Contains(tags, newTag) {
+		f.t.Errorf("expected tags %v to contain new tag %s", tags, newTag)
 	}
 }

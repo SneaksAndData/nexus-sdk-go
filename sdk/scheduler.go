@@ -493,6 +493,28 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 	}
 }
 
+func (nc *NexusSchedulerClient) UpdateRunTag(tag string, requestId string, algorithm string) ([]string, error) {
+	response, err := nc.ApiClient.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(context.TODO(), tag, api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams{
+		AlgorithmName: algorithm,
+		RequestId:     requestId,
+	}, nc.getRequestOptions()...)
+
+	if err != nil { // coverage-ignore
+		return nil, mapApiError(err)
+	}
+
+	switch responseType := response.(type) {
+	case *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON:
+		return *responseType, nil
+	case *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON, *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextHTML, *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextPlain:
+		return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON, *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML, *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain: // coverage-ignore
+		return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	default: // coverage-ignore
+		return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	}
+}
+
 func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string) (string, error) {
 	runMeta, err := nc.GetMetadata(requestId, algorithm)
 

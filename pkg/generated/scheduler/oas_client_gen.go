@@ -104,7 +104,7 @@ type Invoker interface {
 	// side.
 	//
 	// POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId}
-	AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, error)
+	AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request string, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, error)
 	// AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet invokes GET /algorithm/v1/payload/{algorithmName}/requests/{requestId} operation.
 	//
 	// Retrieves payload sent by the client for the provided run (legacy).
@@ -464,12 +464,12 @@ func (c *Client) sendAlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet(ctx co
 // side.
 //
 // POST /algorithm/v1/metadata/tags/{algorithmName}/requests/{requestId}
-func (c *Client) AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, error) {
+func (c *Client) AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request string, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, options ...RequestOption) (AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, error) {
 	res, err := c.sendAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx, request, params, options...)
 	return res, err
 }
 
-func (c *Client) sendAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, requestOptions ...RequestOption) (res AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, err error) {
+func (c *Client) sendAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(ctx context.Context, request string, params AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams, requestOptions ...RequestOption) (res AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes, err error) {
 
 	var reqCfg requestConfig
 	reqCfg.setDefaults(c.baseClient)

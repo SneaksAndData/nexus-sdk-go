@@ -521,46 +521,6 @@ type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON 
 func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq struct {
-	Data io.Reader
-}
-
-// Read reads data from the Data reader.
-//
-// Kept to satisfy the io.Reader interface.
-func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq) Read(p []byte) (n int, err error) {
-	if s.Data == nil {
-		return 0, io.EOF
-	}
-	return s.Data.Read(p)
-}
-
-// AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType wraps AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq with Content-Type.
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType struct {
-	ContentType string
-	Content     AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq
-}
-
-// GetContentType returns the value of ContentType.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) GetContentType() string {
-	return s.ContentType
-}
-
-// GetContent returns the value of Content.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) GetContent() AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq {
-	return s.Content
-}
-
-// SetContentType sets the value of ContentType.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) SetContentType(val string) {
-	s.ContentType = val
-}
-
-// SetContent sets the value of Content.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) SetContent(val AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq) {
-	s.Content = val
-}
-
 type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON string
 
 func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
