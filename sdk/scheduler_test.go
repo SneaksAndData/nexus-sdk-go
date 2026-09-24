@@ -221,7 +221,7 @@ func Test_AwaitRun(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	runResult, err := f.client.AwaitRun(runId, "hello-world", nil, nil)
+	runResult, err := f.client.AwaitRun(t.Context(), runId, "hello-world", nil, nil)
 
 	if err != nil {
 		f.t.Fatal(err)
@@ -257,7 +257,7 @@ func Test_AwaitRun_Timeout(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	_, err = f.client.AwaitRun(runId, "hello-world", new(time.Second*1), new(time.Second*1))
+	_, err = f.client.AwaitRun(t.Context(), runId, "hello-world", new(time.Second*1), new(time.Second*1))
 
 	if err == nil {
 		f.t.Fatalf("AwaitRun should have failed with timeout error, but it did not")
@@ -297,7 +297,7 @@ func Test_AwaitRuns(t *testing.T) {
 		print("Completed run")
 	}()
 
-	runs, err := f.client.AwaitTaggedRuns(tags, nil, nil, counterRef, nil, true)
+	runs, err := f.client.AwaitTaggedRuns(t.Context(), tags, nil, nil, counterRef, nil, true)
 
 	if err != nil {
 		f.t.Fatalf("failed to await a tagged run: %s", err)
@@ -375,7 +375,7 @@ func Test_GetRun(t *testing.T) {
 		f.t.Error(err)
 	}
 
-	if _, err = f.client.AwaitRun(runId, "hello-world", nil, nil); err != nil {
+	if _, err = f.client.AwaitRun(t.Context(), runId, "hello-world", nil, nil); err != nil {
 		f.t.Error(err)
 	}
 
@@ -444,7 +444,7 @@ func Test_GetRunResults(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	if _, err = f.client.AwaitTaggedRuns([]string{tag.String()}, &algorithmName, nil, nil, nil, false); err != nil {
+	if _, err = f.client.AwaitTaggedRuns(t.Context(), []string{tag.String()}, &algorithmName, nil, nil, nil, false); err != nil {
 		f.t.Error(err)
 	}
 
@@ -486,7 +486,7 @@ func Test_CompleteRun(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	if _, err = f.client.AwaitRun(runId, "hello-world", nil, nil); err != nil {
+	if _, err = f.client.AwaitRun(t.Context(), runId, "hello-world", nil, nil); err != nil {
 		f.t.Fatal(err)
 	}
 
@@ -772,7 +772,7 @@ func Test_UpdateRunTag(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	runResult, err := f.client.AwaitRun(runId, "hello-world", nil, nil)
+	runResult, err := f.client.AwaitRun(t.Context(), runId, "hello-world", nil, nil)
 	if err != nil {
 		f.t.Fatal(err)
 	}

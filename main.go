@@ -25,6 +25,8 @@ package main
 //char* workgroup_kind;
 //char* cpu_limit;
 //char* memory_limit;
+//char* cpu_request;
+//char* memory_request;
 //int deadline_seconds;
 //int maximum_retries;
 //} CustomRunConfiguration;
@@ -46,7 +48,6 @@ package main
 //char* lifecycle_stage;
 //char* parent_job;
 //char* payload_uri;
-//char* payload_valid_for;
 //char* received_at;
 //char* received_by_host;
 //char* result_uri;
@@ -261,8 +262,14 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 	}
 
 	if customConfiguration != nil {
-		var cpuLimit api.OptString
-		var memoryLimit api.OptString
+		resources := api.OptV1NexusAlgorithmResources{
+			Set: false,
+			Value: api.V1NexusAlgorithmResources{
+				CustomResources: api.OptV1NexusAlgorithmResourcesCustomResources{
+					Set: false,
+				},
+			},
+		}
 		container := api.OptV1NexusAlgorithmContainer{
 			Value: api.V1NexusAlgorithmContainer{
 				VersionTag: api.OptString{
@@ -273,17 +280,31 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		}
 		var workgroup api.OptV1NexusAlgorithmWorkgroupRef
 
-		if customConfiguration.cpu_limit != nil {
-			cpuLimit = api.OptString{
-				Value: C.GoString(customConfiguration.cpu_limit),
-				Set:   true,
+		if (customConfiguration.memory_limit != nil && customConfiguration.cpu_limit == nil) || (customConfiguration.memory_limit == nil && customConfiguration.cpu_limit != nil) {
+			client.Logger.V(0).Info("Invalid custom resource limits provided. Both cpu and memory limits must be specified")
+		}
+
+		if (customConfiguration.memory_request != nil && customConfiguration.cpu_request == nil) || (customConfiguration.memory_request == nil && customConfiguration.cpu_request != nil) {
+			client.Logger.V(0).Info("Invalid custom resource requests provided. Both cpu and memory requests must be specified")
+		}
+
+		if customConfiguration.cpu_limit != nil && customConfiguration.memory_limit != nil {
+			resources.Value.Limits = api.OptV1ResourceList{
+				Set: true,
+				Value: api.V1ResourceList{
+					"cpu":    C.GoString(customConfiguration.cpu_limit),
+					"memory": C.GoString(customConfiguration.memory_limit),
+				},
 			}
 		}
 
-		if customConfiguration.memory_limit != nil {
-			memoryLimit = api.OptString{
-				Value: C.GoString(customConfiguration.memory_limit),
-				Set:   true,
+		if customConfiguration.cpu_request != nil && customConfiguration.memory_request != nil {
+			resources.Value.Requests = api.OptV1ResourceList{
+				Set: true,
+				Value: api.V1ResourceList{
+					"cpu":    C.GoString(customConfiguration.cpu_request),
+					"memory": C.GoString(customConfiguration.memory_request),
+				},
 			}
 		}
 
@@ -344,17 +365,8 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 				Command: api.OptString{
 					Set: false,
 				},
-				ComputeResources: api.OptV1NexusAlgorithmResources{
-					Value: api.V1NexusAlgorithmResources{
-						CpuLimit:    cpuLimit,
-						MemoryLimit: memoryLimit,
-						CustomResources: api.OptV1NexusAlgorithmResourcesCustomResources{
-							Set: false,
-						},
-					},
-					Set: true,
-				},
-				Container: container,
+				ComputeResources: resources,
+				Container:        container,
 				DatadogIntegrationSettings: api.OptV1NexusDatadogIntegrationSettings{
 					Set: false,
 				},
@@ -500,7 +512,6 @@ func GetRequestMetadata(requestId *C.char, algorithmName *C.char) C.RequestMetad
 			lifecycle_stage:           nil,
 			parent_job:                nil,
 			payload_uri:               nil,
-			payload_valid_for:         nil,
 			received_at:               nil,
 			received_by_host:          nil,
 			result_uri:                nil,
@@ -557,7 +568,7 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 		waitTimeout = nil
 	}
 
-	result, err := client.AwaitRun(C.GoString(requestId), C.GoString(algorithmName), new(time.Duration(pollIntervalSeconds)*time.Second), waitTimeout)
+	result, err := client.AwaitRun(ctx, C.GoString(requestId), C.GoString(algorithmName), new(time.Duration(pollIntervalSeconds)*time.Second), waitTimeout)
 
 	if err != nil {
 		return C.RunResult{
@@ -597,8 +608,6 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 //export AwaitRuns
 func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, completed *int32, waitTimeoutSeconds int32) *C.RunResult {
 	var waitTimeout *time.Duration
-	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
-
 	if waitTimeoutSeconds > 0 {
 		waitDuration := time.Duration(waitTimeoutSeconds) * time.Second
 		waitTimeout = &waitDuration
@@ -631,7 +640,7 @@ func AwaitRuns(tags **C.char, algorithm *C.char, pollIntervalSeconds int32, comp
 	}
 
 	// Python API can only retrieve recent runs for each tag
-	resultsIter, err := client.AwaitTaggedRuns(goTags, algName, &pollInterval, counterRef, waitTimeout, true)
+	resultsIter, err := client.AwaitTaggedRuns(ctx, goTags, algName, new(time.Duration(pollIntervalSeconds)*time.Second), counterRef, waitTimeout, true)
 
 	if counterRef != nil {
 		close(*counterRef)
@@ -801,7 +810,6 @@ func FreeRequestMetadata(result C.RequestMetadata) {
 	C.free(unsafe.Pointer(result.lifecycle_stage))
 	C.free(unsafe.Pointer(result.parent_job))
 	C.free(unsafe.Pointer(result.payload_uri))
-	C.free(unsafe.Pointer(result.payload_valid_for))
 	C.free(unsafe.Pointer(result.received_at))
 	C.free(unsafe.Pointer(result.received_by_host))
 	C.free(unsafe.Pointer(result.result_uri))

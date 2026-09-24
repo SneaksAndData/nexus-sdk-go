@@ -90,12 +90,12 @@ func mapApiError(err error) error {
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRun(ctx context.Context, requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
 	invalidRequestResponseDuration := 0 * time.Second
 	waitTime := 0 * time.Second
 	for {
 		nc.Logger.V(0).Info(fmt.Sprintf("Checking status of a request %s/%s", algorithmName, requestId))
-		response, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{
+		response, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(ctx, api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{
 			AlgorithmName: algorithmName,
 			RequestId:     requestId,
 		}, nc.getRequestOptions()...)
@@ -143,12 +143,12 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML: // coverage-ignore
 			return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
 		default: // coverage-ignore
-			return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
+			return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type %s for algorithm/requestId '%s'/'%s'", result, algorithmName, requestId))
 		}
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRuns(ctx context.Context, runs iter.Seq2[*api.ModelsTaggedRequestResult, error], pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration) ([]*api.ModelsTaggedRequestResult, error) {
 	resultChannel := make(chan *AwaitTaggedResult, 10)
 	var wg sync.WaitGroup
 
@@ -183,7 +183,7 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 
 			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
-			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
+			result, err := nc.awaitRun(ctx, run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
 			if err != nil {
 				isSuccess = false
 				resultChannel <- &AwaitTaggedResult{
@@ -323,10 +323,10 @@ func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string)
 }
 
 // AwaitRun awaits results for a submission identified by a request id and an algorithm name
-func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) AwaitRun(ctx context.Context, requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
 	resultChannel := make(chan *AwaitResult, 1)
 	go func() {
-		result, err := nc.awaitRun(requestId, algorithmName, pollInterval, waitTimeout)
+		result, err := nc.awaitRun(ctx, requestId, algorithmName, pollInterval, waitTimeout)
 		if err != nil {
 			resultChannel <- &AwaitResult{
 				Error:  err,
@@ -349,7 +349,7 @@ func (nc *NexusSchedulerClient) AwaitRun(requestId string, algorithmName string,
 }
 
 // AwaitTaggedRuns awaits results for submissions that use provided tags. In case algorithm name is not nil, only submission with a matching algorithm name will be awaited
-func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration, onlyRecentRuns bool) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
+func (nc *NexusSchedulerClient) AwaitTaggedRuns(ctx context.Context, tags []string, algorithmName *string, pollInterval *time.Duration, completed *chan int32, waitTimeout *time.Duration, onlyRecentRuns bool) (iter.Seq[*api.ModelsTaggedRequestResult], error) {
 	var matchingRuns iter.Seq2[*api.ModelsTaggedRequestResult, error]
 
 	if onlyRecentRuns {
@@ -358,7 +358,7 @@ func (nc *NexusSchedulerClient) AwaitTaggedRuns(tags []string, algorithmName *st
 		matchingRuns = nc.getRuns(tags, algorithmName)
 	}
 
-	runResults, err := nc.awaitRuns(matchingRuns, pollInterval, completed, waitTimeout)
+	runResults, err := nc.awaitRuns(ctx, matchingRuns, pollInterval, completed, waitTimeout)
 	if err != nil { // coverage-ignore
 		return nil, err
 	}
