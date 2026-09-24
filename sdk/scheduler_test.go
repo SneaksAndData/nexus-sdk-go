@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -773,15 +772,36 @@ func Test_UpdateRunTag(t *testing.T) {
 		f.t.Fatal(err)
 	}
 
-	time.Sleep(1 * time.Second)
+	runResult, err := f.client.AwaitRun(runId, "hello-world", nil, nil)
+	if err != nil {
+		f.t.Fatal(err)
+	}
+
+	if !IsFinished(runResult.GetStatus().Value) {
+		f.t.Fatalf("expected run to be finished, but got %s", runResult.GetStatus().Value)
+	}
 
 	newTag := "updated-" + uuid.New().String()
-	tags, err := f.client.UpdateRunTag(newTag, runId, "hello-world")
+	err = f.client.UpdateRunTag(&schedulerapi.ModelsTagUpdateRequest{
+		NewTag: schedulerapi.OptString{
+			Set:   true,
+			Value: newTag,
+		},
+	}, runId, "hello-world")
 	if err != nil {
 		f.t.Fatalf("error updating run tag: %v", err)
 	}
 
-	if !slices.Contains(tags, newTag) {
-		f.t.Errorf("expected tags %v to contain new tag %s", tags, newTag)
+	metadata, err := f.client.GetMetadata(runId, "hello-world")
+	if err != nil {
+		f.t.Fatalf("error getting metadata: %v", err)
+	}
+
+	if metadata == nil {
+		f.t.Fatal("expected metadata to not be nil")
+	}
+
+	if !metadata.Tag.Set || metadata.Tag.Value != newTag {
+		f.t.Errorf("expected metadata tag to be %s, but got %s (set=%v)", newTag, metadata.Tag.Value, metadata.Tag.Set)
 	}
 }

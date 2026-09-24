@@ -25,13 +25,13 @@ func encodeAlgorithmV1CancelAlgorithmNameRequestsRequestIdPostRequest(
 }
 
 func encodeAlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRequest(
-	req string,
+	req *ModelsTagUpdateRequest,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
 	e := new(jx.Encoder)
 	{
-		e.Str(req)
+		req.Encode(e)
 	}
 	encoded := e.Bytes()
 	ht.SetBody(r, bytes.NewReader(encoded), contentType)

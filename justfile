@@ -14,7 +14,7 @@ RECEIVER_IMAGE_REPO := "ghcr.io/sneaksanddata/nexus-receiver"
 
 NEXUS_CHART_NAME := "oci://ghcr.io/sneaksanddata/helm/nexus"
 NEXUS_RECEIVER_CHART_NAME := "oci://ghcr.io/sneaksanddata/helm/nexus-receiver"
-NEXUS_VERSION := "1.2.3"
+NEXUS_VERSION := "1.2.3-2-g7cf0ab7"
 NEXUS_RECEIVER_VERSION := "1.2.0"
 NEXUS_CRD_VERSION := "1.1.0"
 
