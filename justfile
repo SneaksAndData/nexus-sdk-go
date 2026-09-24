@@ -77,6 +77,7 @@ scheduler:
         --set scheduler.config.s3Buffer.processing.payloadProxy.externalName="nexus.nexus.svc.cluster.local:8080" \
         --set scheduler.config.s3Buffer.processing.payloadProxy.insecure="true" \
         --set scheduler.config.logLevel="DEBUG"
+    kubectl -n nexus rollout status deployment/nexus --timeout=180s
 
 receiver:
     helm upgrade nexus-receiver {{NEXUS_RECEIVER_CHART_NAME}} --install --create-namespace --namespace nexus --version v{{NEXUS_RECEIVER_VERSION}} \
@@ -85,6 +86,7 @@ receiver:
         --set receiver.config.checkpointStore.type=cassandra-scylla \
         --set receiver.config.checkpointStore.secretName="cassandra-credentials" \
         --set receiver.config.logLevel="DEBUG"
+    kubectl -n nexus rollout status deployment/nexus-receiver --timeout=180s
 
 # cleanup
 remove-chart:

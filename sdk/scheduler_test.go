@@ -292,11 +292,7 @@ func Test_AwaitRuns(t *testing.T) {
 		}
 	}
 
-	// make sure runs have been committed
-	time.Sleep(1 * time.Second)
-
-	var counterRef *chan int32
-	counterRef = new(make(chan int32, 10))
+	counterRef := new(make(chan int32, 10))
 	go func() {
 		print("Completed run")
 	}()
@@ -378,8 +374,6 @@ func Test_GetRun(t *testing.T) {
 	if err != nil {
 		f.t.Error(err)
 	}
-
-	time.Sleep(1 * time.Second)
 
 	if _, err = f.client.AwaitRun(runId, "hello-world", nil, nil); err != nil {
 		f.t.Error(err)
@@ -491,8 +485,6 @@ func Test_CompleteRun(t *testing.T) {
 	if err != nil {
 		f.t.Fatal(err)
 	}
-
-	time.Sleep(1 * time.Second)
 
 	if _, err = f.client.AwaitRun(runId, "hello-world", nil, nil); err != nil {
 		f.t.Fatal(err)
