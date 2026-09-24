@@ -1,4 +1,0 @@
-nexus-crd:
-  environment: development
-
-dockerServiceType: mac # mac or linux

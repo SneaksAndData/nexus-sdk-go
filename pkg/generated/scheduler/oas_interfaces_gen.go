@@ -13,6 +13,10 @@ type AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes interface {
 	algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes()
 }
 
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes interface {
+	algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes()
+}
+
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes interface {
 	algorithmV1PayloadAlgorithmNameRequestsRequestIdGetRes()
 }
@@ -27,4 +31,8 @@ type AlgorithmV1ResultsTagsRequestTagGetRes interface {
 
 type AlgorithmV1RunAlgorithmNamePostRes interface {
 	algorithmV1RunAlgorithmNamePostRes()
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetRes interface {
+	dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes()
 }

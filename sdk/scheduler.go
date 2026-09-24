@@ -4,17 +4,21 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
-	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
-	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
 	"io"
 	"iter"
-	"k8s.io/klog/v2"
 	"net"
+	"net/http"
+	"net/url"
 	"runtime"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/SneaksAndData/nexus-core/pkg/checkpoint/models"
+	"github.com/SneaksAndData/nexus-sdk-go/pkg/generated/scheduler"
+	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
+	"k8s.io/klog/v2"
 )
 
 type AwaitTaggedResult struct {
@@ -119,12 +123,12 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 				waitTime += 5 * time.Second
 				time.Sleep(5 * time.Second)
 			}
-		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
+		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
 			if invalidRequestResponseDuration > 5*time.Minute {
 				return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithmName, requestId))
 			}
 
-			nc.Logger.V(0).Info("received bad request when trying to read a result - possible lag in submission accounting, will try again")
+			nc.Logger.V(0).Info("received http 404 when trying to read a result - possible lag in submission accounting, will try again")
 
 			if pollInterval != nil {
 				invalidRequestResponseDuration += *pollInterval
@@ -138,8 +142,6 @@ func (nc *NexusSchedulerClient) awaitRun(requestId string, algorithmName string,
 
 		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML: // coverage-ignore
 			return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
-		case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
-			return nil, nil
 		default: // coverage-ignore
 			return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithmName, requestId))
 		}
@@ -155,17 +157,15 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 		go func() {
 			isSuccess := true
 			defer func() {
-				nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 				// prevent panic in case completed channel was closed
 				// in case one of the waiters returns error, the result channel iterator will return, but this goroutine will keep going
 				// thus shutdown clean w/o reporting anything outside
 				if completed != nil && isSuccess {
+					nc.Logger.V(0).Info(fmt.Sprintf("Received result for %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 					*completed <- 1
 				}
 				wg.Done()
 			}()
-
-			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
 			if runErr != nil {
 				isSuccess = false
@@ -173,9 +173,15 @@ func (nc *NexusSchedulerClient) awaitRuns(runs iter.Seq2[*api.ModelsTaggedReques
 					Error:  runErr,
 					Result: nil,
 				}
-				nc.Logger.V(0).Error(runErr, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
+				if run != nil {
+					nc.Logger.V(0).Error(runErr, fmt.Sprintf("Await of the run %s/%s failed", run.AlgorithmName.Value, run.RequestId.Value))
+				} else {
+					nc.Logger.V(0).Error(runErr, "Unable to initialize await loop for the provided run metadata")
+				}
 				return
 			}
+
+			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
 			result, err := nc.awaitRun(run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
 			if err != nil {
@@ -488,36 +494,56 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 }
 
 func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string) (string, error) {
-	payloadResponse, err := nc.ApiClient.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetParams{
+	runMeta, err := nc.GetMetadata(requestId, algorithm)
+
+	if err != nil {
+		return "", mapApiError(err)
+	}
+
+	extraOptions := []api.RequestOption{
+		api.WithEditRequest(func(req *http.Request) error {
+			payloadUrl, err := url.Parse(runMeta.PayloadURI.Value)
+			if err == nil {
+				sigQuery := payloadUrl.Query()
+				baseQuery := req.URL.Query()
+
+				for key, values := range sigQuery {
+					for _, val := range values {
+						baseQuery.Add(key, val)
+					}
+				}
+
+				req.URL.RawQuery = baseQuery.Encode()
+				return nil
+			}
+
+			return nil
+		}),
+	}
+
+	payloadResponse, err := nc.ApiClient.DataV1PayloadsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetParams{
 		AlgorithmName: algorithm,
 		RequestId:     requestId,
-	}, nc.getRequestOptions()...)
-
-	responseSerializer := func(reader io.Reader) string {
-		responseBytes, _ := io.ReadAll(reader)
-		return string(responseBytes)
-	}
+	}, slices.Concat(nc.getRequestOptions(), extraOptions)...)
 
 	if err != nil { // coverage-ignore
 		return "", mapApiError(err)
 	}
 
 	switch payloadResponseType := payloadResponse.(type) {
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextHTML: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetFoundTextPlain: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextPlain: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKTextHTML: // coverage-ignore
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOKApplicationOctetStream:
-		return responseSerializer(payloadResponseType.Data), nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestTextHTML: // coverage-ignore
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON:
+		payloadContent, err := payloadResponseType.MarshalJSON()
+		if err != nil {
+			return "", mapApiError(err)
+		}
+		return string(payloadContent), nil
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenApplicationJSON, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain:
+		return "", models2.NewUnauthorizedError(fmt.Errorf("forbidden request for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML: // coverage-ignore
 		return "", models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextHTML, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetNotFoundTextPlain: // coverage-ignore
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain: // coverage-ignore
 		return "", nil
-	case *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML, *api.AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain: // coverage-ignore
+	case *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML, *api.DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain: // coverage-ignore
 		return "", models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	default: // coverage-ignore
 		return "", models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))

@@ -6,11 +6,13 @@ package api
 type OperationName = string
 
 const (
-	AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOperation   OperationName = "AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet"
-	AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOperation  OperationName = "AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost"
-	AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetOperation OperationName = "AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet"
-	AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOperation  OperationName = "AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet"
-	AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetOperation  OperationName = "AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet"
-	AlgorithmV1ResultsTagsRequestTagGetOperation                  OperationName = "AlgorithmV1ResultsTagsRequestTagGet"
-	AlgorithmV1RunAlgorithmNamePostOperation                      OperationName = "AlgorithmV1RunAlgorithmNamePost"
+	AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetOperation        OperationName = "AlgorithmV1BufferAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOperation       OperationName = "AlgorithmV1CancelAlgorithmNameRequestsRequestIdPost"
+	AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetOperation      OperationName = "AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOperation OperationName = "AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost"
+	AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetOperation       OperationName = "AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetOperation       OperationName = "AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet"
+	AlgorithmV1ResultsTagsRequestTagGetOperation                       OperationName = "AlgorithmV1ResultsTagsRequestTagGet"
+	AlgorithmV1RunAlgorithmNamePostOperation                           OperationName = "AlgorithmV1RunAlgorithmNamePost"
+	DataV1PayloadsAlgorithmNameRequestsRequestIdGetOperation           OperationName = "DataV1PayloadsAlgorithmNameRequestsRequestIdGet"
 )

@@ -1,5 +1,6 @@
 # sets generator options.
 generator:
+  ignore_not_implemented: ["all"]
   # sets generator features.
   features:
     enable:

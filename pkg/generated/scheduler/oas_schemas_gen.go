@@ -477,6 +477,129 @@ func (s AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlai
 func (*AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes() {
 }
 
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON string
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextHTML) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON []string
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+// AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType wraps AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq with Content-Type.
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType struct {
+	ContentType string
+	Content     AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq
+}
+
+// GetContentType returns the value of ContentType.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) GetContentType() string {
+	return s.ContentType
+}
+
+// GetContent returns the value of Content.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) GetContent() AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq {
+	return s.Content
+}
+
+// SetContentType sets the value of ContentType.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) SetContentType(val string) {
+	s.ContentType = val
+}
+
+// SetContent sets the value of Content.
+func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) SetContent(val AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq) {
+	s.Content = val
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON string
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+}
+
 type AlgorithmV1PayloadAlgorithmNameRequestsRequestIdGetBadRequestApplicationOctetStream struct {
 	Data io.Reader
 }
@@ -1058,12 +1181,181 @@ func (s AlgorithmV1RunAlgorithmNamePostUnauthorizedTextPlain) Read(p []byte) (n 
 
 func (*AlgorithmV1RunAlgorithmNamePostUnauthorizedTextPlain) algorithmV1RunAlgorithmNamePostRes() {}
 
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetForbiddenTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON map[string]jx.Raw
+
+func (s *DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) init() DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON {
+	m := *s
+	if m == nil {
+		m = map[string]jx.Raw{}
+		*s = m
+	}
+	return m
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetOKApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON string
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
+type DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*DataV1PayloadsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) dataV1PayloadsAlgorithmNameRequestsRequestIdGetRes() {
+}
+
 // Ref: #/components/schemas/models.AlgorithmRequest
 type ModelsAlgorithmRequest struct {
 	AlgorithmParameters ModelsAlgorithmRequestAlgorithmParameters `json:"algorithmParameters"`
 	CustomConfiguration OptV1NexusAlgorithmSpec                   `json:"customConfiguration"`
 	ParentRequest       OptModelsAlgorithmRequestRef              `json:"parentRequest"`
-	PayloadValidFor     OptString                                 `json:"payloadValidFor"`
 	RequestApiVersion   OptString                                 `json:"requestApiVersion"`
 	Tag                 OptString                                 `json:"tag"`
 }
@@ -1081,11 +1373,6 @@ func (s *ModelsAlgorithmRequest) GetCustomConfiguration() OptV1NexusAlgorithmSpe
 // GetParentRequest returns the value of ParentRequest.
 func (s *ModelsAlgorithmRequest) GetParentRequest() OptModelsAlgorithmRequestRef {
 	return s.ParentRequest
-}
-
-// GetPayloadValidFor returns the value of PayloadValidFor.
-func (s *ModelsAlgorithmRequest) GetPayloadValidFor() OptString {
-	return s.PayloadValidFor
 }
 
 // GetRequestApiVersion returns the value of RequestApiVersion.
@@ -1111,11 +1398,6 @@ func (s *ModelsAlgorithmRequest) SetCustomConfiguration(val OptV1NexusAlgorithmS
 // SetParentRequest sets the value of ParentRequest.
 func (s *ModelsAlgorithmRequest) SetParentRequest(val OptModelsAlgorithmRequestRef) {
 	s.ParentRequest = val
-}
-
-// SetPayloadValidFor sets the value of PayloadValidFor.
-func (s *ModelsAlgorithmRequest) SetPayloadValidFor(val OptString) {
-	s.PayloadValidFor = val
 }
 
 // SetRequestApiVersion sets the value of RequestApiVersion.
@@ -1217,7 +1499,6 @@ type ModelsCheckpointedRequest struct {
 	LifecycleStage          OptString                    `json:"lifecycle_stage"`
 	Parent                  OptModelsAlgorithmRequestRef `json:"parent"`
 	PayloadURI              OptString                    `json:"payload_uri"`
-	PayloadValidFor         OptString                    `json:"payload_valid_for"`
 	ReceivedAt              OptString                    `json:"received_at"`
 	ReceivedByHost          OptString                    `json:"received_by_host"`
 	ResultURI               OptString                    `json:"result_uri"`
@@ -1288,11 +1569,6 @@ func (s *ModelsCheckpointedRequest) GetParent() OptModelsAlgorithmRequestRef {
 // GetPayloadURI returns the value of PayloadURI.
 func (s *ModelsCheckpointedRequest) GetPayloadURI() OptString {
 	return s.PayloadURI
-}
-
-// GetPayloadValidFor returns the value of PayloadValidFor.
-func (s *ModelsCheckpointedRequest) GetPayloadValidFor() OptString {
-	return s.PayloadValidFor
 }
 
 // GetReceivedAt returns the value of ReceivedAt.
@@ -1383,11 +1659,6 @@ func (s *ModelsCheckpointedRequest) SetParent(val OptModelsAlgorithmRequestRef) 
 // SetPayloadURI sets the value of PayloadURI.
 func (s *ModelsCheckpointedRequest) SetPayloadURI(val OptString) {
 	s.PayloadURI = val
-}
-
-// SetPayloadValidFor sets the value of PayloadValidFor.
-func (s *ModelsCheckpointedRequest) SetPayloadValidFor(val OptString) {
-	s.PayloadValidFor = val
 }
 
 // SetReceivedAt sets the value of ReceivedAt.
@@ -1664,98 +1935,6 @@ func (o OptModelsAlgorithmRequestRef) Or(d ModelsAlgorithmRequestRef) ModelsAlgo
 	return d
 }
 
-// NewOptResourceQuantity returns new OptResourceQuantity with value set to v.
-func NewOptResourceQuantity(v ResourceQuantity) OptResourceQuantity {
-	return OptResourceQuantity{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptResourceQuantity is optional ResourceQuantity.
-type OptResourceQuantity struct {
-	Value ResourceQuantity
-	Set   bool
-}
-
-// IsSet returns true if OptResourceQuantity was set.
-func (o OptResourceQuantity) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptResourceQuantity) Reset() {
-	var v ResourceQuantity
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptResourceQuantity) SetTo(v ResourceQuantity) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptResourceQuantity) Get() (v ResourceQuantity, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptResourceQuantity) Or(d ResourceQuantity) ResourceQuantity {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptResourceQuantityFormat returns new OptResourceQuantityFormat with value set to v.
-func NewOptResourceQuantityFormat(v ResourceQuantityFormat) OptResourceQuantityFormat {
-	return OptResourceQuantityFormat{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptResourceQuantityFormat is optional ResourceQuantityFormat.
-type OptResourceQuantityFormat struct {
-	Value ResourceQuantityFormat
-	Set   bool
-}
-
-// IsSet returns true if OptResourceQuantityFormat was set.
-func (o OptResourceQuantityFormat) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptResourceQuantityFormat) Reset() {
-	var v ResourceQuantityFormat
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptResourceQuantityFormat) SetTo(v ResourceQuantityFormat) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptResourceQuantityFormat) Get() (v ResourceQuantityFormat, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptResourceQuantityFormat) Or(d ResourceQuantityFormat) ResourceQuantityFormat {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -1940,6 +2119,98 @@ func (o OptV1EnvVarSource) Or(d V1EnvVarSource) V1EnvVarSource {
 	return d
 }
 
+// NewOptV1FileKeySelector returns new OptV1FileKeySelector with value set to v.
+func NewOptV1FileKeySelector(v V1FileKeySelector) OptV1FileKeySelector {
+	return OptV1FileKeySelector{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1FileKeySelector is optional V1FileKeySelector.
+type OptV1FileKeySelector struct {
+	Value V1FileKeySelector
+	Set   bool
+}
+
+// IsSet returns true if OptV1FileKeySelector was set.
+func (o OptV1FileKeySelector) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1FileKeySelector) Reset() {
+	var v V1FileKeySelector
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1FileKeySelector) SetTo(v V1FileKeySelector) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1FileKeySelector) Get() (v V1FileKeySelector, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1FileKeySelector) Or(d V1FileKeySelector) V1FileKeySelector {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1MountPropagationMode returns new OptV1MountPropagationMode with value set to v.
+func NewOptV1MountPropagationMode(v V1MountPropagationMode) OptV1MountPropagationMode {
+	return OptV1MountPropagationMode{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1MountPropagationMode is optional V1MountPropagationMode.
+type OptV1MountPropagationMode struct {
+	Value V1MountPropagationMode
+	Set   bool
+}
+
+// IsSet returns true if OptV1MountPropagationMode was set.
+func (o OptV1MountPropagationMode) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1MountPropagationMode) Reset() {
+	var v V1MountPropagationMode
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1MountPropagationMode) SetTo(v V1MountPropagationMode) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1MountPropagationMode) Get() (v V1MountPropagationMode, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1MountPropagationMode) Or(d V1MountPropagationMode) V1MountPropagationMode {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptV1NexusAlgorithmContainer returns new OptV1NexusAlgorithmContainer with value set to v.
 func NewOptV1NexusAlgorithmContainer(v V1NexusAlgorithmContainer) OptV1NexusAlgorithmContainer {
 	return OptV1NexusAlgorithmContainer{
@@ -1980,6 +2251,52 @@ func (o OptV1NexusAlgorithmContainer) Get() (v V1NexusAlgorithmContainer, ok boo
 
 // Or returns value if set, or given parameter if does not.
 func (o OptV1NexusAlgorithmContainer) Or(d V1NexusAlgorithmContainer) V1NexusAlgorithmContainer {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1NexusAlgorithmPayloadConfiguration returns new OptV1NexusAlgorithmPayloadConfiguration with value set to v.
+func NewOptV1NexusAlgorithmPayloadConfiguration(v V1NexusAlgorithmPayloadConfiguration) OptV1NexusAlgorithmPayloadConfiguration {
+	return OptV1NexusAlgorithmPayloadConfiguration{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1NexusAlgorithmPayloadConfiguration is optional V1NexusAlgorithmPayloadConfiguration.
+type OptV1NexusAlgorithmPayloadConfiguration struct {
+	Value V1NexusAlgorithmPayloadConfiguration
+	Set   bool
+}
+
+// IsSet returns true if OptV1NexusAlgorithmPayloadConfiguration was set.
+func (o OptV1NexusAlgorithmPayloadConfiguration) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1NexusAlgorithmPayloadConfiguration) Reset() {
+	var v V1NexusAlgorithmPayloadConfiguration
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1NexusAlgorithmPayloadConfiguration) SetTo(v V1NexusAlgorithmPayloadConfiguration) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1NexusAlgorithmPayloadConfiguration) Get() (v V1NexusAlgorithmPayloadConfiguration, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1NexusAlgorithmPayloadConfiguration) Or(d V1NexusAlgorithmPayloadConfiguration) V1NexusAlgorithmPayloadConfiguration {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -2164,6 +2481,144 @@ func (o OptV1NexusAlgorithmRuntimeEnvironmentAnnotations) Get() (v V1NexusAlgori
 
 // Or returns value if set, or given parameter if does not.
 func (o OptV1NexusAlgorithmRuntimeEnvironmentAnnotations) Or(d V1NexusAlgorithmRuntimeEnvironmentAnnotations) V1NexusAlgorithmRuntimeEnvironmentAnnotations {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts returns new OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts with value set to v.
+func NewOptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts(v V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts {
+	return OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts is optional V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts.
+type OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts struct {
+	Value V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts
+	Set   bool
+}
+
+// IsSet returns true if OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts was set.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Reset() {
+	var v V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) SetTo(v V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Get() (v V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) Or(d V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts returns new OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts with value set to v.
+func NewOptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts(v V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts {
+	return OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts is optional V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts.
+type OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts struct {
+	Value V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts
+	Set   bool
+}
+
+// IsSet returns true if OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts was set.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Reset() {
+	var v V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) SetTo(v V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Get() (v V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) Or(d V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1NexusAlgorithmRuntimeEnvironmentStorageMounts returns new OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts with value set to v.
+func NewOptV1NexusAlgorithmRuntimeEnvironmentStorageMounts(v V1NexusAlgorithmRuntimeEnvironmentStorageMounts) OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts {
+	return OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts is optional V1NexusAlgorithmRuntimeEnvironmentStorageMounts.
+type OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts struct {
+	Value V1NexusAlgorithmRuntimeEnvironmentStorageMounts
+	Set   bool
+}
+
+// IsSet returns true if OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts was set.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) Reset() {
+	var v V1NexusAlgorithmRuntimeEnvironmentStorageMounts
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) SetTo(v V1NexusAlgorithmRuntimeEnvironmentStorageMounts) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) Get() (v V1NexusAlgorithmRuntimeEnvironmentStorageMounts, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) Or(d V1NexusAlgorithmRuntimeEnvironmentStorageMounts) V1NexusAlgorithmRuntimeEnvironmentStorageMounts {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -2400,6 +2855,98 @@ func (o OptV1ObjectFieldSelector) Or(d V1ObjectFieldSelector) V1ObjectFieldSelec
 	return d
 }
 
+// NewOptV1PayloadSerializationMode returns new OptV1PayloadSerializationMode with value set to v.
+func NewOptV1PayloadSerializationMode(v V1PayloadSerializationMode) OptV1PayloadSerializationMode {
+	return OptV1PayloadSerializationMode{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1PayloadSerializationMode is optional V1PayloadSerializationMode.
+type OptV1PayloadSerializationMode struct {
+	Value V1PayloadSerializationMode
+	Set   bool
+}
+
+// IsSet returns true if OptV1PayloadSerializationMode was set.
+func (o OptV1PayloadSerializationMode) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1PayloadSerializationMode) Reset() {
+	var v V1PayloadSerializationMode
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1PayloadSerializationMode) SetTo(v V1PayloadSerializationMode) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1PayloadSerializationMode) Get() (v V1PayloadSerializationMode, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1PayloadSerializationMode) Or(d V1PayloadSerializationMode) V1PayloadSerializationMode {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1RecursiveReadOnlyMode returns new OptV1RecursiveReadOnlyMode with value set to v.
+func NewOptV1RecursiveReadOnlyMode(v V1RecursiveReadOnlyMode) OptV1RecursiveReadOnlyMode {
+	return OptV1RecursiveReadOnlyMode{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1RecursiveReadOnlyMode is optional V1RecursiveReadOnlyMode.
+type OptV1RecursiveReadOnlyMode struct {
+	Value V1RecursiveReadOnlyMode
+	Set   bool
+}
+
+// IsSet returns true if OptV1RecursiveReadOnlyMode was set.
+func (o OptV1RecursiveReadOnlyMode) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1RecursiveReadOnlyMode) Reset() {
+	var v V1RecursiveReadOnlyMode
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1RecursiveReadOnlyMode) SetTo(v V1RecursiveReadOnlyMode) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1RecursiveReadOnlyMode) Get() (v V1RecursiveReadOnlyMode, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1RecursiveReadOnlyMode) Or(d V1RecursiveReadOnlyMode) V1RecursiveReadOnlyMode {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptV1ResourceFieldSelector returns new OptV1ResourceFieldSelector with value set to v.
 func NewOptV1ResourceFieldSelector(v V1ResourceFieldSelector) OptV1ResourceFieldSelector {
 	return OptV1ResourceFieldSelector{
@@ -2440,6 +2987,52 @@ func (o OptV1ResourceFieldSelector) Get() (v V1ResourceFieldSelector, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptV1ResourceFieldSelector) Or(d V1ResourceFieldSelector) V1ResourceFieldSelector {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptV1ResourceList returns new OptV1ResourceList with value set to v.
+func NewOptV1ResourceList(v V1ResourceList) OptV1ResourceList {
+	return OptV1ResourceList{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptV1ResourceList is optional V1ResourceList.
+type OptV1ResourceList struct {
+	Value V1ResourceList
+	Set   bool
+}
+
+// IsSet returns true if OptV1ResourceList was set.
+func (o OptV1ResourceList) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptV1ResourceList) Reset() {
+	var v V1ResourceList
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptV1ResourceList) SetTo(v V1ResourceList) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptV1ResourceList) Get() (v V1ResourceList, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptV1ResourceList) Or(d V1ResourceList) V1ResourceList {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -2538,84 +3131,15 @@ func (o OptV1SecretKeySelector) Or(d V1SecretKeySelector) V1SecretKeySelector {
 	return d
 }
 
-// Ref: #/components/schemas/resource.Quantity
-type ResourceQuantity struct {
-	Format OptResourceQuantityFormat `json:"Format"`
-}
-
-// GetFormat returns the value of Format.
-func (s *ResourceQuantity) GetFormat() OptResourceQuantityFormat {
-	return s.Format
-}
-
-// SetFormat sets the value of Format.
-func (s *ResourceQuantity) SetFormat(val OptResourceQuantityFormat) {
-	s.Format = val
-}
-
-type ResourceQuantityFormat string
-
-const (
-	ResourceQuantityFormatDecimalExponent ResourceQuantityFormat = "DecimalExponent"
-	ResourceQuantityFormatBinarySI        ResourceQuantityFormat = "BinarySI"
-	ResourceQuantityFormatDecimalSI       ResourceQuantityFormat = "DecimalSI"
-)
-
-// AllValues returns all ResourceQuantityFormat values.
-func (ResourceQuantityFormat) AllValues() []ResourceQuantityFormat {
-	return []ResourceQuantityFormat{
-		ResourceQuantityFormatDecimalExponent,
-		ResourceQuantityFormatBinarySI,
-		ResourceQuantityFormatDecimalSI,
-	}
-}
-
-// MarshalText implements encoding.TextMarshaler.
-func (s ResourceQuantityFormat) MarshalText() ([]byte, error) {
-	switch s {
-	case ResourceQuantityFormatDecimalExponent:
-		return []byte(s), nil
-	case ResourceQuantityFormatBinarySI:
-		return []byte(s), nil
-	case ResourceQuantityFormatDecimalSI:
-		return []byte(s), nil
-	default:
-		return nil, errors.Errorf("invalid value: %q", s)
-	}
-}
-
-// UnmarshalText implements encoding.TextUnmarshaler.
-func (s *ResourceQuantityFormat) UnmarshalText(data []byte) error {
-	switch ResourceQuantityFormat(data) {
-	case ResourceQuantityFormatDecimalExponent:
-		*s = ResourceQuantityFormatDecimalExponent
-		return nil
-	case ResourceQuantityFormatBinarySI:
-		*s = ResourceQuantityFormatBinarySI
-		return nil
-	case ResourceQuantityFormatDecimalSI:
-		*s = ResourceQuantityFormatDecimalSI
-		return nil
-	default:
-		return errors.Errorf("invalid value: %q", data)
-	}
-}
-
 // Ref: #/components/schemas/v1.ConfigMapEnvSource
 type V1ConfigMapEnvSource struct {
-	// Name of the referent.
-	// This field is effectively required, but due to backwards compatibility is
-	// allowed to be empty. Instances of this type with an empty value here are
-	// almost certainly wrong.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-	// +optional
-	// +default=""
-	// +kubebuilder:default=""
-	// TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.
-	// com/kubernetes-sigs/kubebuilder/issues/3896.
+	// Name of the referent. This field is effectively required, but due to backwards compatibility is
+	// allowed to be empty. Instances of this type with an empty value here are almost certainly wrong.
+	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names +optional
+	// +default="" +kubebuilder:default="" TODO: Drop `kubebuilder:default` when controller-gen doesn't
+	// need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 	Name OptString `json:"name"`
-	// Specify whether the ConfigMap must be defined
-	// +optional.
+	// Specify whether the ConfigMap must be defined +optional.
 	Optional OptBool `json:"optional"`
 }
 
@@ -2643,19 +3167,13 @@ func (s *V1ConfigMapEnvSource) SetOptional(val OptBool) {
 type V1ConfigMapKeySelector struct {
 	// The key to select.
 	Key OptString `json:"key"`
-	// Name of the referent.
-	// This field is effectively required, but due to backwards compatibility is
-	// allowed to be empty. Instances of this type with an empty value here are
-	// almost certainly wrong.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-	// +optional
-	// +default=""
-	// +kubebuilder:default=""
-	// TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.
-	// com/kubernetes-sigs/kubebuilder/issues/3896.
+	// Name of the referent. This field is effectively required, but due to backwards compatibility is
+	// allowed to be empty. Instances of this type with an empty value here are almost certainly wrong.
+	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names +optional
+	// +default="" +kubebuilder:default="" TODO: Drop `kubebuilder:default` when controller-gen doesn't
+	// need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 	Name OptString `json:"name"`
-	// Specify whether the ConfigMap or its key must be defined
-	// +optional.
+	// Specify whether the ConfigMap or its key must be defined +optional.
 	Optional OptBool `json:"optional"`
 }
 
@@ -2691,14 +3209,12 @@ func (s *V1ConfigMapKeySelector) SetOptional(val OptBool) {
 
 // Ref: #/components/schemas/v1.EnvFromSource
 type V1EnvFromSource struct {
-	// The ConfigMap to select from
-	// +optional.
+	// The ConfigMap to select from +optional.
 	ConfigMapRef OptV1ConfigMapEnvSource `json:"configMapRef"`
-	// Optional text to prepend to the name of each environment variable. Must be a C_IDENTIFIER.
-	// +optional.
+	// Optional text to prepend to the name of each environment variable. May consist of any printable
+	// ASCII characters except '='. +optional.
 	Prefix OptString `json:"prefix"`
-	// The Secret to select from
-	// +optional.
+	// The Secret to select from +optional.
 	SecretRef OptV1SecretEnvSource `json:"secretRef"`
 }
 
@@ -2734,21 +3250,16 @@ func (s *V1EnvFromSource) SetSecretRef(val OptV1SecretEnvSource) {
 
 // Ref: #/components/schemas/v1.EnvVar
 type V1EnvVar struct {
-	// Name of the environment variable. Must be a C_IDENTIFIER.
+	// Name of the environment variable. May consist of any printable ASCII characters except '='.
 	Name OptString `json:"name"`
-	// Variable references $(VAR_NAME) are expanded
-	// using the previously defined environment variables in the container and
-	// any service environment variables. If a variable cannot be resolved,
-	// the reference in the input string will be unchanged. Double $$ are reduced
-	// to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
-	// "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
-	// Escaped references will never be expanded, regardless of whether the variable
-	// exists or not.
-	// Defaults to "".
-	// +optional.
+	// Variable references $(VAR_NAME) are expanded using the previously defined environment variables in
+	// the container and any service environment variables. If a variable cannot be resolved, the reference
+	// in the input string will be unchanged. Double $$ are reduced to a single $, which allows for
+	// escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+	// Escaped references will never be expanded, regardless of whether the variable exists or not.
+	// Defaults to "". +optional.
 	Value OptString `json:"value"`
-	// Source for the environment variable's value. Cannot be used if value is not empty.
-	// +optional.
+	// Source for the environment variable's value. Cannot be used if value is not empty. +optional.
 	ValueFrom OptV1EnvVarSource `json:"valueFrom"`
 }
 
@@ -2784,21 +3295,21 @@ func (s *V1EnvVar) SetValueFrom(val OptV1EnvVarSource) {
 
 // Ref: #/components/schemas/v1.EnvVarSource
 type V1EnvVarSource struct {
-	// Selects a key of a ConfigMap.
-	// +optional.
+	// Selects a key of a ConfigMap. +optional.
 	ConfigMapKeyRef OptV1ConfigMapKeySelector `json:"configMapKeyRef"`
 	// Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`,
-	//  `metadata.annotations['<KEY>']`,
-	// spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
-	// +optional.
+	// `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP,
+	// status.podIP, status.podIPs. +optional.
 	FieldRef OptV1ObjectFieldSelector `json:"fieldRef"`
-	// Selects a resource of the container: only resources limits and requests
-	// (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.
-	// ephemeral-storage) are currently supported.
-	// +optional.
+	// FileKeyRef selects a key of the env file. Requires the EnvFiles feature gate to be enabled.
+	//
+	// +featureGate=EnvFiles +optional.
+	FileKeyRef OptV1FileKeySelector `json:"fileKeyRef"`
+	// Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory,
+	// limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are
+	// currently supported. +optional.
 	ResourceFieldRef OptV1ResourceFieldSelector `json:"resourceFieldRef"`
-	// Selects a key of a secret in the pod's namespace
-	// +optional.
+	// Selects a key of a secret in the pod's namespace +optional.
 	SecretKeyRef OptV1SecretKeySelector `json:"secretKeyRef"`
 }
 
@@ -2810,6 +3321,11 @@ func (s *V1EnvVarSource) GetConfigMapKeyRef() OptV1ConfigMapKeySelector {
 // GetFieldRef returns the value of FieldRef.
 func (s *V1EnvVarSource) GetFieldRef() OptV1ObjectFieldSelector {
 	return s.FieldRef
+}
+
+// GetFileKeyRef returns the value of FileKeyRef.
+func (s *V1EnvVarSource) GetFileKeyRef() OptV1FileKeySelector {
+	return s.FileKeyRef
 }
 
 // GetResourceFieldRef returns the value of ResourceFieldRef.
@@ -2832,6 +3348,11 @@ func (s *V1EnvVarSource) SetFieldRef(val OptV1ObjectFieldSelector) {
 	s.FieldRef = val
 }
 
+// SetFileKeyRef sets the value of FileKeyRef.
+func (s *V1EnvVarSource) SetFileKeyRef(val OptV1FileKeySelector) {
+	s.FileKeyRef = val
+}
+
 // SetResourceFieldRef sets the value of ResourceFieldRef.
 func (s *V1EnvVarSource) SetResourceFieldRef(val OptV1ResourceFieldSelector) {
 	s.ResourceFieldRef = val
@@ -2842,10 +3363,120 @@ func (s *V1EnvVarSource) SetSecretKeyRef(val OptV1SecretKeySelector) {
 	s.SecretKeyRef = val
 }
 
+// Ref: #/components/schemas/v1.FileKeySelector
+type V1FileKeySelector struct {
+	// The key within the env file. An invalid key will prevent the pod from starting. The keys defined
+	// within a source may consist of any printable ASCII characters except '='. During Alpha stage of the
+	// EnvFiles feature gate, the key size is limited to 128 characters. +required.
+	Key OptString `json:"key"`
+	// Specify whether the file or its key must be defined. If the file or key does not exist, then the env
+	// var is not published. If optional is set to true and the specified key does not exist, the
+	// environment variable will not be set in the Pod's containers.
+	//
+	// If optional is set to false and the specified key does not exist, an error will be returned during
+	// Pod creation. +optional +default=false.
+	Optional OptBool `json:"optional"`
+	// The path within the volume from which to select the file. Must be relative and may not contain the
+	// '..' path or start with '..'. +required.
+	Path OptString `json:"path"`
+	// The name of the volume mount containing the env file. +required.
+	VolumeName OptString `json:"volumeName"`
+}
+
+// GetKey returns the value of Key.
+func (s *V1FileKeySelector) GetKey() OptString {
+	return s.Key
+}
+
+// GetOptional returns the value of Optional.
+func (s *V1FileKeySelector) GetOptional() OptBool {
+	return s.Optional
+}
+
+// GetPath returns the value of Path.
+func (s *V1FileKeySelector) GetPath() OptString {
+	return s.Path
+}
+
+// GetVolumeName returns the value of VolumeName.
+func (s *V1FileKeySelector) GetVolumeName() OptString {
+	return s.VolumeName
+}
+
+// SetKey sets the value of Key.
+func (s *V1FileKeySelector) SetKey(val OptString) {
+	s.Key = val
+}
+
+// SetOptional sets the value of Optional.
+func (s *V1FileKeySelector) SetOptional(val OptBool) {
+	s.Optional = val
+}
+
+// SetPath sets the value of Path.
+func (s *V1FileKeySelector) SetPath(val OptString) {
+	s.Path = val
+}
+
+// SetVolumeName sets the value of VolumeName.
+func (s *V1FileKeySelector) SetVolumeName(val OptString) {
+	s.VolumeName = val
+}
+
+// Ref: #/components/schemas/v1.MountPropagationMode
+type V1MountPropagationMode string
+
+const (
+	V1MountPropagationModeNone            V1MountPropagationMode = "None"
+	V1MountPropagationModeHostToContainer V1MountPropagationMode = "HostToContainer"
+	V1MountPropagationModeBidirectional   V1MountPropagationMode = "Bidirectional"
+)
+
+// AllValues returns all V1MountPropagationMode values.
+func (V1MountPropagationMode) AllValues() []V1MountPropagationMode {
+	return []V1MountPropagationMode{
+		V1MountPropagationModeNone,
+		V1MountPropagationModeHostToContainer,
+		V1MountPropagationModeBidirectional,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s V1MountPropagationMode) MarshalText() ([]byte, error) {
+	switch s {
+	case V1MountPropagationModeNone:
+		return []byte(s), nil
+	case V1MountPropagationModeHostToContainer:
+		return []byte(s), nil
+	case V1MountPropagationModeBidirectional:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *V1MountPropagationMode) UnmarshalText(data []byte) error {
+	switch V1MountPropagationMode(data) {
+	case V1MountPropagationModeNone:
+		*s = V1MountPropagationModeNone
+		return nil
+	case V1MountPropagationModeHostToContainer:
+		*s = V1MountPropagationModeHostToContainer
+		return nil
+	case V1MountPropagationModeBidirectional:
+		*s = V1MountPropagationModeBidirectional
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // Ref: #/components/schemas/v1.NexusAlgorithmContainer
 type V1NexusAlgorithmContainer struct {
-	Image              OptString `json:"image"`
-	Registry           OptString `json:"registry"`
+	Image    OptString `json:"image"`
+	Registry OptString `json:"registry"`
+	// +optional.
 	ServiceAccountName OptString `json:"serviceAccountName"`
 	VersionTag         OptString `json:"versionTag"`
 }
@@ -2890,11 +3521,47 @@ func (s *V1NexusAlgorithmContainer) SetVersionTag(val OptString) {
 	s.VersionTag = val
 }
 
+// Ref: #/components/schemas/v1.NexusAlgorithmPayloadConfiguration
+type V1NexusAlgorithmPayloadConfiguration struct {
+	// +kubebuilder:default:="s3" +optional.
+	PayloadSerializationMode OptV1PayloadSerializationMode `json:"payloadSerializationMode"`
+	// +kubebuilder:default:="24h" +optional.
+	PayloadValidFor OptString `json:"payloadValidFor"`
+}
+
+// GetPayloadSerializationMode returns the value of PayloadSerializationMode.
+func (s *V1NexusAlgorithmPayloadConfiguration) GetPayloadSerializationMode() OptV1PayloadSerializationMode {
+	return s.PayloadSerializationMode
+}
+
+// GetPayloadValidFor returns the value of PayloadValidFor.
+func (s *V1NexusAlgorithmPayloadConfiguration) GetPayloadValidFor() OptString {
+	return s.PayloadValidFor
+}
+
+// SetPayloadSerializationMode sets the value of PayloadSerializationMode.
+func (s *V1NexusAlgorithmPayloadConfiguration) SetPayloadSerializationMode(val OptV1PayloadSerializationMode) {
+	s.PayloadSerializationMode = val
+}
+
+// SetPayloadValidFor sets the value of PayloadValidFor.
+func (s *V1NexusAlgorithmPayloadConfiguration) SetPayloadValidFor(val OptString) {
+	s.PayloadValidFor = val
+}
+
 // Ref: #/components/schemas/v1.NexusAlgorithmResources
 type V1NexusAlgorithmResources struct {
+	// Deprecated: Use Limits instead +optional.
 	CpuLimit        OptString                                   `json:"cpuLimit"`
 	CustomResources OptV1NexusAlgorithmResourcesCustomResources `json:"customResources"`
-	MemoryLimit     OptString                                   `json:"memoryLimit"`
+	// +kubebuilder:default:="0.1" +optional.
+	DefaultResourceQuota OptString `json:"defaultResourceQuota"`
+	// +kubebuilder:default:={cpu: "1000m"} +optional.
+	Limits OptV1ResourceList `json:"limits"`
+	// Deprecated: Use Limits instead +optional.
+	MemoryLimit OptString `json:"memoryLimit"`
+	// +kubebuilder:default:={cpu: "100m"} +optional.
+	Requests OptV1ResourceList `json:"requests"`
 }
 
 // GetCpuLimit returns the value of CpuLimit.
@@ -2907,9 +3574,24 @@ func (s *V1NexusAlgorithmResources) GetCustomResources() OptV1NexusAlgorithmReso
 	return s.CustomResources
 }
 
+// GetDefaultResourceQuota returns the value of DefaultResourceQuota.
+func (s *V1NexusAlgorithmResources) GetDefaultResourceQuota() OptString {
+	return s.DefaultResourceQuota
+}
+
+// GetLimits returns the value of Limits.
+func (s *V1NexusAlgorithmResources) GetLimits() OptV1ResourceList {
+	return s.Limits
+}
+
 // GetMemoryLimit returns the value of MemoryLimit.
 func (s *V1NexusAlgorithmResources) GetMemoryLimit() OptString {
 	return s.MemoryLimit
+}
+
+// GetRequests returns the value of Requests.
+func (s *V1NexusAlgorithmResources) GetRequests() OptV1ResourceList {
+	return s.Requests
 }
 
 // SetCpuLimit sets the value of CpuLimit.
@@ -2922,9 +3604,24 @@ func (s *V1NexusAlgorithmResources) SetCustomResources(val OptV1NexusAlgorithmRe
 	s.CustomResources = val
 }
 
+// SetDefaultResourceQuota sets the value of DefaultResourceQuota.
+func (s *V1NexusAlgorithmResources) SetDefaultResourceQuota(val OptString) {
+	s.DefaultResourceQuota = val
+}
+
+// SetLimits sets the value of Limits.
+func (s *V1NexusAlgorithmResources) SetLimits(val OptV1ResourceList) {
+	s.Limits = val
+}
+
 // SetMemoryLimit sets the value of MemoryLimit.
 func (s *V1NexusAlgorithmResources) SetMemoryLimit(val OptString) {
 	s.MemoryLimit = val
+}
+
+// SetRequests sets the value of Requests.
+func (s *V1NexusAlgorithmResources) SetRequests(val OptV1ResourceList) {
+	s.Requests = val
 }
 
 type V1NexusAlgorithmResourcesCustomResources map[string]string
@@ -2940,16 +3637,24 @@ func (s *V1NexusAlgorithmResourcesCustomResources) init() V1NexusAlgorithmResour
 
 // Ref: #/components/schemas/v1.NexusAlgorithmRuntimeEnvironment
 type V1NexusAlgorithmRuntimeEnvironment struct {
-	Annotations                OptV1NexusAlgorithmRuntimeEnvironmentAnnotations `json:"annotations"`
-	DeadlineSeconds            OptInt                                           `json:"deadlineSeconds"`
-	EnvironmentVariables       []V1EnvVar                                       `json:"environmentVariables"`
-	MappedEnvironmentVariables []V1EnvFromSource                                `json:"mappedEnvironmentVariables"`
-	MaximumRetries             OptInt                                           `json:"maximumRetries"`
+	Annotations                OptV1NexusAlgorithmRuntimeEnvironmentAnnotations             `json:"annotations"`
+	ConfigurationFileMounts    OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts `json:"configurationFileMounts"`
+	DeadlineSeconds            OptInt                                                       `json:"deadlineSeconds"`
+	EnvironmentVariables       []V1EnvVar                                                   `json:"environmentVariables"`
+	MappedEnvironmentVariables []V1EnvFromSource                                            `json:"mappedEnvironmentVariables"`
+	MaximumRetries             OptInt                                                       `json:"maximumRetries"`
+	SecretFileMounts           OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts        `json:"secretFileMounts"`
+	StorageMounts              OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts           `json:"storageMounts"`
 }
 
 // GetAnnotations returns the value of Annotations.
 func (s *V1NexusAlgorithmRuntimeEnvironment) GetAnnotations() OptV1NexusAlgorithmRuntimeEnvironmentAnnotations {
 	return s.Annotations
+}
+
+// GetConfigurationFileMounts returns the value of ConfigurationFileMounts.
+func (s *V1NexusAlgorithmRuntimeEnvironment) GetConfigurationFileMounts() OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts {
+	return s.ConfigurationFileMounts
 }
 
 // GetDeadlineSeconds returns the value of DeadlineSeconds.
@@ -2972,9 +3677,24 @@ func (s *V1NexusAlgorithmRuntimeEnvironment) GetMaximumRetries() OptInt {
 	return s.MaximumRetries
 }
 
+// GetSecretFileMounts returns the value of SecretFileMounts.
+func (s *V1NexusAlgorithmRuntimeEnvironment) GetSecretFileMounts() OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts {
+	return s.SecretFileMounts
+}
+
+// GetStorageMounts returns the value of StorageMounts.
+func (s *V1NexusAlgorithmRuntimeEnvironment) GetStorageMounts() OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts {
+	return s.StorageMounts
+}
+
 // SetAnnotations sets the value of Annotations.
 func (s *V1NexusAlgorithmRuntimeEnvironment) SetAnnotations(val OptV1NexusAlgorithmRuntimeEnvironmentAnnotations) {
 	s.Annotations = val
+}
+
+// SetConfigurationFileMounts sets the value of ConfigurationFileMounts.
+func (s *V1NexusAlgorithmRuntimeEnvironment) SetConfigurationFileMounts(val OptV1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) {
+	s.ConfigurationFileMounts = val
 }
 
 // SetDeadlineSeconds sets the value of DeadlineSeconds.
@@ -2997,6 +3717,16 @@ func (s *V1NexusAlgorithmRuntimeEnvironment) SetMaximumRetries(val OptInt) {
 	s.MaximumRetries = val
 }
 
+// SetSecretFileMounts sets the value of SecretFileMounts.
+func (s *V1NexusAlgorithmRuntimeEnvironment) SetSecretFileMounts(val OptV1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) {
+	s.SecretFileMounts = val
+}
+
+// SetStorageMounts sets the value of StorageMounts.
+func (s *V1NexusAlgorithmRuntimeEnvironment) SetStorageMounts(val OptV1NexusAlgorithmRuntimeEnvironmentStorageMounts) {
+	s.StorageMounts = val
+}
+
 type V1NexusAlgorithmRuntimeEnvironmentAnnotations map[string]string
 
 func (s *V1NexusAlgorithmRuntimeEnvironmentAnnotations) init() V1NexusAlgorithmRuntimeEnvironmentAnnotations {
@@ -3008,16 +3738,57 @@ func (s *V1NexusAlgorithmRuntimeEnvironmentAnnotations) init() V1NexusAlgorithmR
 	return m
 }
 
+type V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts map[string]V1VolumeMount
+
+func (s *V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts) init() V1NexusAlgorithmRuntimeEnvironmentConfigurationFileMounts {
+	m := *s
+	if m == nil {
+		m = map[string]V1VolumeMount{}
+		*s = m
+	}
+	return m
+}
+
+type V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts map[string]V1VolumeMount
+
+func (s *V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts) init() V1NexusAlgorithmRuntimeEnvironmentSecretFileMounts {
+	m := *s
+	if m == nil {
+		m = map[string]V1VolumeMount{}
+		*s = m
+	}
+	return m
+}
+
+type V1NexusAlgorithmRuntimeEnvironmentStorageMounts map[string]V1VolumeMount
+
+func (s *V1NexusAlgorithmRuntimeEnvironmentStorageMounts) init() V1NexusAlgorithmRuntimeEnvironmentStorageMounts {
+	m := *s
+	if m == nil {
+		m = map[string]V1VolumeMount{}
+		*s = m
+	}
+	return m
+}
+
 // Ref: #/components/schemas/v1.NexusAlgorithmSpec
 type V1NexusAlgorithmSpec struct {
-	Args                       []string                              `json:"args"`
-	Command                    OptString                             `json:"command"`
-	ComputeResources           OptV1NexusAlgorithmResources          `json:"computeResources"`
-	Container                  OptV1NexusAlgorithmContainer          `json:"container"`
-	DatadogIntegrationSettings OptV1NexusDatadogIntegrationSettings  `json:"datadogIntegrationSettings"`
-	ErrorHandlingBehaviour     OptV1NexusErrorHandlingBehaviour      `json:"errorHandlingBehaviour"`
-	RuntimeEnvironment         OptV1NexusAlgorithmRuntimeEnvironment `json:"runtimeEnvironment"`
-	WorkgroupRef               OptV1NexusAlgorithmWorkgroupRef       `json:"workgroupRef"`
+	// +optional.
+	Args    []string  `json:"args"`
+	Command OptString `json:"command"`
+	// +optional.
+	ComputeResources OptV1NexusAlgorithmResources `json:"computeResources"`
+	Container        OptV1NexusAlgorithmContainer `json:"container"`
+	// +optional.
+	DatadogIntegrationSettings OptV1NexusDatadogIntegrationSettings `json:"datadogIntegrationSettings"`
+	// +optional.
+	ErrorHandlingBehaviour OptV1NexusErrorHandlingBehaviour `json:"errorHandlingBehaviour"`
+	// +kubebuilder:default:={payloadValidFor: "24h", payloadSerializationMode: "s3"} +optional.
+	PayloadConfiguration OptV1NexusAlgorithmPayloadConfiguration `json:"payloadConfiguration"`
+	// +optional.
+	RuntimeEnvironment OptV1NexusAlgorithmRuntimeEnvironment `json:"runtimeEnvironment"`
+	// +optional.
+	WorkgroupRef OptV1NexusAlgorithmWorkgroupRef `json:"workgroupRef"`
 }
 
 // GetArgs returns the value of Args.
@@ -3048,6 +3819,11 @@ func (s *V1NexusAlgorithmSpec) GetDatadogIntegrationSettings() OptV1NexusDatadog
 // GetErrorHandlingBehaviour returns the value of ErrorHandlingBehaviour.
 func (s *V1NexusAlgorithmSpec) GetErrorHandlingBehaviour() OptV1NexusErrorHandlingBehaviour {
 	return s.ErrorHandlingBehaviour
+}
+
+// GetPayloadConfiguration returns the value of PayloadConfiguration.
+func (s *V1NexusAlgorithmSpec) GetPayloadConfiguration() OptV1NexusAlgorithmPayloadConfiguration {
+	return s.PayloadConfiguration
 }
 
 // GetRuntimeEnvironment returns the value of RuntimeEnvironment.
@@ -3088,6 +3864,11 @@ func (s *V1NexusAlgorithmSpec) SetDatadogIntegrationSettings(val OptV1NexusDatad
 // SetErrorHandlingBehaviour sets the value of ErrorHandlingBehaviour.
 func (s *V1NexusAlgorithmSpec) SetErrorHandlingBehaviour(val OptV1NexusErrorHandlingBehaviour) {
 	s.ErrorHandlingBehaviour = val
+}
+
+// SetPayloadConfiguration sets the value of PayloadConfiguration.
+func (s *V1NexusAlgorithmSpec) SetPayloadConfiguration(val OptV1NexusAlgorithmPayloadConfiguration) {
+	s.PayloadConfiguration = val
 }
 
 // SetRuntimeEnvironment sets the value of RuntimeEnvironment.
@@ -3139,6 +3920,7 @@ func (s *V1NexusAlgorithmWorkgroupRef) SetName(val OptString) {
 
 // Ref: #/components/schemas/v1.NexusDatadogIntegrationSettings
 type V1NexusDatadogIntegrationSettings struct {
+	// +optional.
 	MountDatadogSocket OptBool `json:"mountDatadogSocket"`
 }
 
@@ -3180,8 +3962,7 @@ func (s *V1NexusErrorHandlingBehaviour) SetTransientExitCodes(val []int) {
 
 // Ref: #/components/schemas/v1.ObjectFieldSelector
 type V1ObjectFieldSelector struct {
-	// Version of the schema the FieldPath is written in terms of, defaults to "v1".
-	// +optional.
+	// Version of the schema the FieldPath is written in terms of, defaults to "v1". +optional.
 	ApiVersion OptString `json:"apiVersion"`
 	// Path of the field to select in the specified API version.
 	FieldPath OptString `json:"fieldPath"`
@@ -3207,14 +3988,103 @@ func (s *V1ObjectFieldSelector) SetFieldPath(val OptString) {
 	s.FieldPath = val
 }
 
+// Ref: #/components/schemas/v1.PayloadSerializationMode
+type V1PayloadSerializationMode string
+
+const (
+	V1PayloadSerializationModeBackend V1PayloadSerializationMode = "backend"
+	V1PayloadSerializationModeS3      V1PayloadSerializationMode = "s3"
+)
+
+// AllValues returns all V1PayloadSerializationMode values.
+func (V1PayloadSerializationMode) AllValues() []V1PayloadSerializationMode {
+	return []V1PayloadSerializationMode{
+		V1PayloadSerializationModeBackend,
+		V1PayloadSerializationModeS3,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s V1PayloadSerializationMode) MarshalText() ([]byte, error) {
+	switch s {
+	case V1PayloadSerializationModeBackend:
+		return []byte(s), nil
+	case V1PayloadSerializationModeS3:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *V1PayloadSerializationMode) UnmarshalText(data []byte) error {
+	switch V1PayloadSerializationMode(data) {
+	case V1PayloadSerializationModeBackend:
+		*s = V1PayloadSerializationModeBackend
+		return nil
+	case V1PayloadSerializationModeS3:
+		*s = V1PayloadSerializationModeS3
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// Ref: #/components/schemas/v1.RecursiveReadOnlyMode
+type V1RecursiveReadOnlyMode string
+
+const (
+	V1RecursiveReadOnlyModeDisabled   V1RecursiveReadOnlyMode = "Disabled"
+	V1RecursiveReadOnlyModeIfPossible V1RecursiveReadOnlyMode = "IfPossible"
+	V1RecursiveReadOnlyModeEnabled    V1RecursiveReadOnlyMode = "Enabled"
+)
+
+// AllValues returns all V1RecursiveReadOnlyMode values.
+func (V1RecursiveReadOnlyMode) AllValues() []V1RecursiveReadOnlyMode {
+	return []V1RecursiveReadOnlyMode{
+		V1RecursiveReadOnlyModeDisabled,
+		V1RecursiveReadOnlyModeIfPossible,
+		V1RecursiveReadOnlyModeEnabled,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s V1RecursiveReadOnlyMode) MarshalText() ([]byte, error) {
+	switch s {
+	case V1RecursiveReadOnlyModeDisabled:
+		return []byte(s), nil
+	case V1RecursiveReadOnlyModeIfPossible:
+		return []byte(s), nil
+	case V1RecursiveReadOnlyModeEnabled:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *V1RecursiveReadOnlyMode) UnmarshalText(data []byte) error {
+	switch V1RecursiveReadOnlyMode(data) {
+	case V1RecursiveReadOnlyModeDisabled:
+		*s = V1RecursiveReadOnlyModeDisabled
+		return nil
+	case V1RecursiveReadOnlyModeIfPossible:
+		*s = V1RecursiveReadOnlyModeIfPossible
+		return nil
+	case V1RecursiveReadOnlyModeEnabled:
+		*s = V1RecursiveReadOnlyModeEnabled
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // Ref: #/components/schemas/v1.ResourceFieldSelector
 type V1ResourceFieldSelector struct {
-	// Container name: required for volumes, optional for env vars
-	// +optional.
+	// Container name: required for volumes, optional for env vars +optional.
 	ContainerName OptString `json:"containerName"`
-	// Specifies the output format of the exposed resources, defaults to "1"
-	// +optional.
-	Divisor OptResourceQuantity `json:"divisor"`
+	// Specifies the output format of the exposed resources, defaults to "1" +optional.
+	Divisor OptString `json:"divisor"`
 	// Required: resource to select.
 	Resource OptString `json:"resource"`
 }
@@ -3225,7 +4095,7 @@ func (s *V1ResourceFieldSelector) GetContainerName() OptString {
 }
 
 // GetDivisor returns the value of Divisor.
-func (s *V1ResourceFieldSelector) GetDivisor() OptResourceQuantity {
+func (s *V1ResourceFieldSelector) GetDivisor() OptString {
 	return s.Divisor
 }
 
@@ -3240,7 +4110,7 @@ func (s *V1ResourceFieldSelector) SetContainerName(val OptString) {
 }
 
 // SetDivisor sets the value of Divisor.
-func (s *V1ResourceFieldSelector) SetDivisor(val OptResourceQuantity) {
+func (s *V1ResourceFieldSelector) SetDivisor(val OptString) {
 	s.Divisor = val
 }
 
@@ -3249,21 +4119,27 @@ func (s *V1ResourceFieldSelector) SetResource(val OptString) {
 	s.Resource = val
 }
 
+// Ref: #/components/schemas/v1.ResourceList
+type V1ResourceList map[string]string
+
+func (s *V1ResourceList) init() V1ResourceList {
+	m := *s
+	if m == nil {
+		m = map[string]string{}
+		*s = m
+	}
+	return m
+}
+
 // Ref: #/components/schemas/v1.SecretEnvSource
 type V1SecretEnvSource struct {
-	// Name of the referent.
-	// This field is effectively required, but due to backwards compatibility is
-	// allowed to be empty. Instances of this type with an empty value here are
-	// almost certainly wrong.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-	// +optional
-	// +default=""
-	// +kubebuilder:default=""
-	// TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.
-	// com/kubernetes-sigs/kubebuilder/issues/3896.
+	// Name of the referent. This field is effectively required, but due to backwards compatibility is
+	// allowed to be empty. Instances of this type with an empty value here are almost certainly wrong.
+	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names +optional
+	// +default="" +kubebuilder:default="" TODO: Drop `kubebuilder:default` when controller-gen doesn't
+	// need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 	Name OptString `json:"name"`
-	// Specify whether the Secret must be defined
-	// +optional.
+	// Specify whether the Secret must be defined +optional.
 	Optional OptBool `json:"optional"`
 }
 
@@ -3289,21 +4165,15 @@ func (s *V1SecretEnvSource) SetOptional(val OptBool) {
 
 // Ref: #/components/schemas/v1.SecretKeySelector
 type V1SecretKeySelector struct {
-	// The key of the secret to select from.  Must be a valid secret key.
+	// The key of the secret to select from. Must be a valid secret key.
 	Key OptString `json:"key"`
-	// Name of the referent.
-	// This field is effectively required, but due to backwards compatibility is
-	// allowed to be empty. Instances of this type with an empty value here are
-	// almost certainly wrong.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-	// +optional
-	// +default=""
-	// +kubebuilder:default=""
-	// TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.
-	// com/kubernetes-sigs/kubebuilder/issues/3896.
+	// Name of the referent. This field is effectively required, but due to backwards compatibility is
+	// allowed to be empty. Instances of this type with an empty value here are almost certainly wrong.
+	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names +optional
+	// +default="" +kubebuilder:default="" TODO: Drop `kubebuilder:default` when controller-gen doesn't
+	// need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
 	Name OptString `json:"name"`
-	// Specify whether the Secret or its key must be defined
-	// +optional.
+	// Specify whether the Secret or its key must be defined +optional.
 	Optional OptBool `json:"optional"`
 }
 
@@ -3335,4 +4205,112 @@ func (s *V1SecretKeySelector) SetName(val OptString) {
 // SetOptional sets the value of Optional.
 func (s *V1SecretKeySelector) SetOptional(val OptBool) {
 	s.Optional = val
+}
+
+// Ref: #/components/schemas/v1.VolumeMount
+type V1VolumeMount struct {
+	// Path within the container at which the volume should be mounted. Must not contain ':'.
+	MountPath OptString `json:"mountPath"`
+	// MountPropagation determines how mounts are propagated from the host to container and the other way
+	// around. When not set, MountPropagationNone is used. This field is beta in 1.10. When
+	// RecursiveReadOnly is set to IfPossible or to Enabled, MountPropagation must be None or unspecified
+	// (which defaults to None). +optional.
+	MountPropagation OptV1MountPropagationMode `json:"mountPropagation"`
+	// This must match the Name of a Volume.
+	Name OptString `json:"name"`
+	// Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false. +optional.
+	ReadOnly OptBool `json:"readOnly"`
+	// RecursiveReadOnly specifies whether read-only mounts should be handled recursively.
+	//
+	// If ReadOnly is false, this field has no meaning and must be unspecified.
+	//
+	// If ReadOnly is true, and this field is set to Disabled, the mount is not made recursively read-only.
+	// If this field is set to IfPossible, the mount is made recursively read-only, if it is supported by
+	// the container runtime. If this field is set to Enabled, the mount is made recursively read-only if
+	// it is supported by the container runtime, otherwise the pod will not be started and an error will be
+	// generated to indicate the reason.
+	//
+	// If this field is set to IfPossible or Enabled, MountPropagation must be set to None (or be
+	// unspecified, which defaults to None).
+	//
+	// If this field is not specified, it is treated as an equivalent of Disabled. +optional.
+	RecursiveReadOnly OptV1RecursiveReadOnlyMode `json:"recursiveReadOnly"`
+	// Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's
+	// root). +optional.
+	SubPath OptString `json:"subPath"`
+	// Expanded path within the volume from which the container's volume should be mounted. Behaves
+	// similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the
+	// container's environment. Defaults to "" (volume's root). SubPathExpr and SubPath are mutually
+	// exclusive. +optional.
+	SubPathExpr OptString `json:"subPathExpr"`
+}
+
+// GetMountPath returns the value of MountPath.
+func (s *V1VolumeMount) GetMountPath() OptString {
+	return s.MountPath
+}
+
+// GetMountPropagation returns the value of MountPropagation.
+func (s *V1VolumeMount) GetMountPropagation() OptV1MountPropagationMode {
+	return s.MountPropagation
+}
+
+// GetName returns the value of Name.
+func (s *V1VolumeMount) GetName() OptString {
+	return s.Name
+}
+
+// GetReadOnly returns the value of ReadOnly.
+func (s *V1VolumeMount) GetReadOnly() OptBool {
+	return s.ReadOnly
+}
+
+// GetRecursiveReadOnly returns the value of RecursiveReadOnly.
+func (s *V1VolumeMount) GetRecursiveReadOnly() OptV1RecursiveReadOnlyMode {
+	return s.RecursiveReadOnly
+}
+
+// GetSubPath returns the value of SubPath.
+func (s *V1VolumeMount) GetSubPath() OptString {
+	return s.SubPath
+}
+
+// GetSubPathExpr returns the value of SubPathExpr.
+func (s *V1VolumeMount) GetSubPathExpr() OptString {
+	return s.SubPathExpr
+}
+
+// SetMountPath sets the value of MountPath.
+func (s *V1VolumeMount) SetMountPath(val OptString) {
+	s.MountPath = val
+}
+
+// SetMountPropagation sets the value of MountPropagation.
+func (s *V1VolumeMount) SetMountPropagation(val OptV1MountPropagationMode) {
+	s.MountPropagation = val
+}
+
+// SetName sets the value of Name.
+func (s *V1VolumeMount) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetReadOnly sets the value of ReadOnly.
+func (s *V1VolumeMount) SetReadOnly(val OptBool) {
+	s.ReadOnly = val
+}
+
+// SetRecursiveReadOnly sets the value of RecursiveReadOnly.
+func (s *V1VolumeMount) SetRecursiveReadOnly(val OptV1RecursiveReadOnlyMode) {
+	s.RecursiveReadOnly = val
+}
+
+// SetSubPath sets the value of SubPath.
+func (s *V1VolumeMount) SetSubPath(val OptString) {
+	s.SubPath = val
+}
+
+// SetSubPathExpr sets the value of SubPathExpr.
+func (s *V1VolumeMount) SetSubPathExpr(val OptString) {
+	s.SubPathExpr = val
 }

@@ -12,14 +12,14 @@ jobs:
       version: ${{ steps.release.outputs.version }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24.*'
+          go-version: '1.26.*'
 
       - name: Verify dependencies
         run: go mod verify
@@ -34,10 +34,10 @@ jobs:
           mkdir release && mv nexus_sdk_linux_amd64.tar.gz release/
 
       - name: Create Release
-        uses: SneaksAndData/github-actions/semver_release@v0.1.11
+        uses: SneaksAndData/github-actions/semver_release@v0.1.12
         with:
           major_v: 1
-          minor_v: 1
+          minor_v: 2
           assets_path: release
         id: release
 
@@ -48,14 +48,14 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24.*'
+          go-version: '1.26.*'
 
       - name: Verify dependencies
         run: go mod verify
@@ -82,14 +82,14 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24.*'
+          go-version: '1.26.*'
 
       - name: Verify dependencies
         run: go mod verify

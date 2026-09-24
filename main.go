@@ -76,6 +76,12 @@ package main
 //} BoolResult;
 import "C"
 import (
+	"os"
+	"reflect"
+	"runtime"
+	"time"
+	"unsafe"
+
 	"github.com/SneaksAndData/nexus-core/pkg/signals"
 	"github.com/SneaksAndData/nexus-core/pkg/telemetry"
 	rapi "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
@@ -84,11 +90,6 @@ import (
 	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
 	"github.com/ogen-go/ogen/json"
 	"k8s.io/klog/v2"
-	"os"
-	"reflect"
-	"runtime"
-	"time"
-	"unsafe"
 )
 
 // for those in need: https://fluhus.github.io/snopher/
@@ -217,10 +218,9 @@ func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
 }
 
 //export CreateRun
-func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, payloadValidFor *C.char, tag *C.char, dryRun *C.char) C.AlgorithmRun {
+func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfiguration *C.CustomRunConfiguration, parentRequest *C.ParentRequest, tag *C.char, dryRun *C.char) C.AlgorithmRun {
 	var algParams api.ModelsAlgorithmRequestAlgorithmParameters
 	var decodeErr *models2.InputDecodeError
-	isDryRun := C.GoString(dryRun) == "true"
 	parentRequestParam := api.OptModelsAlgorithmRequestRef{
 		Value: api.ModelsAlgorithmRequestRef{},
 		Set:   false,
@@ -381,16 +381,12 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		AlgorithmParameters: algParams,
 		CustomConfiguration: customSpec,
 		ParentRequest:       parentRequestParam,
-		PayloadValidFor: api.OptString{
-			Value: C.GoString(payloadValidFor),
-			Set:   true,
-		},
 		RequestApiVersion: api.OptString{
 			Value: "1.2",
 			Set:   true,
 		},
 		Tag: requestTag,
-	}, C.GoString(algorithmName), &isDryRun)
+	}, C.GoString(algorithmName), new(C.GoString(dryRun) == "true"))
 
 	if err != nil {
 		return C.AlgorithmRun{
@@ -542,7 +538,6 @@ func GetRequestMetadata(requestId *C.char, algorithmName *C.char) C.RequestMetad
 		lifecycle_stage:           C.CString(metadata.LifecycleStage.Value),
 		parent_job:                nil,
 		payload_uri:               C.CString(metadata.PayloadURI.Value),
-		payload_valid_for:         C.CString(metadata.PayloadValidFor.Value),
 		received_at:               C.CString(metadata.ReceivedAt.Value),
 		received_by_host:          C.CString(metadata.ReceivedByHost.Value),
 		result_uri:                C.CString(metadata.ResultURI.Value),
@@ -556,16 +551,13 @@ func GetRequestMetadata(requestId *C.char, algorithmName *C.char) C.RequestMetad
 //export AwaitRun
 func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int32, waitTimeoutSeconds int32) C.RunResult {
 	var waitTimeout *time.Duration
-	pollInterval := time.Duration(pollIntervalSeconds) * time.Second
-
 	if waitTimeoutSeconds > 0 {
-		waitDuration := time.Duration(waitTimeoutSeconds) * time.Second
-		waitTimeout = &waitDuration
+		waitTimeout = new(time.Duration(waitTimeoutSeconds) * time.Second)
 	} else {
 		waitTimeout = nil
 	}
 
-	result, err := client.AwaitRun(C.GoString(requestId), C.GoString(algorithmName), &pollInterval, waitTimeout)
+	result, err := client.AwaitRun(C.GoString(requestId), C.GoString(algorithmName), new(time.Duration(pollIntervalSeconds)*time.Second), waitTimeout)
 
 	if err != nil {
 		return C.RunResult{
@@ -579,14 +571,26 @@ func AwaitRun(requestId *C.char, algorithmName *C.char, pollIntervalSeconds int3
 		}
 	}
 
+	if result != nil {
+		return C.RunResult{
+			algorithm:            C.CString(C.GoString(algorithmName)),
+			request_id:           C.CString(C.GoString(requestId)),
+			result_uri:           C.CString(result.ResultUri.Value),
+			run_error_message:    C.CString(result.RunErrorMessage.Value),
+			client_error_type:    nil,
+			client_error_message: nil,
+			status:               C.CString(result.Status.Value),
+		}
+	}
+
 	return C.RunResult{
 		algorithm:            C.CString(C.GoString(algorithmName)),
 		request_id:           C.CString(C.GoString(requestId)),
-		result_uri:           C.CString(result.ResultUri.Value),
-		run_error_message:    C.CString(result.RunErrorMessage.Value),
+		result_uri:           nil,
+		run_error_message:    nil,
 		client_error_type:    nil,
-		client_error_message: nil,
-		status:               C.CString(result.Status.Value),
+		client_error_message: C.CString("Submission not found"),
+		status:               nil,
 	}
 }
 

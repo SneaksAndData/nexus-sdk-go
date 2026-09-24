@@ -1,6 +1,0 @@
-dependencies:
-- name: nexus-crd
-  repository: oci://ghcr.io/sneaksanddata/helm
-  version: v1.0.0
-digest: sha256:52547d0478367691817327fa87cb73dbe078137275c97a8b7ba29df20cb29e16
-generated: "2025-08-11T11:22:57.546636+02:00"
