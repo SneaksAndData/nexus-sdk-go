@@ -7,14 +7,6 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) Validate() error {
-	alias := ([]string)(s)
-	if alias == nil {
-		return errors.New("nil is invalid value")
-	}
-	return nil
-}
-
 func (s AlgorithmV1ResultsTagsRequestTagGetOKApplicationJSON) Validate() error {
 	alias := ([]ModelsTaggedRequestResult)(s)
 	if alias == nil {

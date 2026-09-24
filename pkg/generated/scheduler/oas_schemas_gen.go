@@ -165,11 +165,6 @@ func (s AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain)
 func (*AlgorithmV1BufferAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV1BufferAlgorithmNameRequestsRequestIdGetRes() {
 }
 
-type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON string
-
-func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
-}
-
 type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML struct {
 	Data io.Reader
 }
@@ -202,11 +197,6 @@ func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) 
 }
 
 func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
-}
-
-type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorApplicationJSON string
-
-func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
 }
 
 type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextHTML struct {
@@ -243,11 +233,6 @@ func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTe
 func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostInternalServerErrorTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON string
-
-func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
-}
-
 type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextHTML struct {
 	Data io.Reader
 }
@@ -282,11 +267,6 @@ func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextPlain) Re
 func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostNotFoundTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKApplicationJSON string
-
-func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
-}
-
 type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML struct {
 	Data io.Reader
 }
@@ -319,11 +299,6 @@ func (s AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain) Read(p [
 }
 
 func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
-}
-
-type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON string
-
-func (*AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) algorithmV1CancelAlgorithmNameRequestsRequestIdPostRes() {
 }
 
 type AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML struct {
@@ -477,11 +452,6 @@ func (s AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlai
 func (*AlgorithmV1MetadataAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain) algorithmV1MetadataAlgorithmNameRequestsRequestIdGetRes() {
 }
 
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON string
-
-func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
-}
-
 type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextHTML struct {
 	Data io.Reader
 }
@@ -516,54 +486,38 @@ func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextP
 func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextPlain) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON []string
-
-func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
-}
-
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq struct {
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextHTML struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq) Read(p []byte) (n int, err error) {
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextHTML) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-// AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType wraps AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq with Content-Type.
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType struct {
-	ContentType string
-	Content     AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextHTML) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
 }
 
-// GetContentType returns the value of ContentType.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) GetContentType() string {
-	return s.ContentType
+type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextPlain struct {
+	Data io.Reader
 }
 
-// GetContent returns the value of Content.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) GetContent() AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq {
-	return s.Content
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextPlain) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
 }
 
-// SetContentType sets the value of ContentType.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) SetContentType(val string) {
-	s.ContentType = val
-}
-
-// SetContent sets the value of Content.
-func (s *AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReqWithContentType) SetContent(val AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostReq) {
-	s.Content = val
-}
-
-type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON string
-
-func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
+func (*AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextPlain) algorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostRes() {
 }
 
 type AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML struct {
@@ -1737,6 +1691,21 @@ func (s *ModelsRequestResult) SetStatus(val OptString) {
 }
 
 func (*ModelsRequestResult) algorithmV1ResultsAlgorithmNameRequestsRequestIdGetRes() {}
+
+// Ref: #/components/schemas/models.TagUpdateRequest
+type ModelsTagUpdateRequest struct {
+	NewTag OptString `json:"newTag"`
+}
+
+// GetNewTag returns the value of NewTag.
+func (s *ModelsTagUpdateRequest) GetNewTag() OptString {
+	return s.NewTag
+}
+
+// SetNewTag sets the value of NewTag.
+func (s *ModelsTagUpdateRequest) SetNewTag(val OptString) {
+	s.NewTag = val
+}
 
 // Ref: #/components/schemas/models.TaggedRequestResult
 type ModelsTaggedRequestResult struct {

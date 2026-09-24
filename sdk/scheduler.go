@@ -481,15 +481,37 @@ func (nc *NexusSchedulerClient) CancelRun(cancellation *api.ModelsCancellationRe
 	}
 
 	switch cancelledResponse.(type) {
-	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestApplicationJSON, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML:
+	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostBadRequestTextHTML:
 		return models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
-	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedApplicationJSON, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML:
+	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML:
 		return models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
-	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKApplicationJSON, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML:
+	case *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextPlain, *api.AlgorithmV1CancelAlgorithmNameRequestsRequestIdPostOKTextHTML:
 		return nil
 	default: // coverage-ignore
 		return models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 
+	}
+}
+
+func (nc *NexusSchedulerClient) UpdateRunTag(tagUpdateRequest *api.ModelsTagUpdateRequest, requestId string, algorithm string) error {
+	response, err := nc.ApiClient.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPost(context.TODO(), tagUpdateRequest, api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostParams{
+		AlgorithmName: algorithm,
+		RequestId:     requestId,
+	}, nc.getRequestOptions()...)
+
+	if err != nil { // coverage-ignore
+		return mapApiError(err)
+	}
+
+	switch response.(type) {
+	case *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostOKTextPlain:
+		return nil
+	case *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextHTML, *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostBadRequestTextPlain:
+		return models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
+	case *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextHTML, *api.AlgorithmV1MetadataTagsAlgorithmNameRequestsRequestIdPostUnauthorizedTextPlain: // coverage-ignore
+		return models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
+	default: // coverage-ignore
+		return models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
 	}
 }
 

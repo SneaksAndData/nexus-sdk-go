@@ -747,3 +747,61 @@ func Test_GetRunPayload(t *testing.T) {
 		}
 	}
 }
+
+func Test_UpdateRunTag(t *testing.T) {
+	f := newFixture(t)
+	tag := uuid.New()
+	runId, err := f.client.CreateRun(&schedulerapi.ModelsAlgorithmRequest{
+		AlgorithmParameters: helloParams,
+		CustomConfiguration: schedulerapi.OptV1NexusAlgorithmSpec{
+			Set: false,
+		},
+		ParentRequest: schedulerapi.OptModelsAlgorithmRequestRef{
+			Set: false,
+		},
+		RequestApiVersion: schedulerapi.OptString{
+			Set: false,
+		},
+		Tag: schedulerapi.OptString{
+			Value: tag.String(),
+			Set:   true,
+		},
+	}, "hello-world", nil)
+
+	if err != nil {
+		f.t.Fatal(err)
+	}
+
+	runResult, err := f.client.AwaitRun(runId, "hello-world", nil, nil)
+	if err != nil {
+		f.t.Fatal(err)
+	}
+
+	if !IsFinished(runResult.GetStatus().Value) {
+		f.t.Fatalf("expected run to be finished, but got %s", runResult.GetStatus().Value)
+	}
+
+	newTag := "updated-" + uuid.New().String()
+	err = f.client.UpdateRunTag(&schedulerapi.ModelsTagUpdateRequest{
+		NewTag: schedulerapi.OptString{
+			Set:   true,
+			Value: newTag,
+		},
+	}, runId, "hello-world")
+	if err != nil {
+		f.t.Fatalf("error updating run tag: %v", err)
+	}
+
+	metadata, err := f.client.GetMetadata(runId, "hello-world")
+	if err != nil {
+		f.t.Fatalf("error getting metadata: %v", err)
+	}
+
+	if metadata == nil {
+		f.t.Fatal("expected metadata to not be nil")
+	}
+
+	if !metadata.Tag.Set || metadata.Tag.Value != newTag {
+		f.t.Errorf("expected metadata tag to be %s, but got %s (set=%v)", newTag, metadata.Tag.Value, metadata.Tag.Set)
+	}
+}
