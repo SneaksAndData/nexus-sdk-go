@@ -3,7 +3,7 @@ module github.com/SneaksAndData/nexus-sdk-go
 go 1.26.0
 
 require (
-	github.com/SneaksAndData/nexus-core v1.5.4-0.20260923082840-2fbcd766722c
+	github.com/SneaksAndData/nexus-core v1.5.4
 	github.com/aws/smithy-go v1.27.2
 	github.com/go-faster/errors v0.8.0
 	github.com/go-faster/jx v1.2.0
