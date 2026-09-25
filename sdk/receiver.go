@@ -3,11 +3,15 @@ package sdk
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"runtime"
+	"time"
+
 	api "github.com/SneaksAndData/nexus-sdk-go/pkg/generated/receiver"
 	models2 "github.com/SneaksAndData/nexus-sdk-go/sdk/models"
 	"github.com/aws/smithy-go/ptr"
+	"github.com/hashicorp/go-retryablehttp"
 	"k8s.io/klog/v2"
-	"runtime"
 )
 
 type NexusReceiverClient struct {
@@ -17,7 +21,20 @@ type NexusReceiverClient struct {
 }
 
 func NewNexusReceiverClient(receiverUrl string, logger *klog.Logger, options *[]api.RequestOption, pinner *runtime.Pinner) *NexusReceiverClient {
-	client, err := api.NewClient(receiverUrl)
+	// use client with retry support
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = 10                         // Number of retries
+	retryClient.RetryWaitMin = 500 * time.Millisecond // Minimum backoff duration
+	retryClient.RetryWaitMax = 3 * time.Second        // Maximum backoff duration
+	retryClient.Logger = nil
+
+	// create a new http client with retry support
+	retryableHttpClient := &http.Client{
+		Transport: &retryablehttp.RoundTripper{Client: retryClient},
+		Timeout:   120 * time.Second, // Global request timeout threshold
+	}
+
+	client, err := api.NewClient(receiverUrl, api.WithClient(retryableHttpClient))
 
 	if err != nil {
 		logger.Error(err, "unable to initialize Nexus receiver client")
@@ -31,6 +48,8 @@ func NewNexusReceiverClient(receiverUrl string, logger *klog.Logger, options *[]
 	}
 
 	if pinner != nil { // coverage-ignore
+		pinner.Pin(retryClient)
+		pinner.Pin(retryableHttpClient)
 		pinner.Pin(client)
 		pinner.Pin(logger)
 		pinner.Pin(options)
