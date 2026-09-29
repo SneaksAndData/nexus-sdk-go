@@ -549,6 +549,7 @@ func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string
 
 	extraOptions := []api.RequestOption{
 		api.WithEditRequest(func(req *http.Request) error {
+			nc.AddAuthHeader(req)
 			payloadUrl, err := url.Parse(runMeta.PayloadURI.Value)
 			if err == nil {
 				sigQuery := payloadUrl.Query()
