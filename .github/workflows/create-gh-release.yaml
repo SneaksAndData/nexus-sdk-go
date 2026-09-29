@@ -3,21 +3,26 @@ run-name: Release C-Shared built assets from ${{github.ref_name}} by @${{ github
 
 on: workflow_dispatch
 
+permissions: {}
+
 jobs:
   base_release:
     name: Create Base Release
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: write # create release / upload release assets
     outputs:
       version: ${{ steps.release.outputs.version }}
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version: '1.26.*'
 
@@ -34,7 +39,7 @@ jobs:
           mkdir release && mv nexus_sdk_linux_amd64.tar.gz release/
 
       - name: Create Release
-        uses: SneaksAndData/github-actions/semver_release@v0.1.12
+        uses: SneaksAndData/github-actions/semver_release@e3f4ea513c548adf4e774364872966d0d4a3d2fe # v0.1.12
         with:
           major_v: 1
           minor_v: 2
@@ -46,14 +51,17 @@ jobs:
     needs: [ base_release ]
     runs-on: ubuntu-24.04-arm
     if: ${{ github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: write # create release / upload release assets
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version: '1.26.*'
 
@@ -72,22 +80,26 @@ jobs:
       - name: Upload asset to Release
         env:
           GH_TOKEN: ${{ github.token }}
+          NEEDS_BASE_RELEASE_OUTPUTS_VERSION: ${{needs.base_release.outputs.version}}
         run: |
-          gh release upload ${{needs.base_release.outputs.version}} release/*.*
+          gh release upload "${NEEDS_BASE_RELEASE_OUTPUTS_VERSION}" release/*.*
 
   macos:
     name: Add MacOS Silicon build
     needs: [ base_release ]
     runs-on: macos-latest
     if: ${{ github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: write # create release / upload release assets
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version: '1.26.*'
 
@@ -106,5 +118,6 @@ jobs:
       - name: Upload asset to Release
         env:
           GH_TOKEN: ${{ github.token }}
+          NEEDS_BASE_RELEASE_OUTPUTS_VERSION: ${{needs.base_release.outputs.version}}
         run: |
-          gh release upload ${{needs.base_release.outputs.version}} release/*.*
+          gh release upload "${NEEDS_BASE_RELEASE_OUTPUTS_VERSION}" release/*.*
