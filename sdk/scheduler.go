@@ -36,6 +36,7 @@ type NexusSchedulerClient struct {
 	ApiClient      *api.Client
 	RequestOptions *[]api.RequestOption
 	Logger         *klog.Logger
+	token          string
 }
 
 func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *[]api.RequestOption, pinner *runtime.Pinner) *NexusSchedulerClient {
@@ -63,6 +64,7 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 		ApiClient:      client,
 		RequestOptions: options,
 		Logger:         logger,
+		token:          "",
 	}
 
 	if pinner != nil { // coverage-ignore
@@ -79,6 +81,13 @@ func NewNexusSchedulerClient(schedulerUrl string, logger *klog.Logger, options *
 
 func (nc *NexusSchedulerClient) RefreshAuth(token string) { // coverage-ignore
 	nc.RequestOptions = &[]api.RequestOption{GetSchedulerAuthOption(token)}
+	nc.token = token
+}
+
+func (nc *NexusSchedulerClient) AddAuthHeader(req *http.Request) {
+	if nc.token != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", nc.token))
+	}
 }
 
 func (nc *NexusSchedulerClient) getRequestOptions() []api.RequestOption {
@@ -540,6 +549,7 @@ func (nc *NexusSchedulerClient) GetRunPayload(requestId string, algorithm string
 
 	extraOptions := []api.RequestOption{
 		api.WithEditRequest(func(req *http.Request) error {
+			nc.AddAuthHeader(req)
 			payloadUrl, err := url.Parse(runMeta.PayloadURI.Value)
 			if err == nil {
 				sigQuery := payloadUrl.Query()
