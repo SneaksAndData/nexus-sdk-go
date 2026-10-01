@@ -7,17 +7,23 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions: {}
 
 jobs:
   build:
     name: Validate code
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write      # required for dependabot PRs
+      pull-requests: write # required for dependabot PRs
+      contents: read       # required for dependabot PRs
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version: '1.26.*'
           
@@ -37,6 +43,6 @@ jobs:
         run: go build -v ./...
         
       - name: Lint
-        uses: golangci/golangci-lint-action@v9
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
         with:
           version: v2.12.2
