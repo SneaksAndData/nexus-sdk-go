@@ -429,29 +429,18 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 	}
 }
 
-func (nc *NexusSchedulerClient) GetRun(requestId string, algorithm string) (*api.ModelsRequestResult, error) {
-	if requestId == "" || algorithm == "" {
-		return nil, models2.NewSdkErr(fmt.Errorf("request identifier and/or algorithm template name must not be an empty string"))
+func (nc *NexusSchedulerClient) GetRun(ctx context.Context, requestId string, algorithm string) (*api.ModelsRequestResult, error) {
+	result, err := nc.awaitRun(ctx, requestId, algorithm, new(1*time.Second), new(10*time.Second))
+
+	if notFoundErr, ok := errors.AsType[*models2.BadRequestError](err); ok {
+		return nil, models2.NewNotFoundError(notFoundErr)
 	}
 
-	getRunResponse, err := nc.ApiClient.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGet(context.TODO(), api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetParams{AlgorithmName: algorithm, RequestId: requestId}, nc.getRequestOptions()...)
-
-	if err != nil { // coverage-ignore
-		return nil, mapApiError(err)
+	if err != nil {
+		return nil, err
 	}
 
-	switch getRunResponseType := getRunResponse.(type) {
-	case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetBadRequestTextPlain:
-		return nil, models2.NewBadRequestError(fmt.Errorf("invalid request parameters: algorithm '%s' or request id '%s'", algorithm, requestId))
-	case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextPlain, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetUnauthorizedTextHTML: // coverage-ignore
-		return nil, models2.NewUnauthorizedError(fmt.Errorf("client credentials not recognized or missing for algorithm/requestId '%s'/'%s'", algorithm, requestId))
-	case *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundApplicationJSON, *api.AlgorithmV1ResultsAlgorithmNameRequestsRequestIdGetNotFoundTextPlain:
-		return nil, nil
-	case *api.ModelsRequestResult:
-		return getRunResponseType, nil
-	default: // coverage-ignore
-		return nil, models2.NewSdkErr(fmt.Errorf("unhandled response type for algorithm/requestId '%s'/'%s'", algorithm, requestId))
-	}
+	return result, nil
 }
 
 func (nc *NexusSchedulerClient) GetMetadata(requestId string, algorithm string) (*api.ModelsCheckpointedRequest, error) {

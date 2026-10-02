@@ -379,7 +379,7 @@ func Test_GetRun(t *testing.T) {
 		f.t.Error(err)
 	}
 
-	result, err := f.client.GetRun(runId, "hello-world")
+	result, err := f.client.GetRun(t.Context(), runId, "hello-world")
 
 	if err != nil {
 		f.t.Error(err)
@@ -626,7 +626,7 @@ func Test_CreateDryRun(t *testing.T) {
 
 	time.Sleep(3 * time.Second)
 
-	result, err := f.client.GetRun(runId, "hello-world")
+	result, err := f.client.GetRun(t.Context(), runId, "hello-world")
 
 	if err != nil {
 		f.t.Errorf("error getting run: %v", err)

@@ -193,7 +193,7 @@ func GetRunResults(tag *C.char, algorithm *C.char) *C.RunResult {
 
 //export GetRunResult
 func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
-	result, err := client.GetRun(C.GoString(requestId), C.GoString(algorithm))
+	result, err := client.GetRun(ctx, C.GoString(requestId), C.GoString(algorithm))
 
 	if err != nil {
 		return C.RunResult{
@@ -203,6 +203,18 @@ func GetRunResult(requestId *C.char, algorithm *C.char) C.RunResult {
 			run_error_message:    nil,
 			client_error_type:    C.CString(reflect.TypeOf(err).String()),
 			client_error_message: C.CString(err.Error()),
+			status:               nil,
+		}
+	}
+
+	if result == nil {
+		return C.RunResult{
+			algorithm:            nil,
+			request_id:           nil,
+			result_uri:           nil,
+			run_error_message:    nil,
+			client_error_type:    nil,
+			client_error_message: nil,
 			status:               nil,
 		}
 	}
@@ -417,7 +429,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 
 //export GetRun
 func GetRun(requestId *C.char, algorithmName *C.char) C.RunResult {
-	result, err := client.GetRun(C.GoString(requestId), C.GoString(algorithmName))
+	result, err := client.GetRun(ctx, C.GoString(requestId), C.GoString(algorithmName))
 
 	if err != nil {
 		return C.RunResult{
@@ -427,6 +439,18 @@ func GetRun(requestId *C.char, algorithmName *C.char) C.RunResult {
 			run_error_message:    nil,
 			client_error_type:    C.CString(reflect.TypeOf(err).String()),
 			client_error_message: C.CString(err.Error()),
+			status:               nil,
+		}
+	}
+
+	if result == nil {
+		return C.RunResult{
+			algorithm:            nil,
+			request_id:           nil,
+			result_uri:           nil,
+			run_error_message:    nil,
+			client_error_type:    nil,
+			client_error_message: nil,
 			status:               nil,
 		}
 	}
