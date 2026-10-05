@@ -115,7 +115,7 @@ func mapApiError(err error) error {
 	}
 }
 
-func (nc *NexusSchedulerClient) awaitRun(ctx context.Context, requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
+func (nc *NexusSchedulerClient) awaitRun(ctx context.Context, requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration, awaitCompletion bool) (*api.ModelsRequestResult, error) {
 	invalidRequestResponseDuration := 0 * time.Second
 	waitTime := 0 * time.Second
 	for {
@@ -134,7 +134,7 @@ func (nc *NexusSchedulerClient) awaitRun(ctx context.Context, requestId string, 
 
 			nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s status: %s", algorithmName, requestId, result.Status.Value))
 
-			if getRequestStub(result).IsFinished() {
+			if getRequestStub(result).IsFinished() || !awaitCompletion {
 				nc.Logger.V(0).Info(fmt.Sprintf("Request %s/%s finished", algorithmName, requestId))
 				return result, nil
 			} else if waitTimeout != nil && waitTime >= *waitTimeout {
@@ -208,7 +208,7 @@ func (nc *NexusSchedulerClient) awaitRuns(ctx context.Context, runs iter.Seq2[*a
 
 			nc.Logger.V(0).Info(fmt.Sprintf("Starting await of a run %s/%s", run.AlgorithmName.Value, run.RequestId.Value))
 
-			result, err := nc.awaitRun(ctx, run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout)
+			result, err := nc.awaitRun(ctx, run.RequestId.Value, run.AlgorithmName.Value, pollInterval, waitTimeout, true)
 			if err != nil {
 				isSuccess = false
 				resultChannel <- &AwaitTaggedResult{
@@ -351,7 +351,7 @@ func (nc *NexusSchedulerClient) GetRunResults(tag string, algorithmName *string)
 func (nc *NexusSchedulerClient) AwaitRun(ctx context.Context, requestId string, algorithmName string, pollInterval *time.Duration, waitTimeout *time.Duration) (*api.ModelsRequestResult, error) {
 	resultChannel := make(chan *AwaitResult, 1)
 	go func() {
-		result, err := nc.awaitRun(ctx, requestId, algorithmName, pollInterval, waitTimeout)
+		result, err := nc.awaitRun(ctx, requestId, algorithmName, pollInterval, waitTimeout, true)
 		if err != nil {
 			resultChannel <- &AwaitResult{
 				Error:  err,
@@ -430,7 +430,7 @@ func (nc *NexusSchedulerClient) CreateRun(request *api.ModelsAlgorithmRequest, a
 }
 
 func (nc *NexusSchedulerClient) GetRun(ctx context.Context, requestId string, algorithm string) (*api.ModelsRequestResult, error) {
-	result, err := nc.awaitRun(ctx, requestId, algorithm, new(1*time.Second), new(10*time.Second))
+	result, err := nc.awaitRun(ctx, requestId, algorithm, new(1*time.Second), new(10*time.Second), false)
 
 	if notFoundErr, ok := errors.AsType[*models2.BadRequestError](err); ok {
 		return nil, models2.NewNotFoundError(notFoundErr)
