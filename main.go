@@ -301,6 +301,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		}
 
 		if customConfiguration.cpu_limit != nil && customConfiguration.memory_limit != nil {
+			resources.Set = true
 			resources.Value.Limits = api.OptV1ResourceList{
 				Set: true,
 				Value: api.V1ResourceList{
@@ -311,6 +312,7 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 		}
 
 		if customConfiguration.cpu_request != nil && customConfiguration.memory_request != nil {
+			resources.Set = true
 			resources.Value.Requests = api.OptV1ResourceList{
 				Set: true,
 				Value: api.V1ResourceList{
