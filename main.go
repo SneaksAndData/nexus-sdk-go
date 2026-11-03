@@ -77,6 +77,7 @@ package main
 //} BoolResult;
 import "C"
 import (
+	"errors"
 	"os"
 	"reflect"
 	"runtime"
@@ -294,10 +295,12 @@ func CreateRun(algorithmName *C.char, algorithmParameters *C.char, customConfigu
 
 		if (customConfiguration.memory_limit != nil && customConfiguration.cpu_limit == nil) || (customConfiguration.memory_limit == nil && customConfiguration.cpu_limit != nil) {
 			client.Logger.V(0).Info("Invalid custom resource limits provided. Both cpu and memory limits must be specified")
+			return reportDecodeErr(errors.New("invalid custom resource limits provided: both cpu and memory limits must be specified"))
 		}
 
 		if (customConfiguration.memory_request != nil && customConfiguration.cpu_request == nil) || (customConfiguration.memory_request == nil && customConfiguration.cpu_request != nil) {
 			client.Logger.V(0).Info("Invalid custom resource requests provided. Both cpu and memory requests must be specified")
+			return reportDecodeErr(errors.New("invalid custom resource requests provided: both cpu and memory requests must be specified"))
 		}
 
 		if customConfiguration.cpu_limit != nil && customConfiguration.memory_limit != nil {
